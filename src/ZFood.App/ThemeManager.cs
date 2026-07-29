@@ -49,8 +49,11 @@ public static class ThemeManager
     public static void Apply(Application app, string? theme)
     {
         var id = Normalize(theme);
-        if (_current is not null && id == CurrentTheme)
+        if (_current is not null && id == CurrentTheme
+            && app.Resources.MergedDictionaries.Contains(_current))
+        {
             return;
+        }
 
         ResourceDictionary dictionary;
         try
