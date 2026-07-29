@@ -1,0 +1,8 @@
+# Build artifacts
+bin/
+obj/
+dist/
+*.user
+
+# Project-local .NET SDK installed by `make setup`
+.dotnet/
