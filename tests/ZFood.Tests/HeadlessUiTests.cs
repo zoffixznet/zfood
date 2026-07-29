@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -388,6 +389,30 @@ public class HeadlessUiTests
         f.Box("ServingGramsBox").Focus();
         Fixture.Pump();
         Assert.Equal(new[] { "571", "56" }, copies);
+    }
+
+    [AvaloniaFact]
+    public void The_scale_panel_labels_its_two_weight_columns()
+    {
+        using var f = new Fixture();
+        f.Window.UpdateLayout();
+
+        var withCookware = f.Window.FindControl<TextBlock>("WithCookwareHeader")!;
+        var foodOnly = f.Window.FindControl<TextBlock>("FoodOnlyHeader")!;
+        Assert.Equal("WITH COOKWARE", withCookware.Text);
+        Assert.Equal("FOOD ONLY", foodOnly.Text);
+        Assert.True(withCookware.IsEffectivelyVisible);
+        Assert.True(foodOnly.IsEffectivelyVisible);
+
+        // Each header sits over its field column: the horizontal spans overlap.
+        var gross = f.RowBox(0, "rowGross");
+        var net = f.RowBox(0, "rowNet");
+        var grossX = gross.TranslatePoint(new Avalonia.Point(0, 0), f.Window)!.Value.X;
+        var netX = net.TranslatePoint(new Avalonia.Point(0, 0), f.Window)!.Value.X;
+        var withX = withCookware.TranslatePoint(new Avalonia.Point(0, 0), f.Window)!.Value.X;
+        var foodX = foodOnly.TranslatePoint(new Avalonia.Point(0, 0), f.Window)!.Value.X;
+        Assert.InRange(withX, grossX, grossX + gross.Bounds.Width);
+        Assert.InRange(foodX, netX, netX + net.Bounds.Width);
     }
 
     [AvaloniaFact]

@@ -78,6 +78,16 @@
             <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
         </Style>
 
+        <!-- Column headers naming the two weight columns. -->
+        <Style Selector="TextBlock.columnHeader">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="LetterSpacing" Value="1.4" />
+            <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
         <!-- The dish caption in the water section. -->
         <Style Selector="TextBlock.dishCaption">
             <Setter Property="FontSize" Value="13" />
@@ -253,6 +263,16 @@
                 <StackPanel>
                     <TextBlock Classes="sectionTitle" Text="SCALE" Margin="0,0,0,10" />
 
+                    <!-- Which column is which weight: the first field holds the
+                         scale reading including the cookware, the second the
+                         food alone. -->
+                    <Grid ColumnDefinitions="8,178,52,104,24,104,26,*" Margin="0,0,0,4">
+                        <TextBlock Grid.Column="3" x:Name="WithCookwareHeader" Classes="columnHeader"
+                                   Text="WITH COOKWARE" />
+                        <TextBlock Grid.Column="5" x:Name="FoodOnlyHeader" Classes="columnHeader"
+                                   Text="FOOD ONLY" />
+                    </Grid>
+
                     <!-- Cookware rows -->
                     <ItemsControl x:Name="CookwareRowsControl" ItemsSource="{Binding Scale.Rows}">
                         <ItemsControl.ItemTemplate>
@@ -266,9 +286,6 @@
                                         <TextBlock Classes="cookwareName" Text="{Binding Name}" />
                                         <TextBlock Classes="unit" FontSize="11" Text="{Binding TareEcho}" />
                                     </StackPanel>
-                                    <TextBlock Grid.Column="2" Classes="unit" Text="reads" Margin="0,0,8,0"
-                                               HorizontalAlignment="Right" VerticalAlignment="Center"
-                                               IsVisible="{Binding !IsNoCookware}" />
                                     <TextBlock Grid.Column="2" Classes="unit" Text="weight" Margin="0,0,8,0"
                                                HorizontalAlignment="Right" VerticalAlignment="Center"
                                                IsVisible="{Binding IsNoCookware}" />
@@ -348,8 +365,8 @@
                     <TextBlock x:Name="DishCaptionText" Classes="dishCaption pulseable"
                                Text="{Binding Scale.DishCaption}" Margin="8,0,0,10" />
                     <!-- The 238 px label column lines the water boxes up with the
-                         cookware rows' reads column; the delta's right edge meets the
-                         net column's right edge. -->
+                         cookware rows' first weight column; the delta's right
+                         edge meets the second column's right edge. -->
                     <Grid ColumnDefinitions="238,232,28" RowDefinitions="Auto,10,Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" Margin="8,0,0,0" />
                         <TextBox Grid.Row="0" Grid.Column="1" x:Name="RecipeBox" Classes="numeric"
