@@ -8,7 +8,12 @@
     <AssemblyName>ZFood</AssemblyName>
     <RootNamespace>ZFood.App</RootNamespace>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationIcon>Assets/zfood.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.18" />
