@@ -7,6 +7,12 @@ adjustment that reconciles a recipe's ingredient total with what the cooked
 dish actually weighs. One window, instant recalculation on every keystroke,
 and every result one keypress away from the clipboard.
 
+ZFood is a companion calculator, not a tracker itself. It sits next to a
+nutrition tracker such as [Cronometer](https://cronometer.com/) and helps you
+get the numbers right before you enter them: the weight of the food on your
+scale, the calories in the portion you just ate, and the corrected weight of
+a cooked recipe.
+
 ![ZFood main window](assets/screenshots/main.png)
 
 ## The three tools
@@ -27,10 +33,16 @@ and every result one keypress away from the clipboard.
 A log keeps completed calculations for two weeks, so a number you forgot to
 enter into your tracker is never lost: click any log row to copy its result.
 
-## Install and run
+## Download
 
-Prebuilt self-contained executables (no runtime required) can be produced from
-a checkout, or grab them from a release if one is available:
+Prebuilt self-contained executables for Linux x64 and Windows x64 are on the
+[releases page](https://github.com/zoffixznet/zfood/releases). Download the
+archive for your platform, unpack it, and run the executable inside; there is
+nothing else to install.
+
+## Build from source
+
+The same executables can be produced from a checkout:
 
 ```sh
 make deps           # Debian/Ubuntu: install any missing system tools via apt

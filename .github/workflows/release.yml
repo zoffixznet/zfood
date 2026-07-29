@@ -1,0 +1,55 @@
+# Builds and publishes a GitHub Release when a version tag (v*) is pushed:
+# run the test suite, produce the self-contained single-file builds for
+# linux-x64 and win-x64 (matching the make publish targets), package them,
+# and attach both archives to a release for the tag.
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run the test suite
+        run: dotnet test ZFood.sln
+
+      - name: Publish linux-x64
+        run: >
+          dotnet publish src/ZFood.App -c Release -r linux-x64 --self-contained
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=None -p:DebugSymbols=false -o dist/linux-x64
+
+      - name: Publish win-x64
+        run: >
+          dotnet publish src/ZFood.App -c Release -r win-x64 --self-contained
+          -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=None -p:DebugSymbols=false -o dist/win-x64
+
+      - name: Package the archives
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          tar -C dist/linux-x64 -czf "zfood-$version-linux-x64.tar.gz" ZFood
+          (cd dist/win-x64 && zip "../../zfood-$version-win-x64.zip" ZFood.exe)
+
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            --title "ZFood $GITHUB_REF_NAME" \
+            --notes "Self-contained builds for Linux x64 and Windows x64. Download the archive for your platform, unpack it, and run the executable; nothing to install." \
+            "zfood-$version-linux-x64.tar.gz" \
+            "zfood-$version-win-x64.zip"
