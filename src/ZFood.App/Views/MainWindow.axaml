@@ -416,7 +416,7 @@
                         </TextBox>
                         <TextBlock Grid.Row="2" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
                         <Button x:Name="UseDishNetButton" Classes="quiet"
-                                MaxWidth="180" Content="{Binding UseDishNetLabel}"
+                                MaxWidth="160" Content="{Binding UseDishNetLabel}"
                                 IsEnabled="{Binding CanUseDishNet}"
                                 ToolTip.Tip="Copy the dish row's net weight into eaten grams"
                                 Click="OnUseDishNetClick" />
