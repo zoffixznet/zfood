@@ -207,6 +207,11 @@ public sealed class ScalePanelModel : ObservableModel
             {
                 row.Tare = pot.Grams;
                 row.Recompute();
+                // The tare edit changed this row's calculation, so the unit must
+                // commit the corrected numbers at its next settle point. (The
+                // edit itself is not a settle point and writes nothing here.)
+                if (row.HoldsValue)
+                    row.ChangedSinceCommit = true;
             }
 
             if (pot.Pinned != row.Pinned)

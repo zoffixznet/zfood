@@ -303,6 +303,38 @@ public class ScalePanelModelTests
     }
 
     [Fact]
+    public void Tare_edit_marks_a_row_holding_a_value_for_recommit()
+    {
+        var settings = DemoSettings();
+        var panel = Panel(settings);
+        Row(panel, "pot1").GrossText = "1440";
+        Row(panel, "pot1").ChangedSinceCommit = false; // the unit settled
+
+        settings.Cookware.First(c => c.Id == "pot1").Grams = 600;
+        settings.Cookware.First(c => c.Id == "pot2").Grams = 200;
+        panel.SyncFromSettings();
+
+        // The corrected calculation must reach the log at the next settle
+        // point, so the unit is dirty again.
+        Assert.True(Row(panel, "pot1").ChangedSinceCommit);
+        // An empty row has nothing to recommit even though its tare changed.
+        Assert.False(Row(panel, "pot2").ChangedSinceCommit);
+    }
+
+    [Fact]
+    public void Tare_sync_without_a_change_leaves_commit_tracking_alone()
+    {
+        var settings = DemoSettings();
+        var panel = Panel(settings);
+        Row(panel, "pot1").GrossText = "1440";
+        Row(panel, "pot1").ChangedSinceCommit = false;
+
+        panel.SyncFromSettings(); // nothing changed in settings
+
+        Assert.False(Row(panel, "pot1").ChangedSinceCommit);
+    }
+
+    [Fact]
     public void Deleting_a_pot_with_a_value_clears_the_row_loudly()
     {
         var settings = DemoSettings();

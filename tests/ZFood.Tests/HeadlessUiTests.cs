@@ -138,6 +138,31 @@ public class HeadlessUiTests
     }
 
     [AvaloniaFact]
+    public void A_tare_edit_after_a_commit_recommits_the_corrected_calculation()
+    {
+        using var f = new Fixture();
+
+        // Settle a water calculation at tare 640: net 800, delta -200.
+        f.Type(f.RowBox(0, "rowGross"), "1440");
+        f.Type(f.Box("RecipeBox"), "1000");
+        f.Press(Key.Enter);
+        Fixture.Pump();
+        Assert.Contains(f.Services.Log.Entries, e => e.Panel == LogPanel.Water && e.Result == "-200");
+
+        // Correct the pot's tare in settings (as the cookware editor would).
+        f.Services.Settings.Cookware.First(c => c.Id == "p1").Grams = 600;
+        f.Vm.Scale.SyncFromSettings();
+        Assert.Equal("-160", f.Vm.Scale.DeltaText);
+
+        // The next settle point (window deactivation) commits the corrected
+        // numbers; the stale -200 is no longer the last word in the log.
+        f.Vm.OnWindowDeactivated();
+        var newest = f.Services.Log.Entries.Last();
+        Assert.Equal(LogPanel.Water, newest.Panel);
+        Assert.Equal("-160", newest.Result);
+    }
+
+    [AvaloniaFact]
     public void Net_direction_computes_target_gross_per_row()
     {
         using var f = new Fixture();
