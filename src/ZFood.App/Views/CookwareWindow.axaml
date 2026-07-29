@@ -8,7 +8,7 @@
         Width="560" Height="420"
         MinWidth="480" MinHeight="340"
         WindowStartupLocation="CenterOwner"
-        Background="{StaticResource PaperBrush}">
+        Background="{StaticResource PorcelainBrush}">
 
     <DockPanel Margin="14">
         <!-- Footer -->
@@ -22,15 +22,15 @@
         <Grid ColumnDefinitions="*,14,240">
             <!-- Pot list -->
             <ListBox Grid.Column="0" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}"
-                     Background="White" BorderBrush="{StaticResource InkBrush}" BorderThickness="1"
-                     CornerRadius="1">
+                     Background="{StaticResource CardBrush}" BorderBrush="{StaticResource HairlineBrush}"
+                     BorderThickness="1" CornerRadius="10" Padding="6">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="vm:CookwareItemViewModel">
-                        <Grid ColumnDefinitions="16,*,Auto">
+                        <Grid ColumnDefinitions="16,*,Auto" Height="26">
                             <TextBlock Grid.Column="0" Text="★" IsVisible="{Binding Pinned}"
-                                       Foreground="{StaticResource InkBrush}" FontSize="12"
+                                       Foreground="{StaticResource SubtleBrush}" FontSize="12"
                                        VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1" Text="{Binding Name}"
+                            <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"
                                        Foreground="{StaticResource InkBrush}" Margin="4,0" />
                             <TextBlock Grid.Column="2" Classes="unit" FontSize="12"
                                        Text="{Binding GramsText, StringFormat='{}{0} g'}" />
@@ -41,7 +41,7 @@
 
             <!-- Editor for the selected pot -->
             <StackPanel Grid.Column="2" Spacing="10" IsEnabled="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
-                <TextBlock Classes="sectionTitle" Text="POT" />
+                <TextBlock Classes="sectionTitle" Text="SELECTED POT" />
                 <StackPanel Spacing="4">
                     <TextBlock Classes="fieldLabel" Text="Name" />
                     <TextBox Text="{Binding Selected.Name}" />
