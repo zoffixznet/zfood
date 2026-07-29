@@ -35,9 +35,15 @@ public static class Numeric
     /// <summary>
     /// Formats grams or calories for display and copy: whole number, half
     /// rounded away from zero, explicit sign when negative, invariant culture.
+    /// A small negative value that rounds to zero renders "0", never "-0".
     /// </summary>
     public static string FormatWhole(double value)
-        => Math.Round(value, MidpointRounding.AwayFromZero).ToString("0", CultureInfo.InvariantCulture);
+    {
+        var rounded = Math.Round(value, MidpointRounding.AwayFromZero);
+        if (rounded == 0)
+            rounded = 0; // normalize negative zero
+        return rounded.ToString("0", CultureInfo.InvariantCulture);
+    }
 
     /// <summary>Formats calorie density (cal/g) with two decimals, invariant culture.</summary>
     public static string FormatDensity(double value)

@@ -45,6 +45,8 @@ public class NumericTests
     [InlineData(-199.5, "-200")]
     [InlineData(-200.4, "-200")]
     [InlineData(0.4, "0")]
+    [InlineData(-0.4, "0")]
+    [InlineData(-0.0, "0")]
     [InlineData(1234, "1234")]
     public void Formats_whole_numbers_rounding_half_away_from_zero(double value, string expected)
     {
