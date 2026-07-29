@@ -20,9 +20,38 @@
             <Setter Property="Margin" Value="0,6" />
         </Style>
 
-        <!-- Cookware rows: empty rows are dim ghosts, the dish row is emphasized. -->
+        <!-- Cookware rows: empty rows are dim ghosts, the dish row is emphasized.
+             Tall windows (the "roomy" window class) relax the vertical rhythm. -->
+        <Style Selector="Grid.cookwareRow">
+            <Setter Property="Height" Value="38" />
+        </Style>
+        <Style Selector="Window.roomy Grid.cookwareRow">
+            <Setter Property="Height" Value="44" />
+        </Style>
+        <Style Selector="StackPanel.waterStack">
+            <Setter Property="Spacing" Value="10" />
+        </Style>
+        <Style Selector="Window.roomy StackPanel.waterStack">
+            <Setter Property="Spacing" Value="14" />
+        </Style>
         <Style Selector="Grid.cookwareRow.dim">
             <Setter Property="Opacity" Value="0.65" />
+        </Style>
+
+        <!-- Narrow windows drop the density hero under the fields so it never
+             collides with the use-dish-net button. The default grid cell is
+             styled (not set inline) so the narrow preset can override it. -->
+        <Style Selector="StackPanel#DensityHeroPanel">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="Window.narrow StackPanel#DensityHeroPanel">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Margin" Value="0,12,0,0" />
         </Style>
         <Style Selector="Grid.cookwareRow.dish">
             <Setter Property="Opacity" Value="1" />
@@ -190,7 +219,7 @@
 
         <!-- PORTION card -->
         <Border DockPanel.Dock="Top" Classes="card" Margin="0,0,0,12">
-            <Grid ColumnDefinitions="*,Auto">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
                 <StackPanel Grid.Column="0" Spacing="10">
                     <TextBlock Classes="sectionTitle" Text="PORTION" />
                     <!-- Columns mirror the cookware rows below so every numeral sits
@@ -245,7 +274,7 @@
                         </TextBox>
                         <TextBlock Grid.Row="2" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
                         <Button Grid.Row="2" Grid.Column="6" x:Name="UseDishNetButton" Classes="quiet"
-                                Margin="16,0,0,0" Content="{Binding UseDishNetLabel}"
+                                Margin="16,0,0,0" MaxWidth="150" Content="{Binding UseDishNetLabel}"
                                 IsEnabled="{Binding CanUseDishNet}"
                                 ToolTip.Tip="Copy the dish row's net weight into eaten grams"
                                 Click="OnUseDishNetClick" />
@@ -253,7 +282,8 @@
                 </StackPanel>
 
                 <!-- Density hero: the instrument's main display. -->
-                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="0">
+                <StackPanel x:Name="DensityHeroPanel"
+                            VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="0">
                     <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
                         <TextBlock x:Name="DensityHero" Classes="pulseable hero"
                                    Classes.placeholder="{Binding Portion.DensityIsPlaceholder}"
@@ -270,7 +300,16 @@
         <!-- SCALE card -->
         <Border Classes="card">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <StackPanel>
+                <!-- The water section is pinned to the card's base like the
+                     display at the foot of a kitchen scale: at tall window
+                     sizes the surplus opens in the flex band between the
+                     cookware rows and the water block instead of leaving a
+                     dead margin under the delta. The MinHeight binding makes
+                     the band engage when there is room while the ScrollViewer
+                     still guards short windows. -->
+                <Grid RowDefinitions="Auto,*,Auto"
+                      MinHeight="{Binding $parent[ScrollViewer].Viewport.Height}">
+                <StackPanel Grid.Row="0">
                     <TextBlock Classes="sectionTitle" Text="SCALE" Margin="0,0,0,10" />
 
                     <!-- Which column is which weight: the first field holds the
@@ -288,7 +327,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="core:CookwareRowModel">
                                 <Grid Classes="cookwareRow" Classes.dish="{Binding IsDish}" Classes.dim="{Binding IsEmpty}"
-                                      ColumnDefinitions="8,178,52,Auto,24,Auto,26,Auto,*,36" Height="38"
+                                      ColumnDefinitions="8,178,52,Auto,24,Auto,26,Auto,*,36"
                                       Background="Transparent">
                                     <Border Grid.Column="0" Classes="dishBar" IsVisible="{Binding IsDish}" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8"
@@ -367,42 +406,51 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </StackPanel>
+                </StackPanel>
 
-                    <!-- Water section -->
-                    <Border Classes="hairline" Margin="0,10,0,10" />
+                <!-- Flex band: absorbs surplus card height at tall sizes. -->
+                <Border Grid.Row="1" x:Name="ScaleFlexBand" IsHitTestVisible="False" MinHeight="0" />
+
+                <!-- Water section -->
+                <StackPanel Grid.Row="2">
+                    <Border Classes="hairline shelfRule" Margin="0,10,0,10" />
                     <TextBlock x:Name="DishCaptionText" Classes="dishCaption pulseable"
                                Text="{Binding Scale.DishCaption}" Margin="8,0,0,10" />
                     <!-- The 238 px label column lines the water boxes up with the
                          cookware rows' first weight column; the delta's right
                          edge meets the second column's right edge. -->
-                    <Grid ColumnDefinitions="238,232,28" RowDefinitions="Auto,10,Auto">
-                        <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" Margin="8,0,0,0" />
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="RecipeBox" Classes="numeric"
-                                 HorizontalAlignment="Right"
-                                 Text="{Binding Scale.RecipeText}">
-                            <TextBox.InnerRightContent>
-                                <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
-                                    <Path />
-                                </Button>
-                            </TextBox.InnerRightContent>
-                        </TextBox>
-                        <TextBlock Grid.Row="0" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
-
-                        <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Water to add" Margin="8,0,0,0" />
-                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="DeltaBox" Classes="numeric computed delta"
-                                 IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
-                                 views:Pulse.Tick="{Binding Scale.DeltaPulse}">
-                            <TextBox.InnerRightContent>
-                                <Button x:Name="DeltaCopyButton" Classes="copyIcon"
-                                        Click="OnDeltaCopyIconClick"
-                                        ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)">
-                                    <Path />
-                                </Button>
-                            </TextBox.InnerRightContent>
-                        </TextBox>
-                        <TextBlock Grid.Row="2" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
-                    </Grid>
+                    <StackPanel Classes="waterStack">
+                        <Grid ColumnDefinitions="238,232,28">
+                            <TextBlock Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" Margin="8,0,0,0" />
+                            <TextBox Grid.Column="1" x:Name="RecipeBox" Classes="numeric"
+                                     HorizontalAlignment="Right"
+                                     Text="{Binding Scale.RecipeText}">
+                                <TextBox.InnerRightContent>
+                                    <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                        <Path />
+                                    </Button>
+                                </TextBox.InnerRightContent>
+                            </TextBox>
+                            <TextBlock Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
+                        </Grid>
+                        <Grid ColumnDefinitions="238,232,28">
+                            <TextBlock Grid.Column="0" Classes="fieldLabel" Text="Water to add" Margin="8,0,0,0" />
+                            <TextBox Grid.Column="1" x:Name="DeltaBox" Classes="numeric computed delta"
+                                     IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
+                                     views:Pulse.Tick="{Binding Scale.DeltaPulse}">
+                                <TextBox.InnerRightContent>
+                                    <Button x:Name="DeltaCopyButton" Classes="copyIcon"
+                                            Click="OnDeltaCopyIconClick"
+                                            ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)">
+                                        <Path />
+                                    </Button>
+                                </TextBox.InnerRightContent>
+                            </TextBox>
+                            <TextBlock Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
+                        </Grid>
+                    </StackPanel>
                 </StackPanel>
+                </Grid>
             </ScrollViewer>
         </Border>
     </DockPanel>

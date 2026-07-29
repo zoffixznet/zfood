@@ -54,8 +54,33 @@ public partial class MainWindow : Window
         Deactivated += (_, _) => _vm.OnWindowDeactivated();
         Closing += OnClosingWindow;
         Opened += (_, _) => FocusAndSelect(ServingGramsBox);
+        SizeChanged += (_, e) => UpdateResponsiveClasses(e.NewSize);
 
         RestoreGeometry();
+        UpdateResponsiveClasses(new Size(Width, Height));
+    }
+
+    // Two responsive presets, both style-driven: "narrow" drops the density
+    // hero under the portion fields so nothing collides at small widths, and
+    // "roomy" relaxes the vertical rhythm when a tall window opens the scale
+    // card's flex band.
+    private void UpdateResponsiveClasses(Size size)
+    {
+        SetClass("narrow", size.Width < 860);
+        SetClass("roomy", size.Height >= 980);
+    }
+
+    private void SetClass(string name, bool on)
+    {
+        if (on)
+        {
+            if (!Classes.Contains(name))
+                Classes.Add(name);
+        }
+        else
+        {
+            Classes.Remove(name);
+        }
     }
 
     private static string ScratchDataDir()
