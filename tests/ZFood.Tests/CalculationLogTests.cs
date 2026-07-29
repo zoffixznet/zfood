@@ -130,6 +130,49 @@ public class CalculationLogTests
         var log = new CalculationLog(sink: null, existing: new[] { PortionEntry() });
         Assert.Equal(CommitOutcome.DuplicateSkipped, log.Commit(PortionEntry()));
     }
+
+    [Fact]
+    public void Commit_survives_an_existing_entry_with_null_inputs()
+    {
+        // A damaged line that reached memory (null inputs) must never crash a
+        // later commit for the same unit; the new entry simply appends.
+        var damaged = TareEntry("pot1");
+        damaged.Inputs = null!;
+        var log = new CalculationLog(sink: null, existing: new[] { damaged });
+
+        Assert.Equal(CommitOutcome.Committed, log.Commit(TareEntry("pot1")));
+        Assert.Equal(CommitOutcome.Committed, log.Commit(WaterEntry("pot1")));
+    }
+
+    [Fact]
+    public void Same_calculation_tolerates_null_inputs_on_either_side()
+    {
+        var whole = TareEntry();
+        var damaged = TareEntry();
+        damaged.Inputs = null!;
+
+        Assert.False(whole.SameCalculation(damaged));
+        Assert.False(damaged.SameCalculation(whole));
+        Assert.False(LogEntryFactory.WaterSubsumesTare(WaterEntry(), damaged));
+    }
+
+    [Fact]
+    public void Entries_with_null_required_fields_are_flagged_incomplete()
+    {
+        Assert.True(TareEntry().HasRequiredFields);
+
+        var noInputs = TareEntry();
+        noInputs.Inputs = null!;
+        Assert.False(noInputs.HasRequiredFields);
+
+        var noUnit = TareEntry();
+        noUnit.Unit = null!;
+        Assert.False(noUnit.HasRequiredFields);
+
+        var noResult = TareEntry();
+        noResult.Result = null!;
+        Assert.False(noResult.HasRequiredFields);
+    }
 }
 
 public class LogEntryFactoryTests

@@ -193,6 +193,27 @@ public class LogStoreTests
         Assert.Equal(2, store.Load(Now).Count);
     }
 
+    [Theory]
+    [InlineData("""{"ts":"2026-07-20T11:59:00+00:00","panel":"portion","unit":"portion","result":"496","resultUnit":"cal","equation":"x","inputs":null}""")]
+    [InlineData("""{"ts":"2026-07-20T11:59:00+00:00","panel":"portion","unit":null,"result":"496","resultUnit":"cal","equation":"x","inputs":{}}""")]
+    [InlineData("""{"ts":"2026-07-20T11:59:00+00:00","panel":"portion","unit":"portion","result":null,"resultUnit":"cal","equation":"x","inputs":{}}""")]
+    public void Lines_with_null_required_fields_are_treated_as_corrupt(string damagedLine)
+    {
+        using var dir = new TempDir();
+        var paths = new AppPaths(dir.Path);
+        var store = Store(dir);
+        store.Append(Entry(Now.AddMinutes(-10)));
+        File.AppendAllText(paths.LogFile, damagedLine + "\n");
+
+        var loaded = store.Load(Now);
+
+        var survivor = Assert.Single(loaded);
+        Assert.NotNull(survivor.Inputs);
+        Assert.True(File.Exists(paths.LogFile + ".bak"));
+        // The rewritten file no longer contains the damaged line.
+        Assert.Single(store.Load(Now));
+    }
+
     [Fact]
     public void Append_failure_raises_the_warning_event_without_throwing()
     {

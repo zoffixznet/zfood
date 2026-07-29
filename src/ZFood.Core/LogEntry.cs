@@ -43,12 +43,31 @@ public sealed class LogEntry
     /// <summary>Raw structured inputs, invariant-formatted, for reconstruction and dedupe.</summary>
     public Dictionary<string, string> Inputs { get; set; } = new();
 
+    /// <summary>
+    /// True when every required field survived deserialization. A damaged or
+    /// hand-edited log line can null any of them (e.g. "inputs": null), and such
+    /// an entry must be treated as corrupt, never dereferenced.
+    /// </summary>
+    public bool HasRequiredFields
+        => Unit is not null
+           && Result is not null
+           && ResultUnit is not null
+           && Equation is not null
+           && Inputs is not null
+           && Enum.IsDefined(Panel);
+
     /// <summary>True when the other entry records the identical settled calculation.</summary>
     public bool SameCalculation(LogEntry other)
-        => Panel == other.Panel
-           && Unit == other.Unit
-           && Result == other.Result
-           && ResultUnit == other.ResultUnit
-           && Inputs.Count == other.Inputs.Count
-           && Inputs.All(kv => other.Inputs.TryGetValue(kv.Key, out var v) && v == kv.Value);
+    {
+        if (Panel != other.Panel || Unit != other.Unit || Result != other.Result || ResultUnit != other.ResultUnit)
+            return false;
+
+        // Tolerate null inputs (a corrupt line that slipped into memory must
+        // never crash a commit).
+        if (Inputs is null || other.Inputs is null)
+            return Inputs is null && other.Inputs is null;
+
+        return Inputs.Count == other.Inputs.Count
+               && Inputs.All(kv => other.Inputs.TryGetValue(kv.Key, out var v) && v == kv.Value);
+    }
 }

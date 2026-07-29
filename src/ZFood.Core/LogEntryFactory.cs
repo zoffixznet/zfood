@@ -131,7 +131,8 @@ public static class LogEntryFactory
            && SameValue(water, tare, "value");
 
     private static bool SameValue(LogEntry a, LogEntry b, string key)
-        => a.Inputs.TryGetValue(key, out var av) && b.Inputs.TryGetValue(key, out var bv) && av == bv;
+        => a.Inputs is not null && b.Inputs is not null
+           && a.Inputs.TryGetValue(key, out var av) && b.Inputs.TryGetValue(key, out var bv) && av == bv;
 
     private static Dictionary<string, string> TareInputs(string potName, double tare, string side, double value)
         => new()

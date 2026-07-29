@@ -54,7 +54,10 @@ public sealed class LogStore : ILogSink
                 try
                 {
                     var entry = JsonSerializer.Deserialize<LogEntry>(line, JsonOptions);
-                    if (entry is null)
+                    // A line that parses but lost a required field (null inputs,
+                    // unit, result...) is corruption too; keeping it would hand
+                    // the commit rules an entry they cannot safely touch.
+                    if (entry is null || !entry.HasRequiredFields)
                         damaged = true;
                     else
                         entries.Add(entry);
