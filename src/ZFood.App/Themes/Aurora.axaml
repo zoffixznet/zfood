@@ -1,0 +1,260 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Aurora: smoked-glass instruments under a frozen northern-lights sky.
+         The window is a deep ink-violet night with a mint bloom behind the
+         density hero and a violet counter-bloom behind the log; cards are
+         dark translucent glass with gradient hairlines; every computed value
+         glows aurora mint, so the math reads as the light source. -->
+
+    <!-- Fluent accent -->
+    <Color x:Key="SystemAccentColor">#3FE8B0</Color>
+    <Color x:Key="SystemAccentColorDark1">#35C897</Color>
+    <Color x:Key="SystemAccentColorDark2">#2BA87E</Color>
+    <Color x:Key="SystemAccentColorDark3">#218864</Color>
+    <Color x:Key="SystemAccentColorLight1">#5CEDBD</Color>
+    <Color x:Key="SystemAccentColorLight2">#79F1CA</Color>
+    <Color x:Key="SystemAccentColorLight3">#96F5D7</Color>
+
+    <!-- Canvas: the night sky and its three frozen aurora blooms. -->
+    <LinearGradientBrush x:Key="WindowBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#151B42" />
+        <GradientStop Offset="0.45" Color="#0D1230" />
+        <GradientStop Offset="1" Color="#070A18" />
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="CanvasBloom1Brush" Center="78%,8%" GradientOrigin="78%,8%"
+                         RadiusX="55%" RadiusY="55%">
+        <GradientStop Offset="0" Color="#2E2EE6A8" />
+        <GradientStop Offset="1" Color="#002EE6A8" />
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="CanvasBloom2Brush" Center="8%,95%" GradientOrigin="8%,95%"
+                         RadiusX="60%" RadiusY="60%">
+        <GradientStop Offset="0" Color="#1F7C5CFF" />
+        <GradientStop Offset="1" Color="#007C5CFF" />
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="CanvasBloom3Brush" Center="100%,55%" GradientOrigin="100%,55%"
+                         RadiusX="35%" RadiusY="35%">
+        <GradientStop Offset="0" Color="#12FF5C9E" />
+        <GradientStop Offset="1" Color="#00FF5C9E" />
+    </RadialGradientBrush>
+    <LinearGradientBrush x:Key="DialogWindowBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#151B42" />
+        <GradientStop Offset="0.45" Color="#0D1230" />
+        <GradientStop Offset="1" Color="#070A18" />
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="DialogBloom1Brush" Center="85%,0%" GradientOrigin="85%,0%"
+                         RadiusX="55%" RadiusY="55%">
+        <GradientStop Offset="0" Color="#1F2EE6A8" />
+        <GradientStop Offset="1" Color="#002EE6A8" />
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="DialogBloom2Brush" Center="8%,100%" GradientOrigin="8%,100%"
+                         RadiusX="55%" RadiusY="55%">
+        <GradientStop Offset="0" Color="#187C5CFF" />
+        <GradientStop Offset="1" Color="#007C5CFF" />
+    </RadialGradientBrush>
+
+    <!-- Header: Space Grotesk wordmark in aurora ice, over the meridian line
+         where the violet and rose live near text without carrying any. -->
+    <LinearGradientBrush x:Key="WordmarkBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#CFFFEA" />
+        <GradientStop Offset="1" Color="#7DFCCE" />
+    </LinearGradientBrush>
+    <FontFamily x:Key="WordmarkFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
+    <x:Double x:Key="WordmarkFontSize">20</x:Double>
+    <FontWeight x:Key="WordmarkFontWeight">SemiBold</FontWeight>
+    <LinearGradientBrush x:Key="HeaderRuleBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Offset="0" Color="#003FE8B0" />
+        <GradientStop Offset="0.35" Color="#663FE8B0" />
+        <GradientStop Offset="0.6" Color="#4DA88FFF" />
+        <GradientStop Offset="0.8" Color="#33FF5C9E" />
+        <GradientStop Offset="1" Color="#00FF5C9E" />
+    </LinearGradientBrush>
+
+    <!-- Cards: smoked ink glass with gradient hairline edges. -->
+    <LinearGradientBrush x:Key="CardBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#C20F1638" />
+        <GradientStop Offset="1" Color="#D9090D22" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="CardBorderBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#663FE8B0" />
+        <GradientStop Offset="0.45" Color="#26FFFFFF" />
+        <GradientStop Offset="1" Color="#1F7C5CFF" />
+    </LinearGradientBrush>
+    <Thickness x:Key="CardBorderThickness">1</Thickness>
+    <CornerRadius x:Key="CardCornerRadius">14</CornerRadius>
+    <BoxShadows x:Key="CardShadow">0 12 32 0 #66040616, 0 2 8 0 #4D040616</BoxShadows>
+    <SolidColorBrush x:Key="CardInnerHighlightBrush" Color="#2EFFFFFF" />
+    <SolidColorBrush x:Key="CardGlossBrush" Color="Transparent" />
+    <Thickness x:Key="CardPadding">20,14</Thickness>
+    <SolidColorBrush x:Key="LogCardBrush" Color="#E6070A18" />
+    <SolidColorBrush x:Key="LogCardBorderBrush" Color="#1FFFFFFF" />
+    <Thickness x:Key="LogCardBorderThickness">0,1,0,0</Thickness>
+    <BoxShadows x:Key="LogCardShadow">inset 0 2 6 0 #66040616</BoxShadows>
+
+    <!-- Text tiers: starlight on night glass. -->
+    <SolidColorBrush x:Key="InkBrush" Color="#F4F7FF" />
+    <SolidColorBrush x:Key="SubtleBrush" Color="#C9D4F2" />
+    <SolidColorBrush x:Key="FaintBrush" Color="#A7B4DC" />
+    <SolidColorBrush x:Key="GhostBrush" Color="#A7B4DC" />
+
+    <!-- Accent family: aurora mint. -->
+    <SolidColorBrush x:Key="AccentBrush" Color="#3FE8B0" />
+    <SolidColorBrush x:Key="AccentTextBrush" Color="#7DFCCE" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#4D3FE8B0" />
+    <SolidColorBrush x:Key="CaretBrush" Color="#3FE8B0" />
+
+    <!-- Computed fields and states -->
+    <SolidColorBrush x:Key="ComputedBrush" Color="#262EE6A8" />
+    <SolidColorBrush x:Key="ComputedBorderBrush" Color="#403FE8B0" />
+    <BoxShadows x:Key="ComputedShadow">0 0 10 0 #1F3FE8B0</BoxShadows>
+    <SolidColorBrush x:Key="PulseBrush" Color="#383FE8B0" />
+    <SolidColorBrush x:Key="WarnBrush" Color="#FFCE6B" />
+    <SolidColorBrush x:Key="WarnFieldBrush" Color="#1FFFB84D" />
+    <SolidColorBrush x:Key="WarnFieldBorderBrush" Color="#59FFB84D" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="#FFA198" />
+    <SolidColorBrush x:Key="ErrorButtonBrush" Color="#14FF6B5E" />
+    <SolidColorBrush x:Key="ErrorButtonBorderBrush" Color="#59FF6B5E" />
+    <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#1F3FE8B0" />
+    <SolidColorBrush x:Key="PrimaryButtonBorderBrush" Color="#663FE8B0" />
+
+    <!-- Inputs: dark wells with a lit mint focus ring. -->
+    <SolidColorBrush x:Key="InputBrush" Color="#59060A1A" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="#26FFFFFF" />
+    <Thickness x:Key="InputBorderThickness">1</Thickness>
+    <CornerRadius x:Key="InputCornerRadius">8</CornerRadius>
+    <SolidColorBrush x:Key="InputHoverBrush" Color="#59060A1A" />
+    <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#59FFFFFF" />
+    <SolidColorBrush x:Key="FocusBorderBrush" Color="#3FE8B0" />
+    <BoxShadows x:Key="FocusShadow">0 0 0 3 #2E3FE8B0, 0 0 14 0 #333FE8B0</BoxShadows>
+    <FontFamily x:Key="NumeralFontFamily">fonts:Inter#Inter</FontFamily>
+    <FontWeight x:Key="NumeralFontWeight">Normal</FontWeight>
+
+    <!-- Density hero: Space Grotesk ice numerals with a mint halo that
+         continues the window's top-right bloom. -->
+    <FontFamily x:Key="HeroFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
+    <FontWeight x:Key="HeroFontWeight">Light</FontWeight>
+    <LinearGradientBrush x:Key="HeroBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#CFFFEA" />
+        <GradientStop Offset="1" Color="#5CF5C4" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="HeroPlaceholderBrush" Color="#A7B4DC" />
+    <SolidColorBrush x:Key="HeroUnitBrush" Color="#A7B4DC" />
+    <RadialGradientBrush x:Key="HeroHaloBrush" Center="50%,50%" GradientOrigin="50%,50%"
+                         RadiusX="50%" RadiusY="50%">
+        <GradientStop Offset="0" Color="#2E3FE8B0" />
+        <GradientStop Offset="1" Color="#003FE8B0" />
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="HeroChipBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="HeroChipPlaceholderBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="HeroChipBorderBrush" Color="Transparent" />
+    <BoxShadows x:Key="HeroChipShadow">0 0 0 0 #00000000</BoxShadows>
+    <CornerRadius x:Key="HeroChipCornerRadius">12</CornerRadius>
+    <Thickness x:Key="HeroChipPadding">0</Thickness>
+    <SolidColorBrush x:Key="HeroChipPulseBrush" Color="#2E3FE8B0" />
+
+    <!-- Water delta: the glossiest object in the app, a deep glass lozenge
+         with a gradient bezel and a resting mint glow. -->
+    <FontFamily x:Key="DeltaFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
+    <FontWeight x:Key="DeltaFontWeight">Light</FontWeight>
+    <x:Double x:Key="DeltaFontSize">34</x:Double>
+    <SolidColorBrush x:Key="DeltaTextBrush" Color="#7DFCCE" />
+    <SolidColorBrush x:Key="DeltaFieldBrush" Color="#E605161B" />
+    <LinearGradientBrush x:Key="DeltaFieldBorderBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#663FE8B0" />
+        <GradientStop Offset="0.5" Color="#26FFFFFF" />
+        <GradientStop Offset="1" Color="#33A88FFF" />
+    </LinearGradientBrush>
+    <Thickness x:Key="DeltaFieldBorderThickness">1</Thickness>
+    <CornerRadius x:Key="DeltaCornerRadius">12</CornerRadius>
+    <BoxShadows x:Key="DeltaShadow">0 0 24 0 #293FE8B0</BoxShadows>
+    <SolidColorBrush x:Key="DeltaSelectionBrush" Color="#4D3FE8B0" />
+    <SolidColorBrush x:Key="DeltaPulseBrush" Color="#383FE8B0" />
+    <SolidColorBrush x:Key="DeltaCopyIconBrush" Color="#A7B4DC" />
+    <SolidColorBrush x:Key="DeltaCopyIconHoverBrush" Color="#3FE8B0" />
+    <SolidColorBrush x:Key="DeltaReflectionBrush" Color="Transparent" />
+
+    <!-- Dish binding: mint bar with a violet tail, the only place the violet
+         touches a semantic element. -->
+    <LinearGradientBrush x:Key="DishBarBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#3FE8B0" />
+        <GradientStop Offset="1" Color="#A88FFF" />
+    </LinearGradientBrush>
+    <BoxShadows x:Key="DishBarShadow">0 0 8 0 #4D3FE8B0</BoxShadows>
+    <LinearGradientBrush x:Key="DishRowBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Offset="0" Color="#143FE8B0" />
+        <GradientStop Offset="1" Color="#003FE8B0" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DishCaptionBrush" Color="#7DFCCE" />
+
+    <!-- Rows -->
+    <x:Double x:Key="GhostRowOpacity">0.6</x:Double>
+    <SolidColorBrush x:Key="StarBrush" Color="#A7B4DC" />
+    <SolidColorBrush x:Key="StarPinnedBrush" Color="#3FE8B0" />
+
+    <!-- Buttons: glass chips, lit by their borders on hover. -->
+    <SolidColorBrush x:Key="ButtonBrush" Color="#14FFFFFF" />
+    <LinearGradientBrush x:Key="ButtonBorderBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#40FFFFFF" />
+        <GradientStop Offset="1" Color="#1FFFFFFF" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#F4F7FF" />
+    <CornerRadius x:Key="ButtonCornerRadius">10</CornerRadius>
+    <BoxShadows x:Key="ButtonShadow">0 0 0 0 #00000000</BoxShadows>
+    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#1AFFFFFF" />
+    <SolidColorBrush x:Key="ButtonHoverBorderBrush" Color="#3FE8B0" />
+    <BoxShadows x:Key="ButtonHoverShadow">0 0 10 0 #263FE8B0</BoxShadows>
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#0FFFFFFF" />
+    <SolidColorBrush x:Key="ButtonDisabledBrush" Color="#0AFFFFFF" />
+    <SolidColorBrush x:Key="ButtonDisabledTextBrush" Color="#66A7B4DC" />
+    <SolidColorBrush x:Key="LinkBrush" Color="#A7B4DC" />
+    <SolidColorBrush x:Key="LinkHoverBrush" Color="#12FFFFFF" />
+    <SolidColorBrush x:Key="LinkHoverTextBrush" Color="#7DFCCE" />
+
+    <!-- Copy icons -->
+    <SolidColorBrush x:Key="CopyIconBrush" Color="#A7B4DC" />
+    <SolidColorBrush x:Key="CopyIconHoverBrush" Color="#3FE8B0" />
+    <SolidColorBrush x:Key="CopyIconDisabledBrush" Color="#4DA7B4DC" />
+
+    <!-- Section titles: Space Grotesk with the aurora echo underline. -->
+    <SolidColorBrush x:Key="SectionTitleBrush" Color="#A7B4DC" />
+    <FontFamily x:Key="SectionTitleFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
+    <x:Double x:Key="SectionTitleLetterSpacing">2.6</x:Double>
+    <StreamGeometry x:Key="SectionMarkGeometry">M0,0</StreamGeometry>
+    <SolidColorBrush x:Key="SectionMarkBrush" Color="Transparent" />
+    <x:Boolean x:Key="SectionMarkVisible">False</x:Boolean>
+    <LinearGradientBrush x:Key="SectionUnderlineBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Offset="0" Color="#3FE8B0" />
+        <GradientStop Offset="1" Color="#66A88FFF" />
+    </LinearGradientBrush>
+    <x:Boolean x:Key="SectionUnderlineVisible">True</x:Boolean>
+
+    <!-- Hairlines, the shelf rule, and the flex band's aurora wisp. -->
+    <SolidColorBrush x:Key="HairlineBrush" Color="#1FFFFFFF" />
+    <LinearGradientBrush x:Key="ShelfRuleBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Offset="0" Color="#003FE8B0" />
+        <GradientStop Offset="0.5" Color="#2E3FE8B0" />
+        <GradientStop Offset="1" Color="#003FE8B0" />
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="FlexBandBrush" Center="80%,50%" GradientOrigin="80%,50%"
+                         RadiusX="60%" RadiusY="70%">
+        <GradientStop Offset="0" Color="#0F7C5CFF" />
+        <GradientStop Offset="1" Color="#007C5CFF" />
+    </RadialGradientBrush>
+
+    <!-- Log rows -->
+    <SolidColorBrush x:Key="TagPillBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="TagPillTextBrush" Color="#A7B4DC" />
+    <Thickness x:Key="TagPillPadding">0</Thickness>
+    <SolidColorBrush x:Key="ListHoverBrush" Color="#12FFFFFF" />
+    <SolidColorBrush x:Key="ListSelectedBrush" Color="#263FE8B0" />
+
+    <!-- Status bar: bare canvas, mint echo. -->
+    <SolidColorBrush x:Key="StatusBarBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="StatusBarBorderBrush" Color="Transparent" />
+    <BoxShadows x:Key="StatusBarShadow">0 0 0 0 #00000000</BoxShadows>
+    <CornerRadius x:Key="StatusBarCornerRadius">0</CornerRadius>
+    <Thickness x:Key="StatusBarPadding">4,8,4,0</Thickness>
+
+    <!-- Scroll bars -->
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#33FFFFFF" />
+    <SolidColorBrush x:Key="ScrollThumbHoverBrush" Color="#59FFFFFF" />
+</ResourceDictionary>

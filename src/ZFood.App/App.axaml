@@ -62,6 +62,7 @@
             <Setter Property="CaretBrush" Value="{DynamicResource CaretBrush}" />
         </Style>
         <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource InputBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="BoxShadow" Value="{DynamicResource FocusShadow}" />
@@ -69,6 +70,14 @@
         <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
             <Setter Property="BorderBrush" Value="{DynamicResource InputHoverBorderBrush}" />
             <Setter Property="Background" Value="{DynamicResource InputHoverBrush}" />
+        </Style>
+        <!-- The stock theme repaints text and surfaces per interaction state;
+             the themes' own inks and wells must hold in every state. -->
+        <Style Selector="TextBox:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+        </Style>
+        <Style Selector="TextBox:focus">
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
         </Style>
 
         <!-- List rows stay quiet: tinted selection, no stock blue. -->
@@ -114,6 +123,15 @@
         <Style Selector="TextBox.numeric.computed:pointerover /template/ Border#PART_BorderElement">
             <Setter Property="Background" Value="{DynamicResource ComputedBrush}" />
         </Style>
+        <Style Selector="TextBox.numeric.computed:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource ComputedBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.computed:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.computed:focus">
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+        </Style>
         <Style Selector="TextBox.numeric.computed.pulse">
             <Setter Property="Background" Value="{DynamicResource PulseBrush}" />
         </Style>
@@ -123,6 +141,18 @@
             <Setter Property="Foreground" Value="{DynamicResource WarnBrush}" />
             <Setter Property="Background" Value="{DynamicResource WarnFieldBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource WarnFieldBorderBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.warn:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource WarnFieldBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.warn:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource WarnFieldBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.warn:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource WarnBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.warn:focus">
+            <Setter Property="Foreground" Value="{DynamicResource WarnBrush}" />
         </Style>
 
         <!-- The water delta: a hero readout like the display of a fine scale.
@@ -148,6 +178,15 @@
         </Style>
         <Style Selector="TextBox.numeric.delta:pointerover /template/ Border#PART_BorderElement">
             <Setter Property="Background" Value="{DynamicResource DeltaFieldBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource DeltaFieldBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource DeltaTextBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta:focus">
+            <Setter Property="Foreground" Value="{DynamicResource DeltaTextBrush}" />
         </Style>
         <Style Selector="TextBox.numeric.delta.pulse">
             <Setter Property="Background" Value="{DynamicResource DeltaPulseBrush}" />
@@ -344,13 +383,26 @@
             <Setter Property="Background" Value="{DynamicResource ScrollThumbHoverBrush}" />
         </Style>
 
-        <!-- Toolkit text controls pick up the theme's ink. -->
+        <!-- Toolkit text controls pick up the theme's ink; the stock theme
+             would otherwise repaint their labels per check state. -->
         <Style Selector="CheckBox">
             <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+        </Style>
+        <Style Selector="CheckBox:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource InkBrush}" />
+        </Style>
+        <Style Selector="CheckBox:unchecked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource InkBrush}" />
         </Style>
         <Style Selector="RadioButton">
             <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
             <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="RadioButton:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource InkBrush}" />
+        </Style>
+        <Style Selector="RadioButton:unchecked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource InkBrush}" />
         </Style>
     </Application.Styles>
 </Application>
