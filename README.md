@@ -32,6 +32,34 @@ a cooked recipe.
 
 A log keeps completed calculations for two weeks, so a number you forgot to
 enter into your tracker is never lost: click any log row to copy its result.
+Every field carries a small copy icon, and focusing a field that holds a
+number also places it on the clipboard, so a result is always one action away
+from your tracker.
+
+## Themes
+
+Four visual themes ship with the app. Pick one in the settings dialog (gear
+icon, top right); it applies instantly and is remembered across runs.
+
+- **Aurora** (the default): smoked-glass panels under a northern-lights sky;
+  computed values glow mint.
+
+  ![Aurora theme](assets/screenshots/theme-aurora.png)
+
+- **Porcelain**: a quiet, light instrument; white cards on cool porcelain
+  with a single deep-teal accent.
+
+  ![Porcelain theme](assets/screenshots/theme-porcelain.png)
+
+- **Juice Bar**: a sunlit counter; cream cards on a mango-to-watermelon
+  gradient, with the two hero readouts as glossy raspberry candy chips.
+
+  ![Juice Bar theme](assets/screenshots/theme-juicebar.png)
+
+- **Glossy**: a jeweler's vitrine; dark bottle-green glass, brass bezels,
+  and gold numerals lit by one warm lamp.
+
+  ![Glossy theme](assets/screenshots/theme-glossy.png)
 
 ## Download
 
@@ -97,8 +125,9 @@ covers dishes weighed directly on the scale.
 
 All data lives in one per-user folder, `ZFood` inside your platform's
 application-data directory: `~/.config/ZFood` on Linux, `%APPDATA%\ZFood` on
-Windows. It holds `settings.json` (window geometry, cookware), `log.jsonl`
-(the calculation log, pruned to 14 days / 500 entries), and `diagnostics.log`.
+Windows. It holds `settings.json` (window geometry, cookware, theme),
+`log.jsonl` (the calculation log, pruned to 14 days / 500 entries), and
+`diagnostics.log`.
 Set the `ZFOOD_DATA_DIR` environment variable to keep the data somewhere else.
 Damaged files are moved aside with a `.bak` suffix and replaced with defaults;
 the app never refuses to start over its own data.
