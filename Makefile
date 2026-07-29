@@ -51,11 +51,13 @@ icons: ## Regenerate PNG and ICO icons from the SVG source
 
 publish-linux: ## Produce a self-contained linux-x64 single-file build in dist/linux-x64
 	$(DOTNET) publish src/ZFood.App -c Release -r linux-x64 --self-contained \
-		-p:PublishSingleFile=true -o dist/linux-x64
+		-p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
+		-p:DebugType=None -p:DebugSymbols=false -o dist/linux-x64
 
 publish-win: ## Produce a self-contained win-x64 single-file build in dist/win-x64
 	$(DOTNET) publish src/ZFood.App -c Release -r win-x64 --self-contained \
-		-p:PublishSingleFile=true -o dist/win-x64
+		-p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true \
+		-p:DebugType=None -p:DebugSymbols=false -o dist/win-x64
 
 clean: ## Remove build outputs
 	$(DOTNET) clean ZFood.sln >/dev/null 2>&1 || true
