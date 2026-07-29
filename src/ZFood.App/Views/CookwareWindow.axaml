@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ZFood.App.ViewModels"
+        x:Class="ZFood.App.Views.CookwareWindow"
+        x:DataType="vm:CookwareEditorViewModel"
+        Title="Cookware"
+        Icon="/Assets/zfood.png"
+        Width="560" Height="420"
+        MinWidth="480" MinHeight="340"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource PaperBrush}">
+
+    <DockPanel Margin="14">
+        <!-- Footer -->
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,*,Auto" Margin="0,10,0,0">
+            <Button Grid.Column="0" Classes="quiet" Content="Add pot" Click="OnAddClick" />
+            <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center" FontSize="13"
+                       Foreground="{StaticResource WarnBrush}" Text="{Binding Note}" />
+            <Button Grid.Column="2" Classes="quiet" Content="Close" Click="OnCloseClick" />
+        </Grid>
+
+        <Grid ColumnDefinitions="*,14,240">
+            <!-- Pot list -->
+            <ListBox Grid.Column="0" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}"
+                     Background="White" BorderBrush="{StaticResource InkBrush}" BorderThickness="1"
+                     CornerRadius="1">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:CookwareItemViewModel">
+                        <Grid ColumnDefinitions="16,*,Auto">
+                            <TextBlock Grid.Column="0" Text="★" IsVisible="{Binding Pinned}"
+                                       Foreground="{StaticResource InkBrush}" FontSize="12"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding Name}"
+                                       Foreground="{StaticResource InkBrush}" Margin="4,0" />
+                            <TextBlock Grid.Column="2" Classes="unit" FontSize="12"
+                                       Text="{Binding GramsText, StringFormat='{}{0} g'}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <!-- Editor for the selected pot -->
+            <StackPanel Grid.Column="2" Spacing="10" IsEnabled="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock Classes="sectionTitle" Text="POT" />
+                <StackPanel Spacing="4">
+                    <TextBlock Classes="fieldLabel" Text="Name" />
+                    <TextBox Text="{Binding Selected.Name}" />
+                </StackPanel>
+                <StackPanel Spacing="4">
+                    <TextBlock Classes="fieldLabel" Text="Empty weight (g)" />
+                    <TextBox Classes="numeric" Width="120" HorizontalAlignment="Left"
+                             Text="{Binding Selected.GramsText}" />
+                </StackPanel>
+                <CheckBox Content="Pinned (always visible)" IsChecked="{Binding Selected.Pinned}" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="quiet" Content="Move up" Click="OnMoveUpClick" />
+                    <Button Classes="quiet" Content="Move down" Click="OnMoveDownClick" />
+                </StackPanel>
+                <Button Classes="quiet" Content="Delete pot" Click="OnDeleteClick"
+                        Foreground="{StaticResource ErrorBrush}" BorderBrush="{StaticResource ErrorBrush}" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</Window>

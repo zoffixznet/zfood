@@ -1,0 +1,341 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ZFood.App.ViewModels"
+        xmlns:core="using:ZFood.Core"
+        xmlns:views="using:ZFood.App.Views"
+        x:Class="ZFood.App.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="ZFood"
+        Icon="/Assets/zfood.png"
+        Width="860" Height="780"
+        MinWidth="700" MinHeight="640"
+        Background="{StaticResource PaperBrush}">
+
+    <Window.Styles>
+        <!-- The accent bar marking the dish row. -->
+        <Style Selector="Border.dishBar">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Width" Value="5" />
+            <Setter Property="Margin" Value="0,3" />
+        </Style>
+
+        <!-- Pot rows: empty rows are dim, the dish row is emphasized. -->
+        <Style Selector="Grid.potRow.dim">
+            <Setter Property="Opacity" Value="0.55" />
+        </Style>
+        <Style Selector="Grid.potRow.dish">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Grid.potRow.dish TextBlock.potName">
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+        <Style Selector="TextBlock.potName">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- The density hero and other pulse-capable text readouts. -->
+        <Style Selector="TextBlock.pulseable">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="TextBlock.pulseable.pulse">
+            <Setter Property="Background" Value="{StaticResource PulseTintBrush}" />
+        </Style>
+        <Style Selector="TextBlock.hero.placeholder">
+            <Setter Property="Foreground" Value="{StaticResource RuleBrush}" />
+        </Style>
+
+        <!-- Below-tare hint. -->
+        <Style Selector="TextBlock.belowTare">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource WarnBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Pin stars: pure glyph buttons outside the tab order. -->
+        <Style Selector="Button.star">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="MinWidth" Value="32" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Foreground" Value="{StaticResource RuleBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.star.pinned">
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        </Style>
+
+        <!-- The dish caption in the water section. -->
+        <Style Selector="TextBlock.dishCaption">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+        </Style>
+
+        <!-- Log rows. -->
+        <Style Selector="ListBox.logList">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="ListBox.logList ListBoxItem">
+            <Setter Property="Padding" Value="4,2" />
+            <Setter Property="MinHeight" Value="24" />
+        </Style>
+        <Style Selector="TextBlock.logDay">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="Margin" Value="0,6,0,2" />
+        </Style>
+
+        <!-- Status bar notice colors. -->
+        <Style Selector="TextBlock.notice">
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+        </Style>
+        <Style Selector="TextBlock.notice.warnNotice">
+            <Setter Property="Foreground" Value="{StaticResource WarnBrush}" />
+        </Style>
+
+    </Window.Styles>
+
+    <DockPanel Margin="16,10,16,8">
+
+        <!-- Header -->
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto,Auto" Margin="0,0,0,8">
+            <TextBlock Grid.Column="0" Text="ZFood" FontSize="20" FontWeight="Black"
+                       Foreground="{StaticResource InkBrush}" VerticalAlignment="Center" />
+            <Button Grid.Column="2" x:Name="ResetButton" Classes="quiet" Content="Reset"
+                    ToolTip.Tip="Clear all entered numbers (Ctrl+R)" Margin="0,0,8,0" Click="OnResetClick" />
+            <Button Grid.Column="3" x:Name="LogButton" Classes="quiet" Content="Log"
+                    ToolTip.Tip="Show the calculation log (Ctrl+L)" Margin="0,0,8,0" Click="OnLogClick" />
+            <Button Grid.Column="4" x:Name="GearButton" Classes="quiet" Content="⚙"
+                    FontSize="16" Padding="8,2" ToolTip.Tip="Cookware settings" Click="OnGearClick" />
+        </Grid>
+
+        <Border DockPanel.Dock="Top" Classes="barThick" />
+
+        <!-- PORTION panel -->
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,10,0,12">
+            <StackPanel Grid.Column="0" Spacing="10">
+                <TextBlock Classes="sectionTitle" Text="PORTION" />
+                <Grid x:Name="PortionPanel" ColumnDefinitions="64,Auto,30,24,Auto,34,Auto"
+                      RowDefinitions="Auto,10,Auto">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Serving" />
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="ServingGramsBox" Classes="numeric"
+                             Text="{Binding Portion.ServingGramsText}" TabIndex="1" />
+                    <TextBlock Grid.Row="0" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
+                    <TextBlock Grid.Row="0" Grid.Column="3" Classes="unit" Text="=" TextAlignment="Center" />
+                    <TextBox Grid.Row="0" Grid.Column="4" x:Name="ServingCaloriesBox" Classes="numeric"
+                             Text="{Binding Portion.ServingCaloriesText}" TabIndex="2" />
+                    <TextBlock Grid.Row="0" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Eaten" />
+                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="EatenGramsBox" Classes="numeric"
+                             Classes.computed="{Binding Portion.EatenGramsIsComputed}"
+                             Text="{Binding Portion.EatenGramsText}" TabIndex="3" />
+                    <TextBlock Grid.Row="2" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
+                    <TextBlock Grid.Row="2" Grid.Column="3" Classes="unit" Text="⇄" TextAlignment="Center" />
+                    <TextBox Grid.Row="2" Grid.Column="4" x:Name="EatenCaloriesBox" Classes="numeric"
+                             Classes.computed="{Binding Portion.EatenCaloriesIsComputed}"
+                             Text="{Binding Portion.EatenCaloriesText}" TabIndex="4" />
+                    <TextBlock Grid.Row="2" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
+                    <Button Grid.Row="2" Grid.Column="6" x:Name="UseDishNetButton" Classes="quiet"
+                            Margin="14,0,0,0" Content="{Binding UseDishNetLabel}"
+                            IsEnabled="{Binding CanUseDishNet}"
+                            ToolTip.Tip="Copy the dish row's net weight into eaten grams"
+                            Click="OnUseDishNetClick" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Density hero: the label's "Calories" line -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Spacing="2">
+                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                    <TextBlock x:Name="DensityHero" Classes="pulseable hero"
+                               Classes.placeholder="{Binding Portion.DensityIsPlaceholder}"
+                               Text="{Binding Portion.DensityCalPerG}"
+                               FontSize="36" FontWeight="Black" Foreground="{StaticResource InkBrush}" />
+                    <TextBlock Classes="unit" Text="cal/g" VerticalAlignment="Bottom" Margin="0,0,0,6" />
+                </StackPanel>
+                <TextBlock HorizontalAlignment="Right" Classes="unit"
+                           Text="{Binding Portion.DensityPer100, StringFormat='{}{0} cal / 100 g'}" />
+            </StackPanel>
+        </Grid>
+
+        <Border DockPanel.Dock="Top" Classes="barThick" />
+
+        <!-- Status bar -->
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,10,Auto,*,Auto" Margin="0,6,0,0">
+            <TextBlock Grid.Column="0" Text="{Binding StatusEcho}" FontWeight="SemiBold"
+                       Foreground="{StaticResource AccentBrush}" />
+            <TextBlock Grid.Column="2" Classes="unit" Text="{Binding StatusTime}" />
+            <TextBlock Grid.Column="4" Classes="notice" Classes.warnNotice="{Binding StatusNoticeIsWarning}"
+                       Text="{Binding StatusNotice}" />
+        </Grid>
+
+        <Border DockPanel.Dock="Bottom" Classes="hairline" Margin="0,6,0,0" />
+
+        <!-- LOG strip / drawer -->
+        <StackPanel DockPanel.Dock="Bottom">
+            <Border Classes="barMedium" Margin="0,8,0,0" />
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,6,0,2">
+                <TextBlock Classes="sectionTitle" Text="LOG" />
+                <TextBlock Grid.Column="2" Classes="unit" FontSize="12"
+                           Text="click a row to copy its result" />
+            </Grid>
+            <ListBox x:Name="RecentLogList" Classes="logList" IsVisible="{Binding !LogDrawerOpen}"
+                     ItemsSource="{Binding Log.Recent}" Height="76"
+                     Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:LogRow">
+                        <Grid ColumnDefinitions="44,84,66,*">
+                            <TextBlock Grid.Column="0" Classes="unit" Text="{Binding Time}" />
+                            <TextBlock Grid.Column="1" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"
+                                       Text="{Binding Result}" Margin="0,0,10,0" TextAlignment="Right" />
+                            <TextBlock Grid.Column="2" Classes="unit" FontSize="12" Text="{Binding Kind}" />
+                            <TextBlock Grid.Column="3" FontSize="13" Foreground="{StaticResource InkBrush}"
+                                       Opacity="0.85" Text="{Binding Equation}" TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Border IsVisible="{Binding LogDrawerOpen}" Height="200"
+                    BorderBrush="{StaticResource RuleBrush}" BorderThickness="0,0,0,1">
+                <ScrollViewer>
+                    <ListBox x:Name="DrawerLogList" Classes="logList" ItemsSource="{Binding Log.Drawer}"
+                             Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
+                        <ListBox.DataTemplates>
+                            <DataTemplate DataType="vm:LogDayHeader">
+                                <TextBlock Classes="logDay" Text="{Binding Label}" />
+                            </DataTemplate>
+                            <DataTemplate DataType="vm:LogRow">
+                                <Grid ColumnDefinitions="44,84,66,*">
+                                    <TextBlock Grid.Column="0" Classes="unit" Text="{Binding Time}" />
+                                    <TextBlock Grid.Column="1" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"
+                                               Text="{Binding Result}" Margin="0,0,10,0" TextAlignment="Right" />
+                                    <TextBlock Grid.Column="2" Classes="unit" FontSize="12" Text="{Binding Kind}" />
+                                    <TextBlock Grid.Column="3" FontSize="13" Foreground="{StaticResource InkBrush}"
+                                               Opacity="0.85" Text="{Binding Equation}" TextTrimming="CharacterEllipsis" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.DataTemplates>
+                    </ListBox>
+                </ScrollViewer>
+            </Border>
+        </StackPanel>
+
+        <!-- SCALE panel -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+            <TextBlock Classes="sectionTitle" Text="SCALE" Margin="0,10,0,8" />
+                <ItemsControl x:Name="PotRowsControl" ItemsSource="{Binding Scale.Rows}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="core:PotRowModel">
+                            <Grid Classes="potRow" Classes.dish="{Binding IsDish}" Classes.dim="{Binding IsEmpty}"
+                                  ColumnDefinitions="8,178,52,Auto,24,Auto,26,Auto,*,30" Height="36"
+                                  Background="Transparent">
+                                <Border Grid.Column="0" Classes="dishBar" IsVisible="{Binding IsDish}" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8"
+                                            VerticalAlignment="Center" Margin="4,0,0,0">
+                                    <TextBlock Classes="potName" Text="{Binding Name}" />
+                                    <TextBlock Classes="unit" FontSize="12" Text="{Binding TareEcho}" />
+                                </StackPanel>
+                                <TextBlock Grid.Column="2" Classes="unit" Text="reads" Margin="0,0,6,0"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           IsVisible="{Binding !IsNoPot}" />
+                                <TextBlock Grid.Column="2" Classes="unit" Text="weight" Margin="0,0,6,0"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
+                                           IsVisible="{Binding IsNoPot}" />
+                                <TextBox Grid.Column="3" Classes="numeric rowGross"
+                                         Classes.computed="{Binding GrossIsComputed}"
+                                         Text="{Binding GrossText}"
+                                         views:Pulse.Tick="{Binding ComputedPulse}" />
+                                <TextBlock Grid.Column="4" Classes="unit" Text="⇄" TextAlignment="Center"
+                                           VerticalAlignment="Center" IsVisible="{Binding !IsNoPot}" />
+                                <TextBox Grid.Column="5" Classes="numeric rowNet"
+                                         Classes.computed="{Binding NetIsComputed}"
+                                         Classes.warn="{Binding BelowTare}"
+                                         Text="{Binding NetText}"
+                                         views:Pulse.Tick="{Binding ComputedPulse}"
+                                         IsVisible="{Binding !IsNoPot}" />
+                                <TextBlock Grid.Column="6" Classes="unit" Text="g" Margin="6,0,0,0"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="7" Classes="belowTare" Margin="10,0,0,0"
+                                           Text="below tare, wrong pot?" IsVisible="{Binding BelowTare}" />
+                                <Button Grid.Column="9" Classes="star" Classes.pinned="{Binding Pinned}"
+                                        IsVisible="{Binding !IsNoPot}" Click="OnStarClick"
+                                        ToolTip.Tip="Pin or unpin this pot">
+                                    <Panel>
+                                        <TextBlock Text="★" IsVisible="{Binding Pinned}" />
+                                        <TextBlock Text="☆" IsVisible="{Binding !Pinned}" />
+                                    </Panel>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel IsVisible="{Binding MorePotsVisible}" Margin="8,2,0,0">
+                    <Button x:Name="MorePotsToggle" Classes="linklike" Click="OnMorePotsToggleClick"
+                            ToolTip.Tip="Rarely used cookware (Alt+M)">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="▸" FontSize="11" VerticalAlignment="Center"
+                                       IsVisible="{Binding !MorePotsOpen}" />
+                            <TextBlock Text="▾" FontSize="11" VerticalAlignment="Center"
+                                       IsVisible="{Binding MorePotsOpen}" />
+                            <TextBlock Text="{Binding MorePotsHeader}" />
+                        </StackPanel>
+                    </Button>
+                    <ListBox x:Name="MorePotsList" Classes="logList" ItemsSource="{Binding Scale.AvailablePots}"
+                             IsVisible="{Binding MorePotsOpen}" Margin="16,2,0,0"
+                             Tapped="OnMorePotsTapped" KeyDown="OnMorePotsKeyDown">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="core:Cookware">
+                                <StackPanel Orientation="Horizontal" Spacing="10" Height="22">
+                                    <TextBlock Foreground="{StaticResource InkBrush}" Text="{Binding Name}"
+                                               VerticalAlignment="Center" />
+                                    <TextBlock Classes="unit" FontSize="12" VerticalAlignment="Center"
+                                               Text="{Binding Grams, StringFormat='tare {0} g'}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+
+                <!-- Water section -->
+                <StackPanel Spacing="8" Margin="0,10,0,6">
+                    <Rectangle Height="1" Stroke="{StaticResource RuleBrush}" StrokeThickness="1"
+                               StrokeDashArray="1,3" Margin="0,2" />
+                    <TextBlock x:Name="DishCaptionText" Classes="dishCaption pulseable"
+                               Text="{Binding Scale.DishCaption}" />
+                    <!-- The 238 px label column lines the water boxes up with the
+                         pot rows' reads column. -->
+                    <Grid ColumnDefinitions="238,Auto,30,Auto" RowDefinitions="Auto,8,Auto">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" />
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="RecipeBox" Classes="numeric"
+                                 Text="{Binding Scale.RecipeText}" TabIndex="40" />
+                        <TextBlock Grid.Row="0" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Water to add" />
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="DeltaBox" Classes="numeric computed delta"
+                                 IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
+                                 views:Pulse.Tick="{Binding Scale.DeltaPulse}" TabIndex="41" />
+                        <TextBlock Grid.Row="2" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
+                        <Button Grid.Row="2" Grid.Column="3" x:Name="CopyButton" Classes="quiet" Content="Copy"
+                                Margin="14,0,0,0" IsEnabled="{Binding Scale.CanCopy}"
+                                ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)"
+                                Click="OnCopyClick" />
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

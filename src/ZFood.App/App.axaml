@@ -6,6 +6,16 @@
          nutrition-facts label and must not invert with the system theme. -->
 
     <Application.Resources>
+        <!-- The one accent everywhere, including toolkit-drawn selection and
+             focus chrome: chive green, never the stock blue. -->
+        <Color x:Key="SystemAccentColor">#3E7B27</Color>
+        <Color x:Key="SystemAccentColorDark1">#356B22</Color>
+        <Color x:Key="SystemAccentColorDark2">#2C591C</Color>
+        <Color x:Key="SystemAccentColorDark3">#234717</Color>
+        <Color x:Key="SystemAccentColorLight1">#4E8F35</Color>
+        <Color x:Key="SystemAccentColorLight2">#5FA344</Color>
+        <Color x:Key="SystemAccentColorLight3">#70B653</Color>
+
         <!-- Label palette -->
         <Color x:Key="PaperColor">#FAF9F6</Color>
         <Color x:Key="InkColor">#141414</Color>
@@ -28,6 +38,40 @@
 
     <Application.Styles>
         <FluentTheme />
+
+        <!-- Every text box wears the label look: a white ruled box with ink
+             borders, never the stock rounded chrome. -->
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="SelectionBrush" Value="{StaticResource RuleBrush}" />
+            <Setter Property="CaretBrush" Value="{StaticResource InkBrush}" />
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+            <Setter Property="BorderThickness" Value="2" />
+        </Style>
+        <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+            <Setter Property="Background" Value="White" />
+        </Style>
+
+        <!-- List rows stay paper-quiet: tinted selection, no stock blue. -->
+        <Style Selector="ListBoxItem /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="0" />
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource ComputedTintBrush}" />
+        </Style>
+        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#F1EFE9" />
+        </Style>
+        <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource ComputedTintBrush}" />
+        </Style>
 
         <!-- Numeric entry boxes: right-aligned tabular digits in a ruled box. -->
         <Style Selector="TextBox.numeric">
@@ -75,6 +119,26 @@
         <!-- Field in a warning state (gross below tare). -->
         <Style Selector="TextBox.numeric.warn">
             <Setter Property="Foreground" Value="{StaticResource WarnBrush}" />
+        </Style>
+
+        <!-- The water delta: the panel's second-loudest number. -->
+        <Style Selector="TextBox.numeric.delta">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Width" Value="110" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+
+        <!-- Quiet text-only toggle (the More-pots expander header). -->
+        <Style Selector="Button.linklike">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="6,4" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        </Style>
+        <Style Selector="Button.linklike:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#F1EFE9" />
         </Style>
 
         <!-- Section titles: the label's heavy typography. -->

@@ -34,6 +34,10 @@ public partial class PortionViewModel : ObservableObject
     [ObservableProperty]
     private string densityPer100 = Dash;
 
+    /// <summary>True while the density hero shows a placeholder dash.</summary>
+    [ObservableProperty]
+    private bool densityIsPlaceholder = true;
+
     [ObservableProperty]
     private bool eatenGramsIsComputed;
 
@@ -51,6 +55,12 @@ public partial class PortionViewModel : ObservableObject
 
     /// <summary>Which eaten member currently holds the input role.</summary>
     public PairSide EatenInput => _eatenPair.Input;
+
+    /// <summary>
+    /// Set when the panel's calculation changed after its last log commit; the
+    /// commit coordinator clears it after settling the unit.
+    /// </summary>
+    public bool ChangedSinceCommit { get; set; }
 
     partial void OnServingGramsTextChanged(string value) => UserEdit(null);
 
@@ -78,10 +88,12 @@ public partial class PortionViewModel : ObservableObject
             EatenCaloriesText = "";
             DensityCalPerG = Dash;
             DensityPer100 = Dash;
+            DensityIsPlaceholder = true;
             EatenGramsIsComputed = false;
             EatenCaloriesIsComputed = false;
             LatestEcho = Dash;
             _eatenPair.Reset();
+            ChangedSinceCommit = false;
         }
         finally
         {
@@ -115,6 +127,7 @@ public partial class PortionViewModel : ObservableObject
         if (editedSide is PairSide side)
             _eatenPair.UserEdited(side);
 
+        ChangedSinceCommit = true;
         Recompute();
         Activity?.Invoke();
     }
@@ -141,6 +154,7 @@ public partial class PortionViewModel : ObservableObject
         {
             DensityCalPerG = result.Density is double d ? Numeric.FormatDensity(d) : Dash;
             DensityPer100 = result.Per100 is double p ? Numeric.FormatWhole(p) : Dash;
+            DensityIsPlaceholder = result.Density is null;
             EatenGramsIsComputed = _eatenPair.Input == PairSide.B;
             EatenCaloriesIsComputed = _eatenPair.Input == PairSide.A;
 
