@@ -43,6 +43,10 @@
         <SolidColorBrush x:Key="WarnBrush" Color="{StaticResource WarnColor}" />
         <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
         <SolidColorBrush x:Key="SelectionBrush" Color="#3D0E7568" />
+
+        <!-- Copy glyph: two overlapping sheets, drawn as a stroked vector path
+             (used by the in-field copy icons on computed values). -->
+        <StreamGeometry x:Key="CopyIconGeometry">M11 9 H19 A2 2 0 0 1 21 11 V19 A2 2 0 0 1 19 21 H11 A2 2 0 0 1 9 19 V11 A2 2 0 0 1 11 9 Z M5 15 H4 A2 2 0 0 1 2 13 V4 A2 2 0 0 1 4 2 H13 A2 2 0 0 1 15 4 V5</StreamGeometry>
     </Application.Resources>
 
     <Application.Styles>
@@ -192,6 +196,44 @@
         </Style>
         <Style Selector="Button.linklike:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource PorcelainBrush}" />
+        </Style>
+
+        <!-- In-field copy icons: quiet inside the box's right edge, teal on
+             hover and while the field has focus. -->
+        <Style Selector="Button.copyIcon">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="5,0" />
+            <Setter Property="MinWidth" Value="26" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Button.copyIcon:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.copyIcon:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.copyIcon Path">
+            <Setter Property="Data" Value="{StaticResource CopyIconGeometry}" />
+            <Setter Property="Width" Value="13" />
+            <Setter Property="Height" Value="13" />
+            <Setter Property="Stretch" Value="Uniform" />
+            <Setter Property="Stroke" Value="{StaticResource GhostBrush}" />
+            <Setter Property="StrokeThickness" Value="2" />
+            <Setter Property="StrokeJoin" Value="Round" />
+            <Setter Property="StrokeLineCap" Value="Round" />
+        </Style>
+        <Style Selector="Button.copyIcon:pointerover Path">
+            <Setter Property="Stroke" Value="{StaticResource AccentBrush}" />
+        </Style>
+        <Style Selector="TextBox:focus-within Button.copyIcon Path">
+            <Setter Property="Stroke" Value="{StaticResource AccentBrush}" />
+        </Style>
+        <Style Selector="Button.copyIcon:disabled Path">
+            <Setter Property="Stroke" Value="{StaticResource HairlineStrongBrush}" />
         </Style>
 
         <!-- Hairline separators. -->

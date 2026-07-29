@@ -203,12 +203,26 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox Grid.Row="2" Grid.Column="2" x:Name="EatenGramsBox" Classes="numeric"
                                  Classes.computed="{Binding Portion.EatenGramsIsComputed}"
-                                 Text="{Binding Portion.EatenGramsText}" />
+                                 Text="{Binding Portion.EatenGramsText}">
+                            <TextBox.InnerRightContent>
+                                <Button Classes="copyIcon" IsVisible="{Binding Portion.EatenGramsIsComputed}"
+                                        Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                    <Path />
+                                </Button>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                         <TextBlock Grid.Row="2" Grid.Column="3" Classes="unit" Text="⇄" TextAlignment="Center"
                                    VerticalAlignment="Center" />
                         <TextBox Grid.Row="2" Grid.Column="4" x:Name="EatenCaloriesBox" Classes="numeric"
                                  Classes.computed="{Binding Portion.EatenCaloriesIsComputed}"
-                                 Text="{Binding Portion.EatenCaloriesText}" />
+                                 Text="{Binding Portion.EatenCaloriesText}">
+                            <TextBox.InnerRightContent>
+                                <Button Classes="copyIcon" IsVisible="{Binding Portion.EatenCaloriesIsComputed}"
+                                        Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                    <Path />
+                                </Button>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                         <TextBlock Grid.Row="2" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
                         <Button Grid.Row="2" Grid.Column="6" x:Name="UseDishNetButton" Classes="quiet"
                                 Margin="16,0,0,0" Content="{Binding UseDishNetLabel}"
@@ -261,7 +275,14 @@
                                     <TextBox Grid.Column="3" Classes="numeric rowGross"
                                              Classes.computed="{Binding GrossIsComputed}"
                                              Text="{Binding GrossText}"
-                                             views:Pulse.Tick="{Binding ComputedPulse}" />
+                                             views:Pulse.Tick="{Binding ComputedPulse}">
+                                        <TextBox.InnerRightContent>
+                                            <Button Classes="copyIcon" IsVisible="{Binding GrossIsComputed}"
+                                                    Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                                <Path />
+                                            </Button>
+                                        </TextBox.InnerRightContent>
+                                    </TextBox>
                                     <TextBlock Grid.Column="4" Classes="unit" Text="⇄" TextAlignment="Center"
                                                VerticalAlignment="Center" IsVisible="{Binding !IsNoCookware}" />
                                     <TextBox Grid.Column="5" Classes="numeric rowNet"
@@ -269,7 +290,14 @@
                                              Classes.warn="{Binding BelowTare}"
                                              Text="{Binding NetText}"
                                              views:Pulse.Tick="{Binding ComputedPulse}"
-                                             IsVisible="{Binding !IsNoCookware}" />
+                                             IsVisible="{Binding !IsNoCookware}">
+                                        <TextBox.InnerRightContent>
+                                            <Button Classes="copyIcon" IsVisible="{Binding NetIsComputed}"
+                                                    Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                                <Path />
+                                            </Button>
+                                        </TextBox.InnerRightContent>
+                                    </TextBox>
                                     <TextBlock Grid.Column="6" Classes="unit" Text="g" Margin="6,0,0,0"
                                                VerticalAlignment="Center" />
                                     <TextBlock Grid.Column="7" Classes="belowTare" Margin="10,0,0,0"
@@ -322,7 +350,7 @@
                     <!-- The 238 px label column lines the water boxes up with the
                          cookware rows' reads column; the delta's right edge meets the
                          net column's right edge. -->
-                    <Grid ColumnDefinitions="238,232,28,Auto" RowDefinitions="Auto,10,Auto">
+                    <Grid ColumnDefinitions="238,232,28" RowDefinitions="Auto,10,Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" Margin="8,0,0,0" />
                         <TextBox Grid.Row="0" Grid.Column="1" x:Name="RecipeBox" Classes="numeric"
                                  HorizontalAlignment="Right"
@@ -332,12 +360,16 @@
                         <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Water to add" Margin="8,0,0,0" />
                         <TextBox Grid.Row="2" Grid.Column="1" x:Name="DeltaBox" Classes="numeric computed delta"
                                  IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
-                                 views:Pulse.Tick="{Binding Scale.DeltaPulse}" />
+                                 views:Pulse.Tick="{Binding Scale.DeltaPulse}">
+                            <TextBox.InnerRightContent>
+                                <Button x:Name="DeltaCopyButton" Classes="copyIcon" IsEnabled="{Binding Scale.CanCopy}"
+                                        Click="OnDeltaCopyIconClick"
+                                        ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)">
+                                    <Path />
+                                </Button>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                         <TextBlock Grid.Row="2" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
-                        <Button Grid.Row="2" Grid.Column="3" x:Name="CopyButton" Classes="quiet" Content="Copy"
-                                Margin="16,0,0,0" VerticalAlignment="Center" IsEnabled="{Binding Scale.CanCopy}"
-                                ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)"
-                                Click="OnCopyClick" />
                     </Grid>
                 </StackPanel>
             </ScrollViewer>

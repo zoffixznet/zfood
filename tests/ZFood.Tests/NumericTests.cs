@@ -39,6 +39,33 @@ public class NumericTests
     }
 
     [Theory]
+    [InlineData("128", 128.0)]
+    [InlineData("-200", -200.0)]
+    [InlineData("-140.5", -140.5)]
+    [InlineData("-140,5", -140.5)]
+    [InlineData(" 42 ", 42.0)]
+    [InlineData("0", 0.0)]
+    public void Parses_displayed_numbers_including_negatives(string text, double expected)
+    {
+        Assert.Equal(expected, Numeric.ParseDisplayed(text));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData("—")]
+    [InlineData("abc")]
+    [InlineData("12a")]
+    [InlineData("1.2.3")]
+    [InlineData("NaN")]
+    [InlineData("Infinity")]
+    public void Displayed_parse_rejects_placeholders_and_garbage(string? text)
+    {
+        Assert.Null(Numeric.ParseDisplayed(text));
+    }
+
+    [Theory]
     [InlineData(0, "0")]
     [InlineData(496.4, "496")]
     [InlineData(496.5, "497")]

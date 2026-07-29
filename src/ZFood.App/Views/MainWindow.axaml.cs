@@ -102,7 +102,7 @@ public partial class MainWindow : Window
             if (e.NavigationMethod == NavigationMethod.Pointer)
                 _pendingPointerSelectAll = box;
             else
-                Dispatcher.UIThread.Post(box.SelectAll);
+                Dispatcher.UIThread.Post(() => SelectAllAndCopy(box));
         }
 
         _vm.NotifyFocusedUnit(UnitFromSource(e.Source));
@@ -113,8 +113,16 @@ public partial class MainWindow : Window
         if (_pendingPointerSelectAll is TextBox box)
         {
             _pendingPointerSelectAll = null;
-            Dispatcher.UIThread.Post(box.SelectAll);
+            Dispatcher.UIThread.Post(() => SelectAllAndCopy(box));
         }
+    }
+
+    // Focus-select also copies: the freshly selected content, when it is a
+    // valid number, lands on the clipboard with the quiet status-bar echo.
+    private void SelectAllAndCopy(TextBox box)
+    {
+        box.SelectAll();
+        _ = _vm.CopyBareNumberAsync(box.Text);
     }
 
     private string? UnitFromSource(object? source)
@@ -482,7 +490,18 @@ public partial class MainWindow : Window
         FocusAndSelect(EatenGramsBox);
     }
 
-    private void OnCopyClick(object? sender, RoutedEventArgs e) => _ = _vm.CopyDeltaAsync();
+    // -- In-field copy icons -----------------------------------------------
+
+    private void OnCopyIconClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Visual visual
+            && visual.GetVisualAncestors().OfType<TextBox>().FirstOrDefault() is TextBox box)
+        {
+            _ = _vm.CopyBareNumberAsync(box.Text);
+        }
+    }
+
+    private void OnDeltaCopyIconClick(object? sender, RoutedEventArgs e) => _ = _vm.CopyDeltaAsync();
 
     // -- Log lists ---------------------------------------------------------
 

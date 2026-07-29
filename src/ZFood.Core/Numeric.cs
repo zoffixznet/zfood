@@ -33,6 +33,27 @@ public static class Numeric
     }
 
     /// <summary>
+    /// Parses a displayed number for copying. Unlike user input, displayed
+    /// values may carry a leading hyphen-minus (the water delta, a net weight
+    /// below tare). Returns null for empty text, placeholder dashes, or
+    /// anything else that is not a finite number.
+    /// </summary>
+    public static double? ParseDisplayed(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return null;
+
+        var t = text.Trim().Replace(',', '.');
+        if (!double.TryParse(t, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+                CultureInfo.InvariantCulture, out var value))
+        {
+            return null;
+        }
+
+        return double.IsNaN(value) || double.IsInfinity(value) ? null : value;
+    }
+
+    /// <summary>
     /// Formats grams or calories for display and copy: whole number, half
     /// rounded away from zero, explicit sign when negative, invariant culture.
     /// A small negative value that rounds to zero renders "0", never "-0".

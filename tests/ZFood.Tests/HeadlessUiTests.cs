@@ -279,6 +279,117 @@ public class HeadlessUiTests
         Assert.Equal("-200", copied);
     }
 
+    private static Button CopyIconOf(TextBox box)
+        => box.GetVisualDescendants().OfType<Button>().First(b => b.Classes.Contains("copyIcon"));
+
+    private static void Click(Button button)
+        => button.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+
+    [AvaloniaFact]
+    public void Computed_members_carry_a_copy_icon_that_copies_the_bare_number()
+    {
+        using var f = new Fixture();
+        string? copied = null;
+        f.Vm.CopyToClipboard = text =>
+        {
+            copied = text;
+            return Task.CompletedTask;
+        };
+
+        f.Type(f.RowBox(0, "rowGross"), "1440");
+        f.Window.UpdateLayout();
+
+        // Only the computed member shows the icon.
+        Assert.True(CopyIconOf(f.RowBox(0, "rowNet")).IsVisible);
+        Assert.False(CopyIconOf(f.RowBox(0, "rowGross")).IsVisible);
+
+        Click(CopyIconOf(f.RowBox(0, "rowNet")));
+        Fixture.Pump();
+
+        Assert.Equal("800", copied);
+        Assert.Contains("copied 800", f.Vm.StatusNotice);
+    }
+
+    [AvaloniaFact]
+    public void The_eaten_pair_icon_follows_the_computed_role()
+    {
+        using var f = new Fixture();
+
+        f.Type(f.Box("ServingGramsBox"), "56");
+        f.Type(f.Box("ServingCaloriesBox"), "250");
+        f.Type(f.Box("EatenGramsBox"), "128");
+        f.Window.UpdateLayout();
+        Assert.True(CopyIconOf(f.Box("EatenCaloriesBox")).IsVisible);
+        Assert.False(CopyIconOf(f.Box("EatenGramsBox")).IsVisible);
+
+        f.Type(f.Box("EatenCaloriesBox"), "250");
+        f.Window.UpdateLayout();
+        Assert.True(CopyIconOf(f.Box("EatenGramsBox")).IsVisible);
+        Assert.False(CopyIconOf(f.Box("EatenCaloriesBox")).IsVisible);
+    }
+
+    [AvaloniaFact]
+    public void The_delta_copy_icon_replaces_the_external_button_and_commits()
+    {
+        using var f = new Fixture();
+        string? copied = null;
+        f.Vm.CopyToClipboard = text =>
+        {
+            copied = text;
+            return Task.CompletedTask;
+        };
+
+        // The old external text button is gone; the in-field icon remains.
+        Assert.Null(f.Window.FindControl<Button>("CopyButton"));
+        var icon = f.Window.FindControl<Button>("DeltaCopyButton")!;
+        Assert.False(icon.IsEnabled); // dormant water section
+
+        f.Type(f.RowBox(0, "rowGross"), "1440");
+        f.Type(f.Box("RecipeBox"), "1000");
+        Assert.True(icon.IsEnabled);
+
+        Click(icon);
+        Fixture.Pump();
+
+        Assert.Equal("-200", copied);
+        Assert.Contains("Big pot", f.Vm.StatusNotice); // names the cookware
+        // The icon commits the dish unit like the old button did.
+        Assert.Contains(f.Services.Log.Entries, e => e.Panel == LogPanel.Water && e.Result == "-200");
+    }
+
+    [AvaloniaFact]
+    public void Focusing_a_field_with_a_valid_number_copies_it()
+    {
+        using var f = new Fixture();
+        var copies = new List<string>();
+        f.Vm.CopyToClipboard = text =>
+        {
+            copies.Add(text);
+            return Task.CompletedTask;
+        };
+
+        f.Type(f.Box("ServingGramsBox"), "56");
+        f.Type(f.Box("ServingCaloriesBox"), "250");
+        f.Type(f.Box("EatenGramsBox"), "128");
+        copies.Clear();
+
+        // Focusing the computed member selects its content and copies it.
+        f.Box("EatenCaloriesBox").Focus();
+        Fixture.Pump();
+        Assert.Equal(new[] { "571" }, copies);
+        Assert.Contains("copied 571", f.Vm.StatusNotice);
+
+        // Focusing an empty field copies nothing.
+        f.Box("RecipeBox").Focus();
+        Fixture.Pump();
+        Assert.Equal(new[] { "571" }, copies);
+
+        // An input member with a value copies too.
+        f.Box("ServingGramsBox").Focus();
+        Fixture.Pump();
+        Assert.Equal(new[] { "571", "56" }, copies);
+    }
+
     [AvaloniaFact]
     public void Reset_clears_fields_and_session_rows_but_not_pins()
     {

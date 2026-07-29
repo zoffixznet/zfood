@@ -176,6 +176,22 @@ public partial class MainViewModel : ObservableObject
         return true;
     }
 
+    /// <summary>
+    /// Copies a field's displayed number as a bare invariant value with the
+    /// quiet status-bar echo. Empty text and placeholder dashes copy nothing.
+    /// Serves both the in-field copy icons and the copy-on-focus behavior.
+    /// </summary>
+    public async Task<bool> CopyBareNumberAsync(string? text)
+    {
+        if (Numeric.ParseDisplayed(text) is not double value)
+            return false;
+
+        var bare = Numeric.FormatEditable(value);
+        await CopyAsync(bare);
+        Notice($"copied {bare}");
+        return true;
+    }
+
     /// <summary>Copies a log row's bare result number.</summary>
     public async Task CopyLogRowAsync(LogRow row)
     {
