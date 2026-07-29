@@ -316,11 +316,12 @@ public class HeadlessUiTests
         f.Vm.LogDrawerOpen = true;
         Fixture.Pump();
 
-        Assert.Contains(f.Vm.Log.Drawer, item => item is LogDayHeader);
-        var row = f.Vm.Log.Drawer.OfType<LogRow>().First();
+        var row = f.Vm.Log.Drawer.First();
         Assert.Equal("571 cal", row.Result);
         Assert.Equal("PORTION", row.Kind);
+        Assert.Matches(@"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$", row.Time);
         Assert.Single(f.Vm.Log.Recent);
+        Assert.Equal(row.Time, f.Vm.Log.Recent.Single().Time);
     }
 
     [AvaloniaFact]

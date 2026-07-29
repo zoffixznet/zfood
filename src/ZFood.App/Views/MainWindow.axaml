@@ -94,13 +94,6 @@
             <Setter Property="Padding" Value="6,3" />
             <Setter Property="MinHeight" Value="26" />
         </Style>
-        <Style Selector="TextBlock.logDay">
-            <Setter Property="FontSize" Value="11" />
-            <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="LetterSpacing" Value="1.6" />
-            <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
-            <Setter Property="Margin" Value="0,8,0,2" />
-        </Style>
 
         <!-- Status bar notices. -->
         <Style Selector="TextBlock.notice">
@@ -149,8 +142,8 @@
                          Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="vm:LogRow">
-                            <Grid ColumnDefinitions="44,86,66,*">
-                                <TextBlock Grid.Column="0" Classes="unit" Text="{Binding Time}" />
+                            <Grid ColumnDefinitions="140,86,66,*">
+                                <TextBlock Grid.Column="0" Classes="unit" FontFeatures="+tnum" Text="{Binding Time}" />
                                 <TextBlock Grid.Column="1" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"
                                            FontFeatures="+tnum" Text="{Binding Result}" Margin="0,0,12,0"
                                            TextAlignment="Right" />
@@ -166,13 +159,10 @@
                         <ListBox x:Name="DrawerLogList" Classes="logList" ItemsSource="{Binding Log.Drawer}"
                                  IsTabStop="False" KeyboardNavigation.TabNavigation="None"
                                  Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
-                            <ListBox.DataTemplates>
-                                <DataTemplate DataType="vm:LogDayHeader">
-                                    <TextBlock Classes="logDay" Text="{Binding Label}" />
-                                </DataTemplate>
-                                <DataTemplate DataType="vm:LogRow">
-                                    <Grid ColumnDefinitions="44,86,66,*">
-                                        <TextBlock Grid.Column="0" Classes="unit" Text="{Binding Time}" />
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="vm:LogRow">
+                                    <Grid ColumnDefinitions="140,86,66,*">
+                                        <TextBlock Grid.Column="0" Classes="unit" FontFeatures="+tnum" Text="{Binding Time}" />
                                         <TextBlock Grid.Column="1" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"
                                                    FontFeatures="+tnum" Text="{Binding Result}" Margin="0,0,12,0"
                                                    TextAlignment="Right" />
@@ -181,7 +171,7 @@
                                                    Text="{Binding Equation}" TextTrimming="CharacterEllipsis" />
                                     </Grid>
                                 </DataTemplate>
-                            </ListBox.DataTemplates>
+                            </ListBox.ItemTemplate>
                         </ListBox>
                     </ScrollViewer>
                 </Border>
