@@ -37,7 +37,7 @@ echo "smoke: window appeared (id $WID)"
 grep -q "startup" "$DATA/diagnostics.log" || { echo "FAIL: no startup record in diagnostics log" >&2; exit 1; }
 echo "smoke: diagnostics log records startup"
 
-import -window "$WID" "$OUT/smoke.png"
+capture_window "$WID" "$OUT/smoke.png"
 SIZE=$(identify -format '%wx%h' "$OUT/smoke.png")
 echo "smoke: captured screenshot ($SIZE)"
 case "$SIZE" in

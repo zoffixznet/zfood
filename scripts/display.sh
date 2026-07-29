@@ -27,16 +27,29 @@ stop_virtual_display() {
     [ -n "$VDISPLAY_PID" ] && kill "$VDISPLAY_PID" 2>/dev/null || true
 }
 
-# Waits for the ZFood main window and echoes its X window id.
+# Waits for the ZFood main window to be visible and echoes its X window id.
 wait_for_window() {
     local wid=""
     for _ in $(seq 1 100); do
-        wid=$(xdotool search --name '^ZFood$' 2>/dev/null | head -1)
+        wid=$(xdotool search --onlyvisible --name '^ZFood$' 2>/dev/null | head -1)
         [ -n "$wid" ] && break
         sleep 0.1
     done
     [ -n "$wid" ] || { echo "error: ZFood window did not appear" >&2; return 1; }
     echo "$wid"
+}
+
+# Captures a window to a PNG, retrying while the first frame is still rendering.
+capture_window() {
+    local wid=$1 out=$2
+    for _ in $(seq 1 20); do
+        if import -window "$wid" "$out" 2>/dev/null; then
+            return 0
+        fi
+        sleep 0.25
+    done
+    echo "error: could not capture window $wid" >&2
+    return 1
 }
 
 # Resolves the dotnet to use, matching the Makefile's logic.
