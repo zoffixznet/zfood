@@ -3,48 +3,13 @@
              xmlns:views="using:ZFood.App.Views"
              x:Class="ZFood.App.App"
              RequestedThemeVariant="Light">
-    <!-- The light variant is forced: the porcelain-and-teal look must not
-         invert or mix with the system theme. -->
+    <!-- The light variant is forced so the toolkit's control chrome never
+         mixes with the themes' own painted surfaces. All colors, fonts, and
+         effects come from semantic tokens supplied by the active theme
+         dictionary (Themes/*.axaml) and referenced via DynamicResource, so a
+         theme switch restyles the app live. -->
 
     <Application.Resources>
-        <!-- The one accent everywhere, including toolkit-drawn selection and
-             focus chrome: deep teal, never the stock blue. -->
-        <Color x:Key="SystemAccentColor">#0E7568</Color>
-        <Color x:Key="SystemAccentColorDark1">#0C6459</Color>
-        <Color x:Key="SystemAccentColorDark2">#0A534A</Color>
-        <Color x:Key="SystemAccentColorDark3">#08423B</Color>
-        <Color x:Key="SystemAccentColorLight1">#2A8578</Color>
-        <Color x:Key="SystemAccentColorLight2">#469589</Color>
-        <Color x:Key="SystemAccentColorLight3">#62A59A</Color>
-
-        <!-- Instrument palette -->
-        <Color x:Key="PorcelainColor">#F2F3F5</Color>
-        <Color x:Key="CardColor">#FFFFFF</Color>
-        <Color x:Key="HairlineColor">#E3E5E8</Color>
-        <Color x:Key="HairlineStrongColor">#D3D7DC</Color>
-        <Color x:Key="InkColor">#1B1F24</Color>
-        <Color x:Key="SubtleColor">#4B5563</Color>
-        <Color x:Key="GhostColor">#7E8794</Color>
-        <Color x:Key="AccentColor">#0E7568</Color>
-        <Color x:Key="AccentTintColor">#EDF4F2</Color>
-        <Color x:Key="PulseTintColor">#C5E0DB</Color>
-        <Color x:Key="WarnColor">#8F6A12</Color>
-        <Color x:Key="ErrorColor">#A42B1D</Color>
-
-        <SolidColorBrush x:Key="PorcelainBrush" Color="{StaticResource PorcelainColor}" />
-        <SolidColorBrush x:Key="CardBrush" Color="{StaticResource CardColor}" />
-        <SolidColorBrush x:Key="HairlineBrush" Color="{StaticResource HairlineColor}" />
-        <SolidColorBrush x:Key="HairlineStrongBrush" Color="{StaticResource HairlineStrongColor}" />
-        <SolidColorBrush x:Key="InkBrush" Color="{StaticResource InkColor}" />
-        <SolidColorBrush x:Key="SubtleBrush" Color="{StaticResource SubtleColor}" />
-        <SolidColorBrush x:Key="GhostBrush" Color="{StaticResource GhostColor}" />
-        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
-        <SolidColorBrush x:Key="AccentTintBrush" Color="{StaticResource AccentTintColor}" />
-        <SolidColorBrush x:Key="PulseTintBrush" Color="{StaticResource PulseTintColor}" />
-        <SolidColorBrush x:Key="WarnBrush" Color="{StaticResource WarnColor}" />
-        <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
-        <SolidColorBrush x:Key="SelectionBrush" Color="#3D0E7568" />
-
         <!-- Copy glyph: two overlapping sheets. Drawn as filled outline rings
              (even-odd) rather than stroked lines, so the shape stays crisp at
              any rendered size; a stroked path distorts when scaled. -->
@@ -54,137 +19,239 @@
     <Application.Styles>
         <FluentTheme />
 
-        <!-- Panels are white cards floating on porcelain. -->
+        <!-- Cards: the two work panels and the log strip. Each card carries
+             two full-bleed overlays (gloss sheet, inner top highlight) that
+             most themes leave transparent. -->
         <Style Selector="Border.card">
-            <Setter Property="Background" Value="{StaticResource CardBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource HairlineBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="Padding" Value="20,14" />
-            <Setter Property="BoxShadow" Value="0 2 10 0 #10141A14" />
+            <Setter Property="Background" Value="{DynamicResource CardBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource CardBorderThickness}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource CardCornerRadius}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BoxShadow" Value="{DynamicResource CardShadow}" />
+        </Style>
+        <Style Selector="Border.card.recessed">
+            <Setter Property="Background" Value="{DynamicResource LogCardBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource LogCardBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource LogCardBorderThickness}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource LogCardShadow}" />
+        </Style>
+        <Style Selector="Border.cardGloss">
+            <Setter Property="Background" Value="{DynamicResource CardGlossBrush}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource CardCornerRadius}" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="Border.cardHighlight">
+            <Setter Property="BorderBrush" Value="{DynamicResource CardInnerHighlightBrush}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="CornerRadius" Value="{DynamicResource CardCornerRadius}" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <Style Selector="Border.cardContent">
+            <Setter Property="Padding" Value="{DynamicResource CardPadding}" />
         </Style>
 
-        <!-- Every text box: quiet hairline field, teal ring when focused. -->
+        <!-- Every text box: quiet field, accent ring when focused. -->
         <Style Selector="TextBox">
-            <Setter Property="Background" Value="{StaticResource CardBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource HairlineStrongBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="7" />
-            <Setter Property="SelectionBrush" Value="{StaticResource SelectionBrush}" />
-            <Setter Property="CaretBrush" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Background" Value="{DynamicResource InputBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource InputBorderThickness}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource InputCornerRadius}" />
+            <Setter Property="SelectionBrush" Value="{DynamicResource SelectionBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource CaretBrush}" />
         </Style>
         <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource FocusBorderBrush}" />
             <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BoxShadow" Value="{DynamicResource FocusShadow}" />
         </Style>
         <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
-            <Setter Property="BorderBrush" Value="{StaticResource SubtleBrush}" />
-            <Setter Property="Background" Value="{StaticResource CardBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource InputHoverBorderBrush}" />
+            <Setter Property="Background" Value="{DynamicResource InputHoverBrush}" />
         </Style>
 
-        <!-- List rows stay quiet: faint teal selection, no stock blue. -->
+        <!-- List rows stay quiet: tinted selection, no stock blue. -->
         <Style Selector="ListBoxItem /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="CornerRadius" Value="6" />
         </Style>
         <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource AccentTintBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ListSelectedBrush}" />
         </Style>
         <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource PorcelainBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ListHoverBrush}" />
         </Style>
         <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource AccentTintBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ListSelectedBrush}" />
         </Style>
 
         <!-- Numeric entry boxes: mid-size calm tabular digits, right-aligned. -->
         <Style Selector="TextBox.numeric">
             <Setter Property="HorizontalContentAlignment" Value="Right" />
             <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="{DynamicResource NumeralFontFamily}" />
+            <Setter Property="FontWeight" Value="{DynamicResource NumeralFontWeight}" />
             <Setter Property="FontFeatures" Value="+tnum" />
             <Setter Property="Width" Value="104" />
             <Setter Property="MinHeight" Value="36" />
             <Setter Property="Padding" Value="10,6" />
         </Style>
 
-        <!-- Computed member of a pair: faint teal tint, teal digits, real box. -->
+        <!-- Computed member of a pair: tinted, accent digits, still a real box. -->
         <Style Selector="TextBox.numeric.computed">
-            <Setter Property="Background" Value="{StaticResource AccentTintBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource HairlineBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ComputedBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ComputedBorderBrush}" />
             <Setter Property="Transitions">
                 <Transitions>
                     <BrushTransition Property="Background" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
         </Style>
+        <Style Selector="TextBox.numeric.computed /template/ Border#PART_BorderElement">
+            <Setter Property="BoxShadow" Value="{DynamicResource ComputedShadow}" />
+        </Style>
         <Style Selector="TextBox.numeric.computed:pointerover /template/ Border#PART_BorderElement">
-            <Setter Property="Background" Value="{StaticResource AccentTintBrush}" />
+            <Setter Property="Background" Value="{DynamicResource ComputedBrush}" />
         </Style>
         <Style Selector="TextBox.numeric.computed.pulse">
-            <Setter Property="Background" Value="{StaticResource PulseTintBrush}" />
+            <Setter Property="Background" Value="{DynamicResource PulseBrush}" />
         </Style>
 
         <!-- Field in a warning state (gross below tare). -->
         <Style Selector="TextBox.numeric.warn">
-            <Setter Property="Foreground" Value="{StaticResource WarnBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource WarnBrush}" />
+            <Setter Property="Background" Value="{DynamicResource WarnFieldBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource WarnFieldBorderBrush}" />
         </Style>
 
         <!-- The water delta: a hero readout like the display of a fine scale.
-             Still a real selectable text box. -->
+             Still a real selectable text box. Declared after the computed
+             styles so its tokens win at equal specificity. -->
         <Style Selector="TextBox.numeric.delta">
-            <Setter Property="FontSize" Value="32" />
-            <Setter Property="FontWeight" Value="Light" />
+            <Setter Property="FontSize" Value="{DynamicResource DeltaFontSize}" />
+            <Setter Property="FontFamily" Value="{DynamicResource DeltaFontFamily}" />
+            <Setter Property="FontWeight" Value="{DynamicResource DeltaFontWeight}" />
+            <Setter Property="Foreground" Value="{DynamicResource DeltaTextBrush}" />
+            <Setter Property="Background" Value="{DynamicResource DeltaFieldBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DeltaFieldBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource DeltaFieldBorderThickness}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource DeltaCornerRadius}" />
+            <Setter Property="SelectionBrush" Value="{DynamicResource DeltaSelectionBrush}" />
             <Setter Property="Width" Value="232" />
             <Setter Property="MinHeight" Value="44" />
             <Setter Property="Padding" Value="10,2" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
+        <Style Selector="TextBox.numeric.delta /template/ Border#PART_BorderElement">
+            <Setter Property="BoxShadow" Value="{DynamicResource DeltaShadow}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource DeltaFieldBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta.pulse">
+            <Setter Property="Background" Value="{DynamicResource DeltaPulseBrush}" />
+        </Style>
 
-        <!-- Section titles: small letterspaced uppercase micro-labels. -->
+        <!-- Section titles: small letterspaced uppercase micro-labels, with a
+             per-theme mark before the text and an optional underline below. -->
         <Style Selector="TextBlock.sectionTitle">
             <Setter Property="FontSize" Value="11" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="LetterSpacing" Value="2.2" />
-            <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
+            <Setter Property="FontFamily" Value="{DynamicResource SectionTitleFontFamily}" />
+            <Setter Property="LetterSpacing" Value="{DynamicResource SectionTitleLetterSpacing}" />
+            <Setter Property="Foreground" Value="{DynamicResource SectionTitleBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Path.sectionMark">
+            <Setter Property="Data" Value="{DynamicResource SectionMarkGeometry}" />
+            <Setter Property="Fill" Value="{DynamicResource SectionMarkBrush}" />
+            <Setter Property="IsVisible" Value="{DynamicResource SectionMarkVisible}" />
+            <Setter Property="Stretch" Value="None" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.sectionUnderline">
+            <Setter Property="Background" Value="{DynamicResource SectionUnderlineBrush}" />
+            <Setter Property="IsVisible" Value="{DynamicResource SectionUnderlineVisible}" />
+            <Setter Property="Width" Value="20" />
+            <Setter Property="Height" Value="2" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="0,4,0,0" />
         </Style>
 
         <!-- Field labels: calm primary ink. -->
         <Style Selector="TextBlock.fieldLabel">
             <Setter Property="FontSize" Value="13" />
-            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
         <!-- Unit labels sit outside the boxes, secondary. -->
         <Style Selector="TextBlock.unit">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource FaintBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <!-- Quiet buttons; kept out of the tab cycle so Tab walks fields. -->
+        <!-- Quiet buttons; kept out of the tab cycle so Tab walks fields.
+             Own template: a Border carries the chrome so themes can shadow
+             and glow buttons, which the stock presenter-only template cannot. -->
         <Style Selector="Button.quiet">
             <Setter Property="Focusable" Value="False" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="Padding" Value="14,6" />
             <Setter Property="MinHeight" Value="32" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Background" Value="{StaticResource CardBrush}" />
-            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource HairlineStrongBrush}" />
+            <Setter Property="CornerRadius" Value="{DynamicResource ButtonCornerRadius}" />
+            <Setter Property="Background" Value="{DynamicResource ButtonBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ButtonTextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="ButtonChrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BoxShadow="{DynamicResource ButtonShadow}">
+                        <ContentPresenter x:Name="ButtonContent"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
         </Style>
-        <Style Selector="Button.quiet:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource PorcelainBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource SubtleBrush}" />
+        <Style Selector="Button.quiet:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ButtonHoverBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ButtonHoverBorderBrush}" />
         </Style>
-        <Style Selector="Button.quiet:pressed /template/ ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource HairlineBrush}" />
+        <Style Selector="Button.quiet:pointerover /template/ Border#ButtonChrome">
+            <Setter Property="BoxShadow" Value="{DynamicResource ButtonHoverShadow}" />
         </Style>
-        <Style Selector="Button.quiet:disabled /template/ ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource PorcelainBrush}" />
-            <Setter Property="TextElement.Foreground" Value="{StaticResource GhostBrush}" />
+        <Style Selector="Button.quiet:pressed">
+            <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}" />
+        </Style>
+        <Style Selector="Button.quiet:disabled">
+            <Setter Property="Background" Value="{DynamicResource ButtonDisabledBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ButtonDisabledTextBrush}" />
+        </Style>
+
+        <!-- Dialog variants: the emphasized Save and the destructive Delete. -->
+        <Style Selector="Button.quiet.primary">
+            <Setter Property="Background" Value="{DynamicResource PrimaryButtonBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryButtonBorderBrush}" />
+        </Style>
+        <Style Selector="Button.quiet.danger">
+            <Setter Property="Background" Value="{DynamicResource ErrorButtonBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ErrorButtonBorderBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ErrorBrush}" />
         </Style>
 
         <!-- Quiet text-only toggle (the More-cookware expander header). -->
@@ -194,13 +261,14 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Padding" Value="6,4" />
             <Setter Property="FontSize" Value="13" />
-            <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource LinkBrush}" />
         </Style>
         <Style Selector="Button.linklike:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="{StaticResource PorcelainBrush}" />
+            <Setter Property="Background" Value="{DynamicResource LinkHoverBrush}" />
+            <Setter Property="TextElement.Foreground" Value="{DynamicResource LinkHoverTextBrush}" />
         </Style>
 
-        <!-- In-field copy icons: quiet inside the box's right edge, teal on
+        <!-- In-field copy icons: quiet inside the box's right edge, accent on
              hover and while the field has focus, chromeless in every state
              (a plain button would paint stock backgrounds, most visibly the
              gray disabled block). The icon enables itself while the field
@@ -231,27 +299,58 @@
             <Setter Property="Width" Value="14" />
             <Setter Property="Height" Value="14" />
             <Setter Property="Stretch" Value="Uniform" />
-            <Setter Property="Fill" Value="{StaticResource GhostBrush}" />
+            <Setter Property="Fill" Value="{DynamicResource CopyIconBrush}" />
         </Style>
         <Style Selector="Button.copyIcon:pointerover Path">
-            <Setter Property="Fill" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Fill" Value="{DynamicResource CopyIconHoverBrush}" />
         </Style>
         <Style Selector="TextBox:focus-within Button.copyIcon Path">
-            <Setter Property="Fill" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Fill" Value="{DynamicResource CopyIconHoverBrush}" />
         </Style>
         <Style Selector="Button.copyIcon:disabled Path">
-            <Setter Property="Fill" Value="{StaticResource HairlineStrongBrush}" />
+            <Setter Property="Fill" Value="{DynamicResource CopyIconDisabledBrush}" />
         </Style>
-        <!-- The delta's hero box gets a proportionally larger icon. -->
+        <!-- The delta's hero box gets a proportionally larger icon in the
+             delta's own colors (its surface can be a dark chip). -->
         <Style Selector="TextBox.numeric.delta Button.copyIcon Path">
             <Setter Property="Width" Value="18" />
             <Setter Property="Height" Value="18" />
+            <Setter Property="Fill" Value="{DynamicResource DeltaCopyIconBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta Button.copyIcon:pointerover Path">
+            <Setter Property="Fill" Value="{DynamicResource DeltaCopyIconHoverBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta:focus-within Button.copyIcon Path">
+            <Setter Property="Fill" Value="{DynamicResource DeltaCopyIconHoverBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.delta Button.copyIcon:disabled Path">
+            <Setter Property="Fill" Value="{DynamicResource CopyIconDisabledBrush}" />
         </Style>
 
         <!-- Hairline separators. -->
         <Style Selector="Border.hairline">
             <Setter Property="Height" Value="1" />
-            <Setter Property="Background" Value="{StaticResource HairlineBrush}" />
+            <Setter Property="Background" Value="{DynamicResource HairlineBrush}" />
+        </Style>
+        <Style Selector="Border.hairline.shelfRule">
+            <Setter Property="Background" Value="{DynamicResource ShelfRuleBrush}" />
+        </Style>
+
+        <!-- Scroll bars follow the theme's surfaces. -->
+        <Style Selector="ScrollBar /template/ Thumb">
+            <Setter Property="Background" Value="{DynamicResource ScrollThumbBrush}" />
+        </Style>
+        <Style Selector="ScrollBar /template/ Thumb:pointerover">
+            <Setter Property="Background" Value="{DynamicResource ScrollThumbHoverBrush}" />
+        </Style>
+
+        <!-- Toolkit text controls pick up the theme's ink. -->
+        <Style Selector="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+        </Style>
+        <Style Selector="RadioButton">
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
+            <Setter Property="FontSize" Value="13" />
         </Style>
     </Application.Styles>
 </Application>

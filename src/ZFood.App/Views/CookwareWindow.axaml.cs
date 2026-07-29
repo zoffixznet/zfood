@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -9,7 +10,9 @@ namespace ZFood.App.Views;
 public partial class CookwareWindow : Window
 {
     private readonly CookwareEditorViewModel _vm;
+    private readonly Settings _settings;
     private bool _closing;
+    private bool _initializingTheme;
 
     /// <summary>
     /// Runtime-loader and designer entry point over blank settings; the app
@@ -23,10 +26,41 @@ public partial class CookwareWindow : Window
     public CookwareWindow(Settings settings, Func<bool>? save = null)
     {
         InitializeComponent();
+        _settings = settings;
         _vm = new CookwareEditorViewModel(settings, save);
         DataContext = _vm;
 
         AddHandler(TextInputEvent, OnTextInputTunnel, RoutingStrategies.Tunnel);
+        InitializeThemePicker();
+    }
+
+    // -- Theme picker --------------------------------------------------------
+
+    private void InitializeThemePicker()
+    {
+        _initializingTheme = true;
+        var current = ThemeManager.Normalize(_settings.Theme);
+        foreach (var radio in ThemeRadios())
+            radio.IsChecked = (string?)radio.Tag == current;
+        _initializingTheme = false;
+    }
+
+    private IEnumerable<RadioButton> ThemeRadios()
+        => new[] { ThemePorcelain, ThemeAurora, ThemeJuiceBar, ThemeGlossy };
+
+    private void OnThemeChecked(object? sender, RoutedEventArgs e)
+    {
+        // Applies instantly, live; the choice persists with the settings on
+        // Save (or via the owner's save-on-close path).
+        if (_initializingTheme
+            || sender is not RadioButton { IsChecked: true, Tag: string theme }
+            || Application.Current is not Application app)
+        {
+            return;
+        }
+
+        _settings.Theme = theme;
+        ThemeManager.Apply(app, theme);
     }
 
     /// <summary>How long the inline saved confirmation stays visible before the dialog closes.</summary>

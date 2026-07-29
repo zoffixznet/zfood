@@ -38,6 +38,12 @@ public sealed class Settings
 {
     public int Version { get; set; } = 1;
 
+    /// <summary>
+    /// The visual theme id. Free-form on disk; unknown or missing values fall
+    /// back to the default theme when applied.
+    /// </summary>
+    public string? Theme { get; set; }
+
     public WindowGeometry? Window { get; set; }
 
     public List<Cookware> Cookware { get; set; } = new();

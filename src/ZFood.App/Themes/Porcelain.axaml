@@ -1,0 +1,180 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Porcelain: the quiet instrument. Cool porcelain window, white cards
+         with hairline borders, one deep-teal accent, calm tabular numerals.
+         Every key below is a semantic token shared by all themes; this
+         dictionary is the reference for the full set. -->
+
+    <!-- Fluent accent (selection and focus chrome drawn by the toolkit). -->
+    <Color x:Key="SystemAccentColor">#0E7568</Color>
+    <Color x:Key="SystemAccentColorDark1">#0C6459</Color>
+    <Color x:Key="SystemAccentColorDark2">#0A534A</Color>
+    <Color x:Key="SystemAccentColorDark3">#08423B</Color>
+    <Color x:Key="SystemAccentColorLight1">#2A8578</Color>
+    <Color x:Key="SystemAccentColorLight2">#469589</Color>
+    <Color x:Key="SystemAccentColorLight3">#62A59A</Color>
+
+    <!-- Canvas -->
+    <SolidColorBrush x:Key="WindowBrush" Color="#F2F3F5" />
+    <SolidColorBrush x:Key="CanvasBloom1Brush" Color="Transparent" />
+    <SolidColorBrush x:Key="CanvasBloom2Brush" Color="Transparent" />
+    <SolidColorBrush x:Key="CanvasBloom3Brush" Color="Transparent" />
+    <SolidColorBrush x:Key="DialogWindowBrush" Color="#F2F3F5" />
+    <SolidColorBrush x:Key="DialogBloom1Brush" Color="Transparent" />
+    <SolidColorBrush x:Key="DialogBloom2Brush" Color="Transparent" />
+
+    <!-- Header -->
+    <SolidColorBrush x:Key="WordmarkBrush" Color="#1B1F24" />
+    <FontFamily x:Key="WordmarkFontFamily">fonts:Inter#Inter</FontFamily>
+    <x:Double x:Key="WordmarkFontSize">18</x:Double>
+    <FontWeight x:Key="WordmarkFontWeight">SemiBold</FontWeight>
+    <SolidColorBrush x:Key="HeaderRuleBrush" Color="Transparent" />
+
+    <!-- Cards -->
+    <SolidColorBrush x:Key="CardBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#E3E5E8" />
+    <Thickness x:Key="CardBorderThickness">1</Thickness>
+    <CornerRadius x:Key="CardCornerRadius">10</CornerRadius>
+    <BoxShadows x:Key="CardShadow">0 2 10 0 #10141A14</BoxShadows>
+    <SolidColorBrush x:Key="CardInnerHighlightBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="CardGlossBrush" Color="Transparent" />
+    <Thickness x:Key="CardPadding">20,14</Thickness>
+    <SolidColorBrush x:Key="LogCardBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="LogCardBorderBrush" Color="#E3E5E8" />
+    <Thickness x:Key="LogCardBorderThickness">1</Thickness>
+    <BoxShadows x:Key="LogCardShadow">0 2 10 0 #10141A14</BoxShadows>
+
+    <!-- Text tiers -->
+    <SolidColorBrush x:Key="InkBrush" Color="#1B1F24" />
+    <SolidColorBrush x:Key="SubtleBrush" Color="#4B5563" />
+    <SolidColorBrush x:Key="FaintBrush" Color="#47505F" />
+    <SolidColorBrush x:Key="GhostBrush" Color="#7E8794" />
+
+    <!-- Accent family -->
+    <SolidColorBrush x:Key="AccentBrush" Color="#0E7568" />
+    <SolidColorBrush x:Key="AccentTextBrush" Color="#084A43" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#3D0E7568" />
+    <SolidColorBrush x:Key="CaretBrush" Color="#0E7568" />
+
+    <!-- Computed fields and states -->
+    <SolidColorBrush x:Key="ComputedBrush" Color="#EDF4F2" />
+    <SolidColorBrush x:Key="ComputedBorderBrush" Color="#E3E5E8" />
+    <BoxShadows x:Key="ComputedShadow">0 0 0 0 #00000000</BoxShadows>
+    <SolidColorBrush x:Key="PulseBrush" Color="#C5E0DB" />
+    <SolidColorBrush x:Key="WarnBrush" Color="#5F450A" />
+    <SolidColorBrush x:Key="WarnFieldBrush" Color="#EDF4F2" />
+    <SolidColorBrush x:Key="WarnFieldBorderBrush" Color="#E3E5E8" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="#93261B" />
+    <SolidColorBrush x:Key="ErrorButtonBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="ErrorButtonBorderBrush" Color="#93261B" />
+    <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#EDF4F2" />
+    <SolidColorBrush x:Key="PrimaryButtonBorderBrush" Color="#0E7568" />
+
+    <!-- Inputs -->
+    <SolidColorBrush x:Key="InputBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="#D3D7DC" />
+    <Thickness x:Key="InputBorderThickness">1</Thickness>
+    <CornerRadius x:Key="InputCornerRadius">7</CornerRadius>
+    <SolidColorBrush x:Key="InputHoverBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#4B5563" />
+    <SolidColorBrush x:Key="FocusBorderBrush" Color="#0E7568" />
+    <BoxShadows x:Key="FocusShadow">0 0 0 0 #00000000</BoxShadows>
+    <FontFamily x:Key="NumeralFontFamily">fonts:Inter#Inter</FontFamily>
+    <FontWeight x:Key="NumeralFontWeight">Normal</FontWeight>
+
+    <!-- Density hero -->
+    <FontFamily x:Key="HeroFontFamily">fonts:Inter#Inter</FontFamily>
+    <FontWeight x:Key="HeroFontWeight">Light</FontWeight>
+    <SolidColorBrush x:Key="HeroBrush" Color="#084A43" />
+    <SolidColorBrush x:Key="HeroPlaceholderBrush" Color="#7E8794" />
+    <SolidColorBrush x:Key="HeroUnitBrush" Color="#47505F" />
+    <SolidColorBrush x:Key="HeroHaloBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="HeroChipBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="HeroChipPlaceholderBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="HeroChipBorderBrush" Color="Transparent" />
+    <BoxShadows x:Key="HeroChipShadow">0 0 0 0 #00000000</BoxShadows>
+    <CornerRadius x:Key="HeroChipCornerRadius">12</CornerRadius>
+    <Thickness x:Key="HeroChipPadding">0</Thickness>
+    <SolidColorBrush x:Key="HeroChipPulseBrush" Color="#C5E0DB" />
+
+    <!-- Water delta hero -->
+    <FontFamily x:Key="DeltaFontFamily">fonts:Inter#Inter</FontFamily>
+    <FontWeight x:Key="DeltaFontWeight">Light</FontWeight>
+    <x:Double x:Key="DeltaFontSize">32</x:Double>
+    <SolidColorBrush x:Key="DeltaTextBrush" Color="#084A43" />
+    <SolidColorBrush x:Key="DeltaFieldBrush" Color="#EDF4F2" />
+    <SolidColorBrush x:Key="DeltaFieldBorderBrush" Color="#E3E5E8" />
+    <Thickness x:Key="DeltaFieldBorderThickness">1</Thickness>
+    <CornerRadius x:Key="DeltaCornerRadius">7</CornerRadius>
+    <BoxShadows x:Key="DeltaShadow">0 0 0 0 #00000000</BoxShadows>
+    <SolidColorBrush x:Key="DeltaSelectionBrush" Color="#3D0E7568" />
+    <SolidColorBrush x:Key="DeltaPulseBrush" Color="#C5E0DB" />
+    <SolidColorBrush x:Key="DeltaCopyIconBrush" Color="#7E8794" />
+    <SolidColorBrush x:Key="DeltaCopyIconHoverBrush" Color="#0E7568" />
+    <SolidColorBrush x:Key="DeltaReflectionBrush" Color="Transparent" />
+
+    <!-- Dish binding -->
+    <SolidColorBrush x:Key="DishBarBrush" Color="#0E7568" />
+    <BoxShadows x:Key="DishBarShadow">0 0 0 0 #00000000</BoxShadows>
+    <SolidColorBrush x:Key="DishRowBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="DishCaptionBrush" Color="#084A43" />
+
+    <!-- Rows -->
+    <x:Double x:Key="GhostRowOpacity">0.65</x:Double>
+    <SolidColorBrush x:Key="StarBrush" Color="#7E8794" />
+    <SolidColorBrush x:Key="StarPinnedBrush" Color="#4B5563" />
+
+    <!-- Buttons -->
+    <SolidColorBrush x:Key="ButtonBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#D3D7DC" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#1B1F24" />
+    <CornerRadius x:Key="ButtonCornerRadius">8</CornerRadius>
+    <BoxShadows x:Key="ButtonShadow">0 0 0 0 #00000000</BoxShadows>
+    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#F2F3F5" />
+    <SolidColorBrush x:Key="ButtonHoverBorderBrush" Color="#4B5563" />
+    <BoxShadows x:Key="ButtonHoverShadow">0 0 0 0 #00000000</BoxShadows>
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#E3E5E8" />
+    <SolidColorBrush x:Key="ButtonDisabledBrush" Color="#F2F3F5" />
+    <SolidColorBrush x:Key="ButtonDisabledTextBrush" Color="#7E8794" />
+    <SolidColorBrush x:Key="LinkBrush" Color="#4B5563" />
+    <SolidColorBrush x:Key="LinkHoverBrush" Color="#F2F3F5" />
+    <SolidColorBrush x:Key="LinkHoverTextBrush" Color="#4B5563" />
+
+    <!-- Copy icons -->
+    <SolidColorBrush x:Key="CopyIconBrush" Color="#7E8794" />
+    <SolidColorBrush x:Key="CopyIconHoverBrush" Color="#0E7568" />
+    <SolidColorBrush x:Key="CopyIconDisabledBrush" Color="#D3D7DC" />
+
+    <!-- Section titles -->
+    <SolidColorBrush x:Key="SectionTitleBrush" Color="#47505F" />
+    <FontFamily x:Key="SectionTitleFontFamily">fonts:Inter#Inter</FontFamily>
+    <x:Double x:Key="SectionTitleLetterSpacing">2.2</x:Double>
+    <StreamGeometry x:Key="SectionMarkGeometry">M0,0</StreamGeometry>
+    <SolidColorBrush x:Key="SectionMarkBrush" Color="Transparent" />
+    <x:Boolean x:Key="SectionMarkVisible">False</x:Boolean>
+    <SolidColorBrush x:Key="SectionUnderlineBrush" Color="Transparent" />
+    <x:Boolean x:Key="SectionUnderlineVisible">False</x:Boolean>
+
+    <!-- Hairlines and the scale card's flex band -->
+    <SolidColorBrush x:Key="HairlineBrush" Color="#E3E5E8" />
+    <SolidColorBrush x:Key="ShelfRuleBrush" Color="#E3E5E8" />
+    <SolidColorBrush x:Key="FlexBandBrush" Color="Transparent" />
+
+    <!-- Log rows -->
+    <SolidColorBrush x:Key="TagPillBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="TagPillTextBrush" Color="#47505F" />
+    <Thickness x:Key="TagPillPadding">0</Thickness>
+    <SolidColorBrush x:Key="ListHoverBrush" Color="#F2F3F5" />
+    <SolidColorBrush x:Key="ListSelectedBrush" Color="#EDF4F2" />
+
+    <!-- Status bar -->
+    <SolidColorBrush x:Key="StatusBarBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="StatusBarBorderBrush" Color="Transparent" />
+    <BoxShadows x:Key="StatusBarShadow">0 0 0 0 #00000000</BoxShadows>
+    <CornerRadius x:Key="StatusBarCornerRadius">0</CornerRadius>
+    <Thickness x:Key="StatusBarPadding">4,8,4,0</Thickness>
+
+    <!-- Scroll bars -->
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#C4C9D0" />
+    <SolidColorBrush x:Key="ScrollThumbHoverBrush" Color="#A9B0BA" />
+</ResourceDictionary>

@@ -569,11 +569,13 @@ public partial class MainWindow : Window
 
     private void OnPortionComputedChanged(string field)
     {
+        // The density pulse flashes the hero's chip surface so it works on
+        // every theme's hero treatment, plain or chip-shaped.
         Control? target = field switch
         {
             nameof(PortionViewModel.EatenCaloriesText) => EatenCaloriesBox,
             nameof(PortionViewModel.EatenGramsText) => EatenGramsBox,
-            nameof(PortionViewModel.DensityCalPerG) => DensityHero,
+            nameof(PortionViewModel.DensityCalPerG) => DensityChip,
             _ => null,
         };
         if (target is not null)

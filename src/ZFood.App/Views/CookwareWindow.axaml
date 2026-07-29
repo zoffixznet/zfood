@@ -5,36 +5,54 @@
         x:DataType="vm:CookwareEditorViewModel"
         Title="Cookware"
         Icon="/Assets/zfood.png"
-        Width="560" Height="420"
-        MinWidth="480" MinHeight="340"
+        Width="560" Height="470"
+        MinWidth="480" MinHeight="390"
         WindowStartupLocation="CenterOwner"
-        Background="{StaticResource PorcelainBrush}">
+        Background="{DynamicResource DialogWindowBrush}">
 
-    <DockPanel Margin="14">
+    <Panel>
+        <!-- Theme atmosphere layers, calmer than the main window's. -->
+        <Border Background="{DynamicResource DialogBloom1Brush}" IsHitTestVisible="False" />
+        <Border Background="{DynamicResource DialogBloom2Brush}" IsHitTestVisible="False" />
+
+        <DockPanel Margin="14">
         <!-- Footer -->
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,10,0,0">
             <Button Grid.Column="0" Classes="quiet" Content="Add cookware" Click="OnAddClick" />
             <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center" FontSize="13"
-                       Foreground="{StaticResource WarnBrush}" Text="{Binding Note}" />
+                       Foreground="{DynamicResource WarnBrush}" Text="{Binding Note}" />
             <TextBlock Grid.Column="2" x:Name="SavedText" Margin="0,0,12,0" VerticalAlignment="Center"
-                       FontSize="13" Foreground="{StaticResource AccentBrush}" Text="saved"
+                       FontSize="13" Foreground="{DynamicResource AccentTextBrush}" Text="saved"
                        IsVisible="{Binding Saved}" />
-            <Button Grid.Column="3" Classes="quiet" Content="Save" Click="OnSaveClick" />
+            <Button Grid.Column="3" Classes="quiet primary" Content="Save" Click="OnSaveClick" />
         </Grid>
+
+        <!-- Theme picker: applies instantly, saved with the settings. -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="14" Margin="2,12,0,0">
+            <TextBlock Classes="sectionTitle" Text="THEME" VerticalAlignment="Center" Margin="0,0,4,0" />
+            <RadioButton x:Name="ThemePorcelain" GroupName="theme" Content="Porcelain"
+                         Tag="porcelain" IsCheckedChanged="OnThemeChecked" />
+            <RadioButton x:Name="ThemeAurora" GroupName="theme" Content="Aurora"
+                         Tag="aurora" IsCheckedChanged="OnThemeChecked" />
+            <RadioButton x:Name="ThemeJuiceBar" GroupName="theme" Content="Juice Bar"
+                         Tag="juicebar" IsCheckedChanged="OnThemeChecked" />
+            <RadioButton x:Name="ThemeGlossy" GroupName="theme" Content="Glossy"
+                         Tag="glossy" IsCheckedChanged="OnThemeChecked" />
+        </StackPanel>
 
         <Grid ColumnDefinitions="*,14,240">
             <!-- Cookware list -->
             <ListBox Grid.Column="0" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}"
-                     Background="{StaticResource CardBrush}" BorderBrush="{StaticResource HairlineBrush}"
+                     Background="{DynamicResource InputBrush}" BorderBrush="{DynamicResource InputBorderBrush}"
                      BorderThickness="1" CornerRadius="10" Padding="6">
                 <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="vm:CookwareItemViewModel">
                         <Grid ColumnDefinitions="16,*,Auto" Height="26">
                             <TextBlock Grid.Column="0" Text="★" IsVisible="{Binding Pinned}"
-                                       Foreground="{StaticResource SubtleBrush}" FontSize="12"
+                                       Foreground="{DynamicResource StarPinnedBrush}" FontSize="12"
                                        VerticalAlignment="Center" />
                             <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"
-                                       Foreground="{StaticResource InkBrush}" Margin="4,0" />
+                                       Foreground="{DynamicResource InkBrush}" Margin="4,0" />
                             <TextBlock Grid.Column="2" Classes="unit" FontSize="12"
                                        Text="{Binding GramsText, StringFormat='{}{0} g'}" />
                         </Grid>
@@ -44,7 +62,10 @@
 
             <!-- Editor for the selected cookware item -->
             <StackPanel Grid.Column="2" Spacing="10" IsEnabled="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
-                <TextBlock Classes="sectionTitle" Text="SELECTED COOKWARE" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Path Classes="sectionMark" />
+                    <TextBlock Classes="sectionTitle" Text="SELECTED COOKWARE" />
+                </StackPanel>
                 <StackPanel Spacing="4">
                     <TextBlock Classes="fieldLabel" Text="Name" />
                     <TextBox Text="{Binding Selected.Name}" />
@@ -54,7 +75,7 @@
                     <TextBox Classes="numeric" Width="120" HorizontalAlignment="Left"
                              Classes.warn="{Binding Selected.GramsInvalid, FallbackValue=False}"
                              Text="{Binding Selected.GramsText}" />
-                    <TextBlock FontSize="12" Foreground="{StaticResource WarnBrush}"
+                    <TextBlock FontSize="12" Foreground="{DynamicResource WarnBrush}"
                                Text="not a weight; the saved value is unchanged"
                                IsVisible="{Binding Selected.GramsInvalid, FallbackValue=False}" />
                 </StackPanel>
@@ -63,9 +84,9 @@
                     <Button Classes="quiet" Content="Move up" Click="OnMoveUpClick" />
                     <Button Classes="quiet" Content="Move down" Click="OnMoveDownClick" />
                 </StackPanel>
-                <Button Classes="quiet" Content="Delete cookware" Click="OnDeleteClick"
-                        Foreground="{StaticResource ErrorBrush}" BorderBrush="{StaticResource ErrorBrush}" />
+                <Button Classes="quiet danger" Content="Delete cookware" Click="OnDeleteClick" />
             </StackPanel>
         </Grid>
-    </DockPanel>
+        </DockPanel>
+    </Panel>
 </Window>

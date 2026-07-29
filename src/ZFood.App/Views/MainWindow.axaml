@@ -9,12 +9,13 @@
         Icon="/Assets/zfood.png"
         Width="880" Height="920"
         MinWidth="720" MinHeight="700"
-        Background="{StaticResource PorcelainBrush}">
+        Background="{DynamicResource WindowBrush}">
 
     <Window.Styles>
-        <!-- The teal marker bar carried by the dish row alone. -->
+        <!-- The accent marker bar carried by the dish row alone. -->
         <Style Selector="Border.dishBar">
-            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Background" Value="{DynamicResource DishBarBrush}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource DishBarShadow}" />
             <Setter Property="Width" Value="4" />
             <Setter Property="CornerRadius" Value="2" />
             <Setter Property="Margin" Value="0,6" />
@@ -24,6 +25,7 @@
              Tall windows (the "roomy" window class) relax the vertical rhythm. -->
         <Style Selector="Grid.cookwareRow">
             <Setter Property="Height" Value="38" />
+            <Setter Property="Background" Value="Transparent" />
         </Style>
         <Style Selector="Window.roomy Grid.cookwareRow">
             <Setter Property="Height" Value="44" />
@@ -35,37 +37,82 @@
             <Setter Property="Spacing" Value="14" />
         </Style>
         <Style Selector="Grid.cookwareRow.dim">
-            <Setter Property="Opacity" Value="0.65" />
-        </Style>
-
-        <!-- Narrow windows drop the density hero under the fields so it never
-             collides with the use-dish-net button. The default grid cell is
-             styled (not set inline) so the narrow preset can override it. -->
-        <Style Selector="StackPanel#DensityHeroPanel">
-            <Setter Property="Grid.Row" Value="0" />
-            <Setter Property="Grid.Column" Value="1" />
-            <Setter Property="Grid.ColumnSpan" Value="1" />
-            <Setter Property="Margin" Value="0" />
-        </Style>
-        <Style Selector="Window.narrow StackPanel#DensityHeroPanel">
-            <Setter Property="Grid.Row" Value="1" />
-            <Setter Property="Grid.Column" Value="0" />
-            <Setter Property="Grid.ColumnSpan" Value="2" />
-            <Setter Property="Margin" Value="0,12,0,0" />
+            <Setter Property="Opacity" Value="{DynamicResource GhostRowOpacity}" />
         </Style>
         <Style Selector="Grid.cookwareRow.dish">
             <Setter Property="Opacity" Value="1" />
+            <Setter Property="Background" Value="{DynamicResource DishRowBrush}" />
         </Style>
         <Style Selector="Grid.cookwareRow.dish TextBlock.cookwareName">
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
         <Style Selector="TextBlock.cookwareName">
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource InkBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <!-- Pulse-capable text readouts (the density hero). -->
+        <!-- Narrow windows drop the density hero under the fields so it never
+             collides with the use-dish-net button. The default grid cell is
+             styled (not set inline) so the narrow preset can override it. -->
+        <Style Selector="Panel#DensityHeroPanel">
+            <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.Column" Value="1" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Window.narrow Panel#DensityHeroPanel">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+            <Setter Property="Margin" Value="0,12,0,0" />
+        </Style>
+
+        <!-- The density hero: halo behind, an optional chip surface, and the
+             large light numerals. Most themes leave halo and chip invisible. -->
+        <Style Selector="Border.heroHalo">
+            <Setter Property="Background" Value="{DynamicResource HeroHaloBrush}" />
+            <Setter Property="Width" Value="200" />
+            <Setter Property="Height" Value="130" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.heroChip">
+            <Setter Property="Background" Value="{DynamicResource HeroChipBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource HeroChipBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="{DynamicResource HeroChipCornerRadius}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource HeroChipShadow}" />
+            <Setter Property="Padding" Value="{DynamicResource HeroChipPadding}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.heroChip.placeholder">
+            <Setter Property="Background" Value="{DynamicResource HeroChipPlaceholderBrush}" />
+        </Style>
+        <Style Selector="Border.heroChip.pulse">
+            <Setter Property="Background" Value="{DynamicResource HeroChipPulseBrush}" />
+        </Style>
+        <Style Selector="TextBlock.hero">
+            <Setter Property="Foreground" Value="{DynamicResource HeroBrush}" />
+            <Setter Property="FontFamily" Value="{DynamicResource HeroFontFamily}" />
+            <Setter Property="FontWeight" Value="{DynamicResource HeroFontWeight}" />
+        </Style>
+        <Style Selector="TextBlock.hero.placeholder">
+            <Setter Property="Foreground" Value="{DynamicResource HeroPlaceholderBrush}" />
+        </Style>
+        <Style Selector="TextBlock.heroUnit">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{DynamicResource HeroUnitBrush}" />
+        </Style>
+
+        <!-- Pulse-capable text readouts (the dish caption). -->
         <Style Selector="TextBlock.pulseable">
             <Setter Property="Transitions">
                 <Transitions>
@@ -74,19 +121,13 @@
             </Setter>
         </Style>
         <Style Selector="TextBlock.pulseable.pulse">
-            <Setter Property="Background" Value="{StaticResource PulseTintBrush}" />
-        </Style>
-        <Style Selector="TextBlock.hero">
-            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
-        </Style>
-        <Style Selector="TextBlock.hero.placeholder">
-            <Setter Property="Foreground" Value="{StaticResource GhostBrush}" />
+            <Setter Property="Background" Value="{DynamicResource PulseBrush}" />
         </Style>
 
         <!-- Below-tare hint. -->
         <Style Selector="TextBlock.belowTare">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="{StaticResource WarnBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource WarnBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
@@ -99,12 +140,12 @@
             <Setter Property="MinWidth" Value="34" />
             <Setter Property="MinHeight" Value="32" />
             <Setter Property="FontSize" Value="15" />
-            <Setter Property="Foreground" Value="{StaticResource GhostBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource StarBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
         <Style Selector="Button.star.pinned">
-            <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource StarPinnedBrush}" />
         </Style>
 
         <!-- Column headers naming the two weight columns. -->
@@ -112,7 +153,7 @@
             <Setter Property="FontSize" Value="10" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="LetterSpacing" Value="1.4" />
-            <Setter Property="Foreground" Value="{StaticResource SubtleBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource FaintBrush}" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -121,7 +162,7 @@
         <Style Selector="TextBlock.dishCaption">
             <Setter Property="FontSize" Value="13" />
             <Setter Property="FontWeight" Value="Medium" />
-            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource DishCaptionBrush}" />
         </Style>
 
         <!-- Log rows. -->
@@ -133,45 +174,118 @@
             <Setter Property="Padding" Value="6,3" />
             <Setter Property="MinHeight" Value="26" />
         </Style>
+        <Style Selector="TextBlock.logResult">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+            <Setter Property="TextAlignment" Value="Right" />
+        </Style>
+        <Style Selector="TextBlock.logEquation">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{DynamicResource SubtleBrush}" />
+        </Style>
+        <Style Selector="Border.tagPill">
+            <Setter Property="Background" Value="{DynamicResource TagPillBrush}" />
+            <Setter Property="Padding" Value="{DynamicResource TagPillPadding}" />
+            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.tagPill TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource TagPillTextBrush}" />
+        </Style>
 
-        <!-- Status bar notices. -->
+        <!-- The scale card's flex band and the delta's tall-size reflection. -->
+        <Style Selector="Border#ScaleFlexBand">
+            <Setter Property="Background" Value="{DynamicResource FlexBandBrush}" />
+        </Style>
+        <Style Selector="Border#DeltaReflection">
+            <Setter Property="Background" Value="{DynamicResource DeltaReflectionBrush}" />
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="Window.roomy Border#DeltaReflection">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- Status bar. -->
+        <Style Selector="Border.statusBar">
+            <Setter Property="Background" Value="{DynamicResource StatusBarBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource StatusBarBorderBrush}" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+            <Setter Property="CornerRadius" Value="{DynamicResource StatusBarCornerRadius}" />
+            <Setter Property="Padding" Value="{DynamicResource StatusBarPadding}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource StatusBarShadow}" />
+        </Style>
+        <Style Selector="TextBlock.statusEcho">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+        </Style>
         <Style Selector="TextBlock.notice">
-            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
         </Style>
         <Style Selector="TextBlock.notice.warnNotice">
-            <Setter Property="Foreground" Value="{StaticResource WarnBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource WarnBrush}" />
+        </Style>
+
+        <!-- The header wordmark and the rule under the header. -->
+        <Style Selector="TextBlock.wordmark">
+            <Setter Property="Foreground" Value="{DynamicResource WordmarkBrush}" />
+            <Setter Property="FontFamily" Value="{DynamicResource WordmarkFontFamily}" />
+            <Setter Property="FontSize" Value="{DynamicResource WordmarkFontSize}" />
+            <Setter Property="FontWeight" Value="{DynamicResource WordmarkFontWeight}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Border.headerRule">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Background" Value="{DynamicResource HeaderRuleBrush}" />
+            <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
     </Window.Styles>
 
-    <DockPanel Margin="18,14,18,10">
+    <Panel>
+        <!-- Theme atmosphere layers (invisible in themes that leave them
+             transparent); drawn behind everything, never hit-testable. -->
+        <Border Background="{DynamicResource CanvasBloom1Brush}" IsHitTestVisible="False" />
+        <Border Background="{DynamicResource CanvasBloom2Brush}" IsHitTestVisible="False" />
+        <Border Background="{DynamicResource CanvasBloom3Brush}" IsHitTestVisible="False" />
+
+        <DockPanel Margin="18,14,18,10">
 
         <!-- Header -->
-        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto,Auto" Margin="2,0,2,12">
-            <TextBlock Grid.Column="0" Text="ZFood" FontSize="18" FontWeight="SemiBold"
-                       Foreground="{StaticResource InkBrush}" VerticalAlignment="Center" />
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="Auto,*,Auto,Auto,Auto" Margin="2,0,2,5">
+            <TextBlock Grid.Column="0" Classes="wordmark" Text="ZFood" />
             <Button Grid.Column="2" x:Name="ResetButton" Classes="quiet" Content="Reset"
                     ToolTip.Tip="Clear all entered numbers (Ctrl+R)" Margin="0,0,8,0" Click="OnResetClick" />
             <Button Grid.Column="3" x:Name="LogButton" Classes="quiet" Content="Log"
                     ToolTip.Tip="Show the calculation log (Ctrl+L)" Margin="0,0,8,0" Click="OnLogClick" />
             <Button Grid.Column="4" x:Name="GearButton" Classes="quiet" Content="⚙"
-                    FontSize="15" Padding="10,4" ToolTip.Tip="Cookware settings" Click="OnGearClick" />
+                    FontSize="15" Padding="10,4" ToolTip.Tip="Cookware and theme settings" Click="OnGearClick" />
         </Grid>
+        <Border DockPanel.Dock="Top" Classes="headerRule" Margin="0,0,0,6" />
 
         <!-- Status bar -->
-        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,10,Auto,*,Auto" Margin="4,8,4,0">
-            <TextBlock Grid.Column="0" Text="{Binding StatusEcho}" FontSize="13" FontWeight="Medium"
-                       Foreground="{StaticResource AccentBrush}" />
-            <TextBlock Grid.Column="2" Classes="unit" Text="{Binding StatusTime}" />
-            <TextBlock Grid.Column="4" Classes="notice" FontSize="13"
-                       Classes.warnNotice="{Binding StatusNoticeIsWarning}"
-                       Text="{Binding StatusNotice}" />
-        </Grid>
+        <Border DockPanel.Dock="Bottom" Classes="statusBar" Margin="0,8,0,0">
+            <Grid ColumnDefinitions="Auto,10,Auto,*,Auto">
+                <TextBlock Grid.Column="0" Classes="statusEcho" Text="{Binding StatusEcho}" />
+                <TextBlock Grid.Column="2" Classes="unit" Text="{Binding StatusTime}" />
+                <TextBlock Grid.Column="4" Classes="notice" FontSize="13"
+                           Classes.warnNotice="{Binding StatusNoticeIsWarning}"
+                           Text="{Binding StatusNotice}" />
+            </Grid>
+        </Border>
 
         <!-- LOG card -->
-        <Border DockPanel.Dock="Bottom" Classes="card" Margin="0,12,0,0" Padding="20,12,20,10">
-            <StackPanel>
+        <Border DockPanel.Dock="Bottom" Classes="card recessed" Margin="0,12,0,0">
+            <Panel>
+                <Border Classes="cardGloss" />
+                <Border Classes="cardHighlight" />
+                <StackPanel Margin="20,12,20,10">
                 <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,4">
-                    <TextBlock Classes="sectionTitle" Text="LOG" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Path Classes="sectionMark" />
+                        <TextBlock Classes="sectionTitle" Text="LOG" />
+                    </StackPanel>
                     <TextBlock Grid.Column="2" Classes="unit" FontSize="11"
                                Text="click a row to copy its result" />
                 </Grid>
@@ -181,14 +295,16 @@
                          Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="vm:LogRow">
-                            <Grid ColumnDefinitions="140,86,66,*">
+                            <Grid ColumnDefinitions="140,86,72,*">
                                 <TextBlock Grid.Column="0" Classes="unit" FontFeatures="+tnum" Text="{Binding Time}" />
-                                <TextBlock Grid.Column="1" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"
-                                           FontFeatures="+tnum" Text="{Binding Result}" Margin="0,0,12,0"
-                                           TextAlignment="Right" />
-                                <TextBlock Grid.Column="2" Classes="unit" FontSize="11" Text="{Binding Kind}" />
-                                <TextBlock Grid.Column="3" FontSize="13" Foreground="{StaticResource SubtleBrush}"
-                                           Text="{Binding Equation}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Grid.Column="1" Classes="logResult"
+                                           FontFeatures="+tnum" Text="{Binding Result}" Margin="0,0,12,0" />
+                                <Border Grid.Column="2" Classes="tagPill">
+                                    <TextBlock Text="{Binding Kind}" />
+                                </Border>
+                                <TextBlock Grid.Column="3" Classes="logEquation"
+                                           Text="{Binding Equation}" TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -200,28 +316,41 @@
                                  Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="vm:LogRow">
-                                    <Grid ColumnDefinitions="140,86,66,*">
+                                    <Grid ColumnDefinitions="140,86,72,*">
                                         <TextBlock Grid.Column="0" Classes="unit" FontFeatures="+tnum" Text="{Binding Time}" />
-                                        <TextBlock Grid.Column="1" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"
-                                                   FontFeatures="+tnum" Text="{Binding Result}" Margin="0,0,12,0"
-                                                   TextAlignment="Right" />
-                                        <TextBlock Grid.Column="2" Classes="unit" FontSize="11" Text="{Binding Kind}" />
-                                        <TextBlock Grid.Column="3" FontSize="13" Foreground="{StaticResource SubtleBrush}"
-                                                   Text="{Binding Equation}" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Grid.Column="1" Classes="logResult"
+                                                   FontFeatures="+tnum" Text="{Binding Result}" Margin="0,0,12,0" />
+                                        <Border Grid.Column="2" Classes="tagPill">
+                                            <TextBlock Text="{Binding Kind}" />
+                                        </Border>
+                                        <TextBlock Grid.Column="3" Classes="logEquation"
+                                                   Text="{Binding Equation}" TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center" />
                                     </Grid>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </ScrollViewer>
                 </Border>
-            </StackPanel>
+                </StackPanel>
+            </Panel>
         </Border>
 
         <!-- PORTION card -->
         <Border DockPanel.Dock="Top" Classes="card" Margin="0,0,0,12">
-            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+            <Panel>
+                <Border Classes="cardGloss" />
+                <Border Classes="cardHighlight" />
+                <Border Classes="cardContent">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
                 <StackPanel Grid.Column="0" Spacing="10">
-                    <TextBlock Classes="sectionTitle" Text="PORTION" />
+                    <Grid RowDefinitions="Auto,Auto" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Path Classes="sectionMark" />
+                            <TextBlock Classes="sectionTitle" Text="PORTION" />
+                        </StackPanel>
+                        <Border Grid.Row="1" Classes="sectionUnderline" />
+                    </Grid>
                     <!-- Columns mirror the cookware rows below so every numeral sits
                          on one shared grid across both cards. -->
                     <Grid x:Name="PortionPanel" ColumnDefinitions="186,52,Auto,24,Auto,26,Auto"
@@ -282,24 +411,35 @@
                 </StackPanel>
 
                 <!-- Density hero: the instrument's main display. -->
-                <StackPanel x:Name="DensityHeroPanel"
-                            VerticalAlignment="Center" HorizontalAlignment="Right" Spacing="0">
-                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-                        <TextBlock x:Name="DensityHero" Classes="pulseable hero"
-                                   Classes.placeholder="{Binding Portion.DensityIsPlaceholder}"
-                                   Text="{Binding Portion.DensityCalPerG}"
-                                   FontSize="46" FontWeight="Light" FontFeatures="+tnum" />
-                        <TextBlock Classes="unit" Text="cal/g" VerticalAlignment="Bottom" Margin="0,0,0,9" />
-                    </StackPanel>
-                    <TextBlock HorizontalAlignment="Right" Classes="unit"
-                               Text="{Binding Portion.DensityPer100, StringFormat='{}{0} cal / 100 g'}" />
-                </StackPanel>
-            </Grid>
+                <Panel x:Name="DensityHeroPanel">
+                    <Border Classes="heroHalo" />
+                    <Border x:Name="DensityChip" Classes="heroChip"
+                            Classes.placeholder="{Binding Portion.DensityIsPlaceholder}">
+                        <StackPanel Spacing="0">
+                            <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+                                <TextBlock x:Name="DensityHero" Classes="hero"
+                                           Classes.placeholder="{Binding Portion.DensityIsPlaceholder}"
+                                           Text="{Binding Portion.DensityCalPerG}"
+                                           FontSize="46" FontFeatures="+tnum" />
+                                <TextBlock Classes="heroUnit" Text="cal/g" VerticalAlignment="Bottom" Margin="0,0,0,9" />
+                            </StackPanel>
+                            <TextBlock HorizontalAlignment="Right" Classes="heroUnit"
+                                       Text="{Binding Portion.DensityPer100, StringFormat='{}{0} cal / 100 g'}" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+                </Grid>
+                </Border>
+            </Panel>
         </Border>
 
         <!-- SCALE card -->
         <Border Classes="card">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Panel>
+                <Border Classes="cardGloss" />
+                <Border Classes="cardHighlight" />
+                <Border Classes="cardContent">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <!-- The water section is pinned to the card's base like the
                      display at the foot of a kitchen scale: at tall window
                      sizes the surplus opens in the flex band between the
@@ -310,7 +450,13 @@
                 <Grid RowDefinitions="Auto,*,Auto"
                       MinHeight="{Binding $parent[ScrollViewer].Viewport.Height}">
                 <StackPanel Grid.Row="0">
-                    <TextBlock Classes="sectionTitle" Text="SCALE" Margin="0,0,0,10" />
+                    <Grid RowDefinitions="Auto,Auto" HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Path Classes="sectionMark" />
+                            <TextBlock Classes="sectionTitle" Text="SCALE" />
+                        </StackPanel>
+                        <Border Grid.Row="1" Classes="sectionUnderline" />
+                    </Grid>
 
                     <!-- Which column is which weight: the first field holds the
                          scale reading including the cookware, the second the
@@ -327,8 +473,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="core:CookwareRowModel">
                                 <Grid Classes="cookwareRow" Classes.dish="{Binding IsDish}" Classes.dim="{Binding IsEmpty}"
-                                      ColumnDefinitions="8,178,52,Auto,24,Auto,26,Auto,*,36"
-                                      Background="Transparent">
+                                      ColumnDefinitions="8,178,52,Auto,24,Auto,26,Auto,*,36">
                                     <Border Grid.Column="0" Classes="dishBar" IsVisible="{Binding IsDish}" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8"
                                                 VerticalAlignment="Center" Margin="6,0,0,0">
@@ -397,7 +542,7 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="core:Cookware">
                                     <StackPanel Orientation="Horizontal" Spacing="10" Height="24">
-                                        <TextBlock Foreground="{StaticResource InkBrush}" Text="{Binding Name}"
+                                        <TextBlock Foreground="{DynamicResource InkBrush}" Text="{Binding Name}"
                                                    VerticalAlignment="Center" />
                                         <TextBlock Classes="unit" FontSize="11" VerticalAlignment="Center"
                                                    Text="{Binding Grams, StringFormat='tare {0} g'}" />
@@ -433,25 +578,36 @@
                             </TextBox>
                             <TextBlock Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
                         </Grid>
-                        <Grid ColumnDefinitions="238,232,28">
-                            <TextBlock Grid.Column="0" Classes="fieldLabel" Text="Water to add" Margin="8,0,0,0" />
-                            <TextBox Grid.Column="1" x:Name="DeltaBox" Classes="numeric computed delta"
-                                     IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
-                                     views:Pulse.Tick="{Binding Scale.DeltaPulse}">
-                                <TextBox.InnerRightContent>
-                                    <Button x:Name="DeltaCopyButton" Classes="copyIcon"
-                                            Click="OnDeltaCopyIconClick"
-                                            ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)">
-                                        <Path />
-                                    </Button>
-                                </TextBox.InnerRightContent>
-                            </TextBox>
-                            <TextBlock Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
-                        </Grid>
+                        <StackPanel>
+                            <Grid ColumnDefinitions="238,232,28">
+                                <TextBlock Grid.Column="0" Classes="fieldLabel" Text="Water to add" Margin="8,0,0,0" />
+                                <TextBox Grid.Column="1" x:Name="DeltaBox" Classes="numeric computed delta"
+                                         IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
+                                         views:Pulse.Tick="{Binding Scale.DeltaPulse}">
+                                    <TextBox.InnerRightContent>
+                                        <Button x:Name="DeltaCopyButton" Classes="copyIcon"
+                                                Click="OnDeltaCopyIconClick"
+                                                ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)">
+                                            <Path />
+                                        </Button>
+                                    </TextBox.InnerRightContent>
+                                </TextBox>
+                                <TextBlock Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
+                            </Grid>
+                            <!-- At tall sizes some themes reflect the delta on
+                                 the surface beneath it. -->
+                            <Grid ColumnDefinitions="238,232,28">
+                                <Border Grid.Column="1" x:Name="DeltaReflection" Height="12"
+                                        CornerRadius="12" Margin="0,2,0,0" IsHitTestVisible="False" />
+                            </Grid>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
                 </Grid>
-            </ScrollViewer>
+                </ScrollViewer>
+                </Border>
+            </Panel>
         </Border>
-    </DockPanel>
+        </DockPanel>
+    </Panel>
 </Window>

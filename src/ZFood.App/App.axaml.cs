@@ -12,6 +12,9 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        // The default theme is present from the start so every resource
+        // lookup resolves; the persisted choice is applied once settings load.
+        ThemeManager.Apply(this, ThemeManager.DefaultTheme);
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -19,6 +22,7 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var services = AppServices.CreateDefault();
+            ThemeManager.Apply(this, services.Settings.Theme);
             var viewModel = new MainViewModel(services);
             desktop.MainWindow = new MainWindow(viewModel, services);
             desktop.Exit += (_, _) =>
