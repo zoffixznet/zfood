@@ -201,11 +201,23 @@
                         <TextBlock Grid.Row="0" Grid.Column="1" Classes="unit" Text="grams" Margin="0,0,8,0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox Grid.Row="0" Grid.Column="2" x:Name="ServingGramsBox" Classes="numeric"
-                                 Text="{Binding Portion.ServingGramsText}" />
+                                 Text="{Binding Portion.ServingGramsText}">
+                            <TextBox.InnerRightContent>
+                                <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                    <Path />
+                                </Button>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                         <TextBlock Grid.Row="0" Grid.Column="3" Classes="unit" Text="=" TextAlignment="Center"
                                    VerticalAlignment="Center" />
                         <TextBox Grid.Row="0" Grid.Column="4" x:Name="ServingCaloriesBox" Classes="numeric"
-                                 Text="{Binding Portion.ServingCaloriesText}" />
+                                 Text="{Binding Portion.ServingCaloriesText}">
+                            <TextBox.InnerRightContent>
+                                <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                    <Path />
+                                </Button>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                         <TextBlock Grid.Row="0" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Eaten" Margin="6,0,0,0" />
@@ -215,8 +227,7 @@
                                  Classes.computed="{Binding Portion.EatenGramsIsComputed}"
                                  Text="{Binding Portion.EatenGramsText}">
                             <TextBox.InnerRightContent>
-                                <Button Classes="copyIcon" IsVisible="{Binding Portion.EatenGramsIsComputed}"
-                                        Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
                                     <Path />
                                 </Button>
                             </TextBox.InnerRightContent>
@@ -227,8 +238,7 @@
                                  Classes.computed="{Binding Portion.EatenCaloriesIsComputed}"
                                  Text="{Binding Portion.EatenCaloriesText}">
                             <TextBox.InnerRightContent>
-                                <Button Classes="copyIcon" IsVisible="{Binding Portion.EatenCaloriesIsComputed}"
-                                        Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
                                     <Path />
                                 </Button>
                             </TextBox.InnerRightContent>
@@ -294,8 +304,7 @@
                                              Text="{Binding GrossText}"
                                              views:Pulse.Tick="{Binding ComputedPulse}">
                                         <TextBox.InnerRightContent>
-                                            <Button Classes="copyIcon" IsVisible="{Binding GrossIsComputed}"
-                                                    Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                            <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
                                                 <Path />
                                             </Button>
                                         </TextBox.InnerRightContent>
@@ -309,8 +318,7 @@
                                              views:Pulse.Tick="{Binding ComputedPulse}"
                                              IsVisible="{Binding !IsNoCookware}">
                                         <TextBox.InnerRightContent>
-                                            <Button Classes="copyIcon" IsVisible="{Binding NetIsComputed}"
-                                                    Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                            <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
                                                 <Path />
                                             </Button>
                                         </TextBox.InnerRightContent>
@@ -371,7 +379,13 @@
                         <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" Margin="8,0,0,0" />
                         <TextBox Grid.Row="0" Grid.Column="1" x:Name="RecipeBox" Classes="numeric"
                                  HorizontalAlignment="Right"
-                                 Text="{Binding Scale.RecipeText}" />
+                                 Text="{Binding Scale.RecipeText}">
+                            <TextBox.InnerRightContent>
+                                <Button Classes="copyIcon" Click="OnCopyIconClick" ToolTip.Tip="Copy this number">
+                                    <Path />
+                                </Button>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                         <TextBlock Grid.Row="0" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Water to add" Margin="8,0,0,0" />
@@ -379,7 +393,7 @@
                                  IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
                                  views:Pulse.Tick="{Binding Scale.DeltaPulse}">
                             <TextBox.InnerRightContent>
-                                <Button x:Name="DeltaCopyButton" Classes="copyIcon" IsEnabled="{Binding Scale.CanCopy}"
+                                <Button x:Name="DeltaCopyButton" Classes="copyIcon"
                                         Click="OnDeltaCopyIconClick"
                                         ToolTip.Tip="Copy the bare signed number (Enter in the recipe field also copies)">
                                     <Path />

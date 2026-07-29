@@ -287,7 +287,7 @@ public class HeadlessUiTests
         => button.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
 
     [AvaloniaFact]
-    public void Computed_members_carry_a_copy_icon_that_copies_the_bare_number()
+    public void Every_field_carries_a_copy_icon_that_copies_the_bare_number()
     {
         using var f = new Fixture();
         string? copied = null;
@@ -300,33 +300,45 @@ public class HeadlessUiTests
         f.Type(f.RowBox(0, "rowGross"), "1440");
         f.Window.UpdateLayout();
 
-        // Only the computed member shows the icon.
+        // Input and computed members both show the icon.
         Assert.True(CopyIconOf(f.RowBox(0, "rowNet")).IsVisible);
-        Assert.False(CopyIconOf(f.RowBox(0, "rowGross")).IsVisible);
+        Assert.True(CopyIconOf(f.RowBox(0, "rowGross")).IsVisible);
 
         Click(CopyIconOf(f.RowBox(0, "rowNet")));
         Fixture.Pump();
-
         Assert.Equal("800", copied);
         Assert.Contains("copied 800", f.Vm.StatusNotice);
+
+        // The input member's icon copies its typed value.
+        Click(CopyIconOf(f.RowBox(0, "rowGross")));
+        Fixture.Pump();
+        Assert.Equal("1440", copied);
     }
 
     [AvaloniaFact]
-    public void The_eaten_pair_icon_follows_the_computed_role()
+    public void Copy_icons_enable_only_while_the_field_shows_a_number()
     {
         using var f = new Fixture();
+        f.Window.UpdateLayout();
+
+        // Empty fields: icon present but disabled.
+        Assert.False(CopyIconOf(f.Box("ServingGramsBox")).IsEnabled);
+        Assert.False(CopyIconOf(f.RowBox(0, "rowGross")).IsEnabled);
+        Assert.False(CopyIconOf(f.Box("RecipeBox")).IsEnabled);
 
         f.Type(f.Box("ServingGramsBox"), "56");
-        f.Type(f.Box("ServingCaloriesBox"), "250");
-        f.Type(f.Box("EatenGramsBox"), "128");
-        f.Window.UpdateLayout();
-        Assert.True(CopyIconOf(f.Box("EatenCaloriesBox")).IsVisible);
-        Assert.False(CopyIconOf(f.Box("EatenGramsBox")).IsVisible);
+        Assert.True(CopyIconOf(f.Box("ServingGramsBox")).IsEnabled);
 
-        f.Type(f.Box("EatenCaloriesBox"), "250");
-        f.Window.UpdateLayout();
-        Assert.True(CopyIconOf(f.Box("EatenGramsBox")).IsVisible);
-        Assert.False(CopyIconOf(f.Box("EatenCaloriesBox")).IsVisible);
+        // A placeholder dash is not copyable: eaten calories shows a dash
+        // while the serving pair is incomplete.
+        f.Type(f.Box("EatenGramsBox"), "128");
+        Assert.Equal(PortionViewModel.Dash, f.Box("EatenCaloriesBox").Text);
+        Assert.False(CopyIconOf(f.Box("EatenCaloriesBox")).IsEnabled);
+
+        // Completing the serving pair turns the dash into a number.
+        f.Type(f.Box("ServingCaloriesBox"), "250");
+        Assert.Equal("571", f.Box("EatenCaloriesBox").Text);
+        Assert.True(CopyIconOf(f.Box("EatenCaloriesBox")).IsEnabled);
     }
 
     [AvaloniaFact]
