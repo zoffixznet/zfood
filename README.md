@@ -33,14 +33,18 @@ Prebuilt self-contained executables (no runtime required) can be produced from
 a checkout, or grab them from a release if one is available:
 
 ```sh
+make deps           # Debian/Ubuntu: install any missing system tools via apt
 make setup          # one-time: installs a project-local .NET SDK if needed
 make run            # build and start the app
 make publish-linux  # dist/linux-x64/ZFood     (single file)
 make publish-win    # dist/win-x64/ZFood.exe   (single file)
 ```
 
-`make setup` only downloads an SDK when no usable `dotnet` is on your PATH,
-and keeps it inside the project directory. On Windows, install the
+`make deps` checks for the system tools the other targets use (curl, Xvfb,
+xdotool, ImageMagick), tells you what is missing, and runs the `apt-get`
+install line it prints, so sudo can ask for your password. `make setup` only
+downloads an SDK when no usable `dotnet` is on your PATH, and keeps it inside
+the project directory. On Windows, install the
 [.NET 8 SDK](https://dotnet.microsoft.com/download) and use the equivalent
 commands directly: `dotnet run --project src/ZFood.App`.
 
@@ -98,7 +102,8 @@ make icons        # regenerate icons from the SVG source
 make screenshots  # regenerate the README screenshots from the running app
 ```
 
-The smoke and screenshot targets need `Xvfb`, `xdotool`, and ImageMagick.
+The smoke and screenshot targets need `Xvfb`, `xdotool`, and ImageMagick;
+`make deps` installs them on Debian/Ubuntu.
 
 ## Known limitations
 

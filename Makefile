@@ -19,10 +19,13 @@ CONFIG ?= Release
 
 .DEFAULT_GOAL := help
 
-.PHONY: help setup run test format smoke screenshots icons publish-linux publish-win clean
+.PHONY: help setup deps run test format smoke screenshots icons publish-linux publish-win clean
 
 help: ## List available targets
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[1m%-14s\033[0m %s\n", $$1, $$2}'
+
+deps: ## Check for required system tools (Debian/Ubuntu) and offer to install what is missing
+	scripts/deps.sh
 
 setup: ## Install a project-local .NET SDK if none is available, then restore packages
 	@if ! command -v dotnet >/dev/null 2>&1 && [ ! -x .dotnet/dotnet ]; then \
