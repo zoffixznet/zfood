@@ -8,6 +8,12 @@ public sealed class Cookware
     public string Name { get; set; } = "";
 
     public double Grams { get; set; }
+
+    /// <summary>Pinned items render as always-visible rows on the main window.</summary>
+    public bool Pinned { get; set; }
+
+    /// <summary>Display order among pinned items (ascending).</summary>
+    public int Order { get; set; }
 }
 
 /// <summary>Saved main-window geometry.</summary>
@@ -24,7 +30,10 @@ public sealed class WindowGeometry
     public bool Maximized { get; set; }
 }
 
-/// <summary>Everything persisted in settings.json.</summary>
+/// <summary>
+/// Everything persisted in settings.json. Note there is no selected-cookware
+/// field: the dish binding is session state and is never persisted.
+/// </summary>
 public sealed class Settings
 {
     public int Version { get; set; } = 1;
@@ -32,8 +41,6 @@ public sealed class Settings
     public WindowGeometry? Window { get; set; }
 
     public List<Cookware> Cookware { get; set; } = new();
-
-    public string? SelectedCookwareId { get; set; }
 
     /// <summary>Repairs null or out-of-range values after deserialization.</summary>
     public Settings Sanitized()
@@ -47,9 +54,6 @@ public sealed class Settings
             if (double.IsNaN(c.Grams) || double.IsInfinity(c.Grams) || c.Grams < 0)
                 c.Grams = 0;
         }
-
-        if (SelectedCookwareId is not null && Cookware.All(c => c.Id != SelectedCookwareId))
-            SelectedCookwareId = null;
 
         return this;
     }

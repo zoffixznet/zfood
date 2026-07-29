@@ -42,9 +42,8 @@ public class SettingsStoreTests
         var settings = new Settings
         {
             Window = new WindowGeometry { X = 10, Y = 20, Width = 800, Height = 600, Maximized = true },
-            Cookware = { new Cookware { Name = "Big pot", Grams = 640.5 } },
+            Cookware = { new Cookware { Name = "Big pot", Grams = 640.5, Pinned = true, Order = 3 } },
         };
-        settings.SelectedCookwareId = settings.Cookware[0].Id;
 
         Assert.True(store.Save(settings));
         var loaded = store.Load();
@@ -57,7 +56,8 @@ public class SettingsStoreTests
         var pot = Assert.Single(loaded.Cookware);
         Assert.Equal("Big pot", pot.Name);
         Assert.Equal(640.5, pot.Grams);
-        Assert.Equal(pot.Id, loaded.SelectedCookwareId);
+        Assert.True(pot.Pinned);
+        Assert.Equal(3, pot.Order);
     }
 
     [Theory]
@@ -83,7 +83,7 @@ public class SettingsStoreTests
         using var dir = new TempDir();
         var paths = new AppPaths(dir.Path);
         File.WriteAllText(paths.SettingsFile,
-            """{ "version": 1, "cookware": [ { "id": "", "name": null, "grams": -5 } ], "selectedCookwareId": "ghost" }""");
+            """{ "version": 1, "cookware": [ { "id": "", "name": null, "grams": -5 } ] }""");
 
         var settings = Store(dir).Load();
 
@@ -91,7 +91,6 @@ public class SettingsStoreTests
         Assert.Equal(0, pot.Grams);
         Assert.Equal("", pot.Name);
         Assert.NotEqual("", pot.Id);
-        Assert.Null(settings.SelectedCookwareId);
     }
 
     [Fact]
@@ -113,8 +112,9 @@ public class LogStoreTests
         {
             Ts = ts,
             Panel = LogPanel.Portion,
+            Unit = LogEntryFactory.PortionUnit,
             Result = result,
-            Unit = "cal",
+            ResultUnit = "cal",
             Equation = "250 g = 775 cal (3.10 cal/g) · eaten 160 g",
             Inputs = new Dictionary<string, string> { ["servingG"] = "250" },
         };

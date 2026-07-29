@@ -1,10 +1,136 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="ZFood.App.App"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+             RequestedThemeVariant="Light">
+    <!-- The light variant is forced: the whole look is the paper of a
+         nutrition-facts label and must not invert with the system theme. -->
+
+    <Application.Resources>
+        <!-- Label palette -->
+        <Color x:Key="PaperColor">#FAF9F6</Color>
+        <Color x:Key="InkColor">#141414</Color>
+        <Color x:Key="RuleColor">#B8B4AC</Color>
+        <Color x:Key="AccentColor">#3E7B27</Color>
+        <Color x:Key="WarnColor">#B0821A</Color>
+        <Color x:Key="ErrorColor">#A42B1D</Color>
+        <Color x:Key="ComputedTintColor">#EDF3E7</Color>
+        <Color x:Key="PulseTintColor">#C4DCB2</Color>
+
+        <SolidColorBrush x:Key="PaperBrush" Color="{StaticResource PaperColor}" />
+        <SolidColorBrush x:Key="InkBrush" Color="{StaticResource InkColor}" />
+        <SolidColorBrush x:Key="RuleBrush" Color="{StaticResource RuleColor}" />
+        <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+        <SolidColorBrush x:Key="WarnBrush" Color="{StaticResource WarnColor}" />
+        <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorColor}" />
+        <SolidColorBrush x:Key="ComputedTintBrush" Color="{StaticResource ComputedTintColor}" />
+        <SolidColorBrush x:Key="PulseTintBrush" Color="{StaticResource PulseTintColor}" />
+    </Application.Resources>
 
     <Application.Styles>
         <FluentTheme />
+
+        <!-- Numeric entry boxes: right-aligned tabular digits in a ruled box. -->
+        <Style Selector="TextBox.numeric">
+            <Setter Property="HorizontalContentAlignment" Value="Right" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFeatures" Value="+tnum" />
+            <Setter Property="Width" Value="96" />
+            <Setter Property="MinHeight" Value="30" />
+            <Setter Property="Padding" Value="6,4" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="SelectionBrush" Value="{StaticResource RuleBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+            <Setter Property="BorderThickness" Value="2" />
+        </Style>
+        <Style Selector="TextBox.numeric:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+            <Setter Property="Background" Value="White" />
+        </Style>
+
+        <!-- Computed member of a pair: tinted, green ink, still a real text box. -->
+        <Style Selector="TextBox.numeric.computed">
+            <Setter Property="Background" Value="{StaticResource ComputedTintBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="BorderBrush" Value="{StaticResource RuleBrush}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="TextBox.numeric.computed:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{StaticResource ComputedTintBrush}" />
+        </Style>
+        <Style Selector="TextBox.numeric.computed.pulse">
+            <Setter Property="Background" Value="{StaticResource PulseTintBrush}" />
+        </Style>
+
+        <!-- Field in a warning state (gross below tare). -->
+        <Style Selector="TextBox.numeric.warn">
+            <Setter Property="Foreground" Value="{StaticResource WarnBrush}" />
+        </Style>
+
+        <!-- Section titles: the label's heavy typography. -->
+        <Style Selector="TextBlock.sectionTitle">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Black" />
+            <Setter Property="LetterSpacing" Value="1.5" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        </Style>
+
+        <!-- Quiet field labels. -->
+        <Style Selector="TextBlock.fieldLabel">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Unit labels sit outside the boxes, quieter than the digits. -->
+        <Style Selector="TextBlock.unit">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="Opacity" Value="0.75" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Small quiet buttons; kept out of the tab cycle so Tab walks fields. -->
+        <Style Selector="Button.quiet">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="Background" Value="{StaticResource PaperBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Button.quiet:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#EFEDE8" />
+            <Setter Property="BorderBrush" Value="{StaticResource InkBrush}" />
+        </Style>
+        <Style Selector="Button.quiet:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource RuleBrush}" />
+        </Style>
+
+        <!-- The label's rule hierarchy. -->
+        <Style Selector="Border.barThick">
+            <Setter Property="Height" Value="7" />
+            <Setter Property="Background" Value="{StaticResource InkBrush}" />
+        </Style>
+        <Style Selector="Border.barMedium">
+            <Setter Property="Height" Value="3" />
+            <Setter Property="Background" Value="{StaticResource InkBrush}" />
+        </Style>
+        <Style Selector="Border.hairline">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Background" Value="{StaticResource RuleBrush}" />
+        </Style>
     </Application.Styles>
 </Application>

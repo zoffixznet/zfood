@@ -2,10 +2,16 @@ namespace ZFood.Core;
 
 /// <summary>
 /// Builds log entries from settled panel states, rendering the equation text and
-/// the structured inputs consistently.
+/// the structured inputs consistently. Every scale entry names its pot and tare.
 /// </summary>
 public static class LogEntryFactory
 {
+    /// <summary>The portion panel's commit-unit key.</summary>
+    public const string PortionUnit = "portion";
+
+    /// <summary>The commit-unit key for a pot row.</summary>
+    public static string PotUnit(string rowId) => "pot:" + rowId;
+
     /// <summary>
     /// A settled portion calculation. <paramref name="eatenInput"/> is the side
     /// the user typed (A = grams, B = calories); the partner is the result.
@@ -22,8 +28,9 @@ public static class LogEntryFactory
             {
                 Ts = ts,
                 Panel = LogPanel.Portion,
+                Unit = PortionUnit,
                 Result = cal,
-                Unit = "cal",
+                ResultUnit = "cal",
                 Equation = $"{serving} · eaten {grams} g",
                 Inputs = new Dictionary<string, string>
                 {
@@ -37,8 +44,9 @@ public static class LogEntryFactory
             {
                 Ts = ts,
                 Panel = LogPanel.Portion,
+                Unit = PortionUnit,
                 Result = grams,
-                Unit = "g",
+                ResultUnit = "g",
                 Equation = $"{serving} · budget {cal} cal",
                 Inputs = new Dictionary<string, string>
                 {
@@ -51,69 +59,73 @@ public static class LogEntryFactory
     }
 
     /// <summary>
-    /// A settled tare-only calculation. <paramref name="grossNetInput"/> is the
-    /// side the user typed (A = gross, B = net); the partner is the result.
+    /// A settled tare-only pot-row calculation. <paramref name="grossNetInput"/>
+    /// is the side the user typed (A = gross, B = net); the partner is the result.
     /// </summary>
-    public static LogEntry Tare(DateTimeOffset ts, string cookwareName, double tare,
+    public static LogEntry Tare(DateTimeOffset ts, string rowId, string potName, double tare,
         PairSide grossNetInput, double gross, double net)
     {
-        var pot = $"{cookwareName} ({Numeric.FormatWhole(tare)} g)";
+        var pot = $"{potName} ({Numeric.FormatWhole(tare)} g)";
 
         return grossNetInput == PairSide.A
             ? new LogEntry
             {
                 Ts = ts,
                 Panel = LogPanel.Tare,
+                Unit = PotUnit(rowId),
                 Result = Numeric.FormatWhole(net),
-                Unit = "g",
+                ResultUnit = "g",
                 Equation = $"{pot} · gross {Numeric.FormatWhole(gross)} g → net",
-                Inputs = TareInputs(cookwareName, tare, "gross", gross),
+                Inputs = TareInputs(potName, tare, "gross", gross),
             }
             : new LogEntry
             {
                 Ts = ts,
                 Panel = LogPanel.Tare,
+                Unit = PotUnit(rowId),
                 Result = Numeric.FormatWhole(gross),
-                Unit = "g",
+                ResultUnit = "g",
                 Equation = $"{pot} · net {Numeric.FormatWhole(net)} g → target gross",
-                Inputs = TareInputs(cookwareName, tare, "net", net),
+                Inputs = TareInputs(potName, tare, "net", net),
             };
     }
 
     /// <summary>
-    /// A settled water reconciliation: the full pipeline including the recipe
-    /// weight. Records gross, tare, and net, so it subsumes the tare-only entry
-    /// built from the same inputs.
+    /// A settled water reconciliation: a dish row's full pipeline including the
+    /// recipe weight. Records gross, tare, and net, so it subsumes the same
+    /// row's tare-only entry built from the same inputs.
     /// </summary>
-    public static LogEntry Water(DateTimeOffset ts, string cookwareName, double tare,
+    public static LogEntry Water(DateTimeOffset ts, string rowId, string potName, double tare,
         PairSide grossNetInput, double gross, double net, double recipe, double delta)
     {
-        var pot = $"{cookwareName} ({Numeric.FormatWhole(tare)} g)";
+        var pot = $"{potName} ({Numeric.FormatWhole(tare)} g)";
         var side = grossNetInput == PairSide.A ? "gross" : "net";
         var sideValue = grossNetInput == PairSide.A ? gross : net;
 
-        var inputs = TareInputs(cookwareName, tare, side, sideValue);
+        var inputs = TareInputs(potName, tare, side, sideValue);
         inputs["recipe"] = Numeric.FormatEditable(recipe);
 
         return new LogEntry
         {
             Ts = ts,
             Panel = LogPanel.Water,
+            Unit = PotUnit(rowId),
             Result = Numeric.FormatWhole(delta),
-            Unit = "g",
+            ResultUnit = "g",
             Equation = $"{pot} · gross {Numeric.FormatWhole(gross)} g → net {Numeric.FormatWhole(net)} g · recipe {Numeric.FormatWhole(recipe)} g → water",
             Inputs = inputs,
         };
     }
 
     /// <summary>
-    /// True when the water entry records the same gross/net inputs as the
-    /// tare-only entry, making the tare entry redundant.
+    /// True when the water entry comes from the same unit and records the same
+    /// gross/net inputs as the tare-only entry, making the tare entry redundant.
     /// </summary>
     public static bool WaterSubsumesTare(LogEntry water, LogEntry tare)
         => water.Panel == LogPanel.Water
            && tare.Panel == LogPanel.Tare
-           && SameValue(water, tare, "cookware")
+           && water.Unit == tare.Unit
+           && SameValue(water, tare, "pot")
            && SameValue(water, tare, "tare")
            && SameValue(water, tare, "side")
            && SameValue(water, tare, "value");
@@ -121,10 +133,10 @@ public static class LogEntryFactory
     private static bool SameValue(LogEntry a, LogEntry b, string key)
         => a.Inputs.TryGetValue(key, out var av) && b.Inputs.TryGetValue(key, out var bv) && av == bv;
 
-    private static Dictionary<string, string> TareInputs(string cookwareName, double tare, string side, double value)
+    private static Dictionary<string, string> TareInputs(string potName, double tare, string side, double value)
         => new()
         {
-            ["cookware"] = cookwareName,
+            ["pot"] = potName,
             ["tare"] = Numeric.FormatEditable(tare),
             ["side"] = side,
             ["value"] = Numeric.FormatEditable(value),
