@@ -95,7 +95,7 @@
         <GradientStop Offset="1" Color="#FFEDC2" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="WarnFieldBorderBrush" Color="#EBCEA0" />
-    <SolidColorBrush x:Key="ErrorBrush" Color="#A80D2E" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="#970B28" />
     <SolidColorBrush x:Key="ErrorButtonBrush" Color="#FFE9EC" />
     <SolidColorBrush x:Key="ErrorButtonBorderBrush" Color="#F2B7C0" />
     <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#FFE9F1" />

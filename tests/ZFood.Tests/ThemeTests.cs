@@ -121,7 +121,8 @@ public class ThemeTests
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
-        Assert.True(window.FindControl<RadioButton>("ThemePorcelain")!.IsChecked);
+        Assert.True(window.FindControl<RadioButton>("ThemeAurora")!.IsChecked);
+        Assert.False(window.FindControl<RadioButton>("ThemePorcelain")!.IsChecked);
 
         window.Close();
         Dispatcher.UIThread.RunJobs();

@@ -104,7 +104,7 @@
     <SolidColorBrush x:Key="WarnBrush" Color="#FFC892" />
     <SolidColorBrush x:Key="WarnFieldBrush" Color="#21FFAD66" />
     <SolidColorBrush x:Key="WarnFieldBorderBrush" Color="#59FFAD66" />
-    <SolidColorBrush x:Key="ErrorBrush" Color="#FFB0A8" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="#FFBDB6" />
     <SolidColorBrush x:Key="ErrorButtonBrush" Color="#14FF6B5E" />
     <SolidColorBrush x:Key="ErrorButtonBorderBrush" Color="#59FF6B5E" />
     <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#1FE0AE58" />

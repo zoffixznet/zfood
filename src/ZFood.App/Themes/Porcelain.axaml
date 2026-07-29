@@ -158,10 +158,16 @@
     <SolidColorBrush x:Key="SectionUnderlineBrush" Color="Transparent" />
     <x:Boolean x:Key="SectionUnderlineVisible">False</x:Boolean>
 
-    <!-- Hairlines and the scale card's flex band -->
+    <!-- Hairlines and the scale card's flex band: at tall sizes the band
+         carries a barely-there teal wash settling toward the water section,
+         so the open surface reads composed rather than blank. -->
     <SolidColorBrush x:Key="HairlineBrush" Color="#E3E5E8" />
     <SolidColorBrush x:Key="ShelfRuleBrush" Color="#E3E5E8" />
-    <SolidColorBrush x:Key="FlexBandBrush" Color="Transparent" />
+    <RadialGradientBrush x:Key="FlexBandBrush" Center="50%,100%" GradientOrigin="50%,100%"
+                         RadiusX="65%" RadiusY="60%">
+        <GradientStop Offset="0" Color="#0A0E7568" />
+        <GradientStop Offset="1" Color="#000E7568" />
+    </RadialGradientBrush>
 
     <!-- Log rows -->
     <x:Double x:Key="LogStripHeight">82</x:Double>

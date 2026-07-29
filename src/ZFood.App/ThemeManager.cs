@@ -17,7 +17,7 @@ public static class ThemeManager
     public const string Glossy = "glossy";
 
     /// <summary>Applied when settings carry no theme or an unknown one.</summary>
-    public const string DefaultTheme = Porcelain;
+    public const string DefaultTheme = Aurora;
 
     /// <summary>All theme ids, in picker order.</summary>
     public static readonly string[] Themes = { Porcelain, Aurora, JuiceBar, Glossy };
