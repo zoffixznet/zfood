@@ -56,12 +56,14 @@ public partial class CookwareItemViewModel : ObservableObject
 
 /// <summary>
 /// The cookware CRUD behind the gear icon: add, rename, re-weigh, pin, order,
-/// and delete cookware items. Edits apply to the settings object; the caller saves and
-/// re-syncs the scale panel after the dialog closes.
+/// and delete cookware items. Edits apply to the settings object; Save
+/// persists them through the injected saver, and the caller re-syncs the
+/// scale panel after the dialog closes.
 /// </summary>
 public partial class CookwareEditorViewModel : ObservableObject
 {
     private readonly Settings _settings;
+    private readonly Func<bool> _save;
     private bool _revertingPin;
 
     [ObservableProperty]
@@ -70,12 +72,35 @@ public partial class CookwareEditorViewModel : ObservableObject
     [ObservableProperty]
     private string note = "";
 
-    public CookwareEditorViewModel(Settings settings)
+    /// <summary>True after a successful save (shows the inline confirmation).</summary>
+    [ObservableProperty]
+    private bool saved;
+
+    public CookwareEditorViewModel(Settings settings, Func<bool>? save = null)
     {
         _settings = settings;
+        _save = save ?? (() => true);
         foreach (var item in settings.Cookware)
             Items.Add(new CookwareItemViewModel(this, item));
         Selected = Items.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Persists the settings. On success the inline confirmation appears and
+    /// the dialog may close; on failure it stays open with the warning note.
+    /// </summary>
+    public bool Save()
+    {
+        if (_save())
+        {
+            Note = "";
+            Saved = true;
+            return true;
+        }
+
+        Saved = false;
+        Note = "couldn't save settings; changes may not survive a restart";
+        return false;
     }
 
     public ObservableCollection<CookwareItemViewModel> Items { get; } = new();

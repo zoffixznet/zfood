@@ -476,10 +476,12 @@ public partial class MainWindow : Window
 
     private async void OnGearClick(object? sender, RoutedEventArgs e)
     {
-        var editor = new CookwareWindow(_services.Settings);
+        var editor = new CookwareWindow(_services.Settings, () => _services.SaveSettings());
         await editor.ShowDialog(this);
-        // Saving through the view model surfaces the status-bar warning when
-        // the write fails; edits must never appear to succeed silently.
+        // Closing via the window decoration must still persist: saving through
+        // the view model surfaces the status-bar warning when the write fails,
+        // so edits never appear to succeed silently. After an in-dialog Save
+        // this write is a harmless no-op re-save.
         _vm.SaveSettings();
         _vm.Scale.SyncFromSettings();
     }
