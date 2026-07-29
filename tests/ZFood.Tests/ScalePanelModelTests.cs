@@ -77,6 +77,30 @@ public class ScalePanelModelTests
     }
 
     [Fact]
+    public void Delta_pulse_fires_only_when_the_delta_value_or_source_changes()
+    {
+        var panel = Panel();
+        Row(panel, "pot1").GrossText = "1440";
+        panel.RecipeText = "1000";
+        var before = panel.DeltaPulse;
+
+        // Editing another row while the latch is frozen leaves the delta
+        // untouched, so the delta must not pulse (that would mimic the loud
+        // re-target cue).
+        Row(panel, "pot2").GrossText = "610";
+        Assert.Equal(before, panel.DeltaPulse);
+
+        // A change to the delta's value still pulses.
+        Row(panel, "pot1").GrossText = "1500";
+        Assert.True(panel.DeltaPulse > before);
+
+        // An explicit re-target (source change) pulses too.
+        before = panel.DeltaPulse;
+        panel.BindDish(Row(panel, "pot2"));
+        Assert.True(panel.DeltaPulse > before);
+    }
+
+    [Fact]
     public void Water_section_stays_dormant_without_recipe_or_dish()
     {
         var panel = Panel();

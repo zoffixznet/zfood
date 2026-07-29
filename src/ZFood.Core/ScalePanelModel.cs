@@ -19,6 +19,7 @@ public sealed class ScalePanelModel : ObservableModel
     private string _deltaText = Dash;
     private string _dishCaption = "dish = —";
     private int _deltaPulse;
+    private string? _deltaSourceId;
 
     public ScalePanelModel(Settings settings)
     {
@@ -264,15 +265,18 @@ public sealed class ScalePanelModel : ObservableModel
     {
         var dish = DishRow;
         var recipe = RecipeValue;
-        DeltaValue = dish?.NetValue is double net && recipe is double r ? net - r : null;
-        var newText = DeltaValue is double d ? Numeric.FormatWhole(d) : Dash;
-        var changed = newText != DeltaText;
-        DeltaText = newText;
+        var newValue = dish?.NetValue is double net && recipe is double r ? net - r : (double?)null;
+        // The pulse fires only when the delta's value or its source row actually
+        // changed; editing an unrelated row must not mimic the loud re-target cue.
+        var changed = newValue != DeltaValue || dish?.Id != _deltaSourceId;
+        DeltaValue = newValue;
+        _deltaSourceId = dish?.Id;
+        DeltaText = DeltaValue is double d ? Numeric.FormatWhole(d) : Dash;
         DishCaption = dish is null
             ? "dish = —"
             : $"dish = {dish.Name} · net {(dish.NetValue is double n ? Numeric.FormatWhole(n) : Dash)} g";
         Raise(nameof(CanCopy));
-        if (DeltaValue is not null || changed)
+        if (changed)
             DeltaPulse++;
     }
 
