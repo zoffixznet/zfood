@@ -470,7 +470,9 @@ public partial class MainWindow : Window
     {
         var editor = new CookwareWindow(_services.Settings);
         await editor.ShowDialog(this);
-        _services.SaveSettings();
+        // Saving through the view model surfaces the status-bar warning when
+        // the write fails; edits must never appear to succeed silently.
+        _vm.SaveSettings();
         _vm.Scale.SyncFromSettings();
     }
 

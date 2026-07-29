@@ -219,7 +219,12 @@ public partial class MainViewModel : ObservableObject
         }
     }
 
-    private void SaveSettings()
+    /// <summary>
+    /// Persists settings, surfacing the quiet status-bar warning when the write
+    /// fails. Every interactive settings mutation (pin toggles, the cookware
+    /// editor) must save through here so a failure is never silent.
+    /// </summary>
+    public void SaveSettings()
     {
         if (!_services.SaveSettings())
             Notice("couldn't save settings; changes may not survive a restart", warning: true);
