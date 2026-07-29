@@ -79,8 +79,11 @@
     <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#4B5563" />
     <SolidColorBrush x:Key="FocusBorderBrush" Color="#0E7568" />
     <BoxShadows x:Key="FocusShadow">0 0 0 0 #00000000</BoxShadows>
+    <x:Double x:Key="NarrowThreshold">830</x:Double>
+    <FontFamily x:Key="UiFontFamily">fonts:Inter#Inter</FontFamily>
     <FontFamily x:Key="NumeralFontFamily">fonts:Inter#Inter</FontFamily>
     <FontWeight x:Key="NumeralFontWeight">Normal</FontWeight>
+    <FontWeight x:Key="ComputedFontWeight">Normal</FontWeight>
 
     <!-- Density hero -->
     <FontFamily x:Key="HeroFontFamily">fonts:Inter#Inter</FontFamily>
@@ -161,6 +164,7 @@
     <SolidColorBrush x:Key="FlexBandBrush" Color="Transparent" />
 
     <!-- Log rows -->
+    <x:Double x:Key="LogStripHeight">82</x:Double>
     <SolidColorBrush x:Key="TagPillBrush" Color="Transparent" />
     <SolidColorBrush x:Key="TagPillTextBrush" Color="#47505F" />
     <Thickness x:Key="TagPillPadding">0</Thickness>

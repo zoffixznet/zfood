@@ -35,6 +35,9 @@ public static class ThemeManager
     /// <summary>The theme currently applied to the application.</summary>
     public static string CurrentTheme { get; private set; } = DefaultTheme;
 
+    /// <summary>Raised after a theme is applied (layout presets re-evaluate).</summary>
+    public static event Action? ThemeChanged;
+
     /// <summary>Maps any stored value onto a known theme id, defaulting on unknowns.</summary>
     public static string Normalize(string? theme)
     {
@@ -67,5 +70,6 @@ public static class ThemeManager
         app.Resources.MergedDictionaries.Add(dictionary);
         _current = dictionary;
         CurrentTheme = id;
+        ThemeChanged?.Invoke();
     }
 }

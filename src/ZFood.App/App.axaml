@@ -19,6 +19,12 @@
     <Application.Styles>
         <FluentTheme />
 
+        <!-- The theme's UI text face, inherited by everything that does not
+             pick a more specific family. -->
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="{DynamicResource UiFontFamily}" />
+        </Style>
+
         <!-- Cards: the two work panels and the log strip. Each card carries
              two full-bleed overlays (gloss sheet, inner top highlight) that
              most themes leave transparent. -->
@@ -110,6 +116,7 @@
         <Style Selector="TextBox.numeric.computed">
             <Setter Property="Background" Value="{DynamicResource ComputedBrush}" />
             <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}" />
+            <Setter Property="FontWeight" Value="{DynamicResource ComputedFontWeight}" />
             <Setter Property="BorderBrush" Value="{DynamicResource ComputedBorderBrush}" />
             <Setter Property="Transitions">
                 <Transitions>

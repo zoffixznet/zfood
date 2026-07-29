@@ -55,18 +55,24 @@ public partial class MainWindow : Window
         Closing += OnClosingWindow;
         Opened += (_, _) => FocusAndSelect(ServingGramsBox);
         SizeChanged += (_, e) => UpdateResponsiveClasses(e.NewSize);
+        ThemeManager.ThemeChanged += OnThemeChanged;
+        Closed += (_, _) => ThemeManager.ThemeChanged -= OnThemeChanged;
 
         RestoreGeometry();
         UpdateResponsiveClasses(new Size(Width, Height));
     }
 
+    private void OnThemeChanged() => UpdateResponsiveClasses(ClientSize);
+
     // Two responsive presets, both style-driven: "narrow" drops the density
     // hero under the portion fields so nothing collides at small widths, and
     // "roomy" relaxes the vertical rhythm when a tall window opens the scale
-    // card's flex band.
+    // card's flex band. The narrow threshold is a theme token because some
+    // themes give the density hero a wider treatment.
     private void UpdateResponsiveClasses(Size size)
     {
-        SetClass("narrow", size.Width < 860);
+        var threshold = this.TryFindResource("NarrowThreshold", out var value) && value is double d ? d : 860;
+        SetClass("narrow", size.Width < threshold);
         SetClass("roomy", size.Height >= 980);
     }
 

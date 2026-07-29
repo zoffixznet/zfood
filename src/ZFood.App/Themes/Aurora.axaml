@@ -125,8 +125,11 @@
     <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#59FFFFFF" />
     <SolidColorBrush x:Key="FocusBorderBrush" Color="#3FE8B0" />
     <BoxShadows x:Key="FocusShadow">0 0 0 3 #2E3FE8B0, 0 0 14 0 #333FE8B0</BoxShadows>
+    <x:Double x:Key="NarrowThreshold">830</x:Double>
+    <FontFamily x:Key="UiFontFamily">fonts:Inter#Inter</FontFamily>
     <FontFamily x:Key="NumeralFontFamily">fonts:Inter#Inter</FontFamily>
     <FontWeight x:Key="NumeralFontWeight">Normal</FontWeight>
+    <FontWeight x:Key="ComputedFontWeight">Normal</FontWeight>
 
     <!-- Density hero: Space Grotesk ice numerals with a mint halo that
          continues the window's top-right bloom. -->
@@ -241,6 +244,7 @@
     </RadialGradientBrush>
 
     <!-- Log rows -->
+    <x:Double x:Key="LogStripHeight">82</x:Double>
     <SolidColorBrush x:Key="TagPillBrush" Color="Transparent" />
     <SolidColorBrush x:Key="TagPillTextBrush" Color="#A7B4DC" />
     <Thickness x:Key="TagPillPadding">0</Thickness>

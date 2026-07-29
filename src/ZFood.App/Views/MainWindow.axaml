@@ -8,7 +8,7 @@
         Title="ZFood"
         Icon="/Assets/zfood.png"
         Width="880" Height="920"
-        MinWidth="720" MinHeight="700"
+        MinWidth="800" MinHeight="700"
         Background="{DynamicResource WindowBrush}">
 
     <Window.Styles>
@@ -52,22 +52,31 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
 
-        <!-- Narrow windows drop the density hero under the fields so it never
-             collides with the use-dish-net button. The default grid cell is
-             styled (not set inline) so the narrow preset can override it. -->
+        <!-- Narrow layout: below the theme's threshold the use-dish-net
+             button leaves the eaten row for its own row under the fields, so
+             it can never collide with the density hero. The button's grid
+             cell is styled (not set inline) so the preset can override it;
+             the threshold is a theme token because some themes give the hero
+             a wider treatment. -->
         <Style Selector="Panel#DensityHeroPanel">
             <Setter Property="Grid.Row" Value="0" />
+            <Setter Property="Grid.RowSpan" Value="2" />
             <Setter Property="Grid.Column" Value="1" />
-            <Setter Property="Grid.ColumnSpan" Value="1" />
-            <Setter Property="Margin" Value="0" />
             <Setter Property="HorizontalAlignment" Value="Right" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
-        <Style Selector="Window.narrow Panel#DensityHeroPanel">
-            <Setter Property="Grid.Row" Value="1" />
-            <Setter Property="Grid.Column" Value="0" />
-            <Setter Property="Grid.ColumnSpan" Value="2" />
-            <Setter Property="Margin" Value="0,12,0,0" />
+        <Style Selector="Button#UseDishNetButton">
+            <Setter Property="Grid.Row" Value="2" />
+            <Setter Property="Grid.Column" Value="6" />
+            <Setter Property="Grid.ColumnSpan" Value="1" />
+            <Setter Property="Margin" Value="16,0,0,0" />
+        </Style>
+        <Style Selector="Window.narrow Button#UseDishNetButton">
+            <Setter Property="Grid.Row" Value="3" />
+            <Setter Property="Grid.Column" Value="2" />
+            <Setter Property="Grid.ColumnSpan" Value="5" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
         </Style>
 
         <!-- The density hero: halo behind, an optional chip surface, and the
@@ -110,6 +119,9 @@
         <Style Selector="TextBlock.heroUnit">
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="{DynamicResource HeroUnitBrush}" />
+        </Style>
+        <Style Selector="Border.heroChip.placeholder TextBlock.heroUnit">
+            <Setter Property="Foreground" Value="{DynamicResource HeroPlaceholderBrush}" />
         </Style>
 
         <!-- Pulse-capable text readouts (the dish caption). -->
@@ -290,7 +302,7 @@
                                Text="click a row to copy its result" />
                 </Grid>
                 <ListBox x:Name="RecentLogList" Classes="logList" IsVisible="{Binding !LogDrawerOpen}"
-                         ItemsSource="{Binding Log.Recent}" Height="82"
+                         ItemsSource="{Binding Log.Recent}" Height="{DynamicResource LogStripHeight}"
                          IsTabStop="False" KeyboardNavigation.TabNavigation="None"
                          Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
                     <ListBox.ItemTemplate>
@@ -343,8 +355,8 @@
                 <Border Classes="cardHighlight" />
                 <Border Classes="cardContent">
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                <StackPanel Grid.Column="0" Spacing="10">
-                    <Grid RowDefinitions="Auto,Auto" HorizontalAlignment="Left">
+                    <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="Auto,Auto" HorizontalAlignment="Left"
+                          VerticalAlignment="Top">
                         <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                             <Path Classes="sectionMark" />
                             <TextBlock Classes="sectionTitle" Text="PORTION" />
@@ -353,8 +365,9 @@
                     </Grid>
                     <!-- Columns mirror the cookware rows below so every numeral sits
                          on one shared grid across both cards. -->
-                    <Grid x:Name="PortionPanel" ColumnDefinitions="186,52,Auto,24,Auto,26,Auto"
-                          RowDefinitions="Auto,10,Auto">
+                    <Grid Grid.Row="1" Grid.Column="0" x:Name="PortionPanel"
+                          ColumnDefinitions="186,52,Auto,24,Auto,26,Auto"
+                          RowDefinitions="Auto,10,Auto,Auto" Margin="0,10,0,0">
                         <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Serving" Margin="6,0,0,0" />
                         <TextBlock Grid.Row="0" Grid.Column="1" Classes="unit" Text="grams" Margin="0,0,8,0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
@@ -402,13 +415,12 @@
                             </TextBox.InnerRightContent>
                         </TextBox>
                         <TextBlock Grid.Row="2" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
-                        <Button Grid.Row="2" Grid.Column="6" x:Name="UseDishNetButton" Classes="quiet"
-                                Margin="16,0,0,0" MaxWidth="150" Content="{Binding UseDishNetLabel}"
+                        <Button x:Name="UseDishNetButton" Classes="quiet"
+                                MaxWidth="180" Content="{Binding UseDishNetLabel}"
                                 IsEnabled="{Binding CanUseDishNet}"
                                 ToolTip.Tip="Copy the dish row's net weight into eaten grams"
                                 Click="OnUseDishNetClick" />
                     </Grid>
-                </StackPanel>
 
                 <!-- Density hero: the instrument's main display. -->
                 <Panel x:Name="DensityHeroPanel">
@@ -417,11 +429,12 @@
                             Classes.placeholder="{Binding Portion.DensityIsPlaceholder}">
                         <StackPanel Spacing="0">
                             <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-                                <TextBlock x:Name="DensityHero" Classes="hero"
+                                <TextBlock x:Name="DensityHero" Classes="hero" HorizontalAlignment="Right"
                                            Classes.placeholder="{Binding Portion.DensityIsPlaceholder}"
                                            Text="{Binding Portion.DensityCalPerG}"
                                            FontSize="46" FontFeatures="+tnum" />
-                                <TextBlock Classes="heroUnit" Text="cal/g" VerticalAlignment="Bottom" Margin="0,0,0,9" />
+                                <TextBlock Classes="heroUnit" Text="cal/g" HorizontalAlignment="Right"
+                                           VerticalAlignment="Bottom" Margin="0,0,0,9" />
                             </StackPanel>
                             <TextBlock HorizontalAlignment="Right" Classes="heroUnit"
                                        Text="{Binding Portion.DensityPer100, StringFormat='{}{0} cal / 100 g'}" />
