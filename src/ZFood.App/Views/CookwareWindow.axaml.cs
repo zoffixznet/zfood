@@ -11,6 +11,15 @@ public partial class CookwareWindow : Window
     private readonly CookwareEditorViewModel _vm;
     private bool _closing;
 
+    /// <summary>
+    /// Runtime-loader and designer entry point over blank settings; the app
+    /// itself always passes the live settings object.
+    /// </summary>
+    public CookwareWindow()
+        : this(new Settings())
+    {
+    }
+
     public CookwareWindow(Settings settings, Func<bool>? save = null)
     {
         InitializeComponent();

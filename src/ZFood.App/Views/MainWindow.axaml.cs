@@ -15,6 +15,21 @@ public partial class MainWindow : Window
     private readonly MainViewModel _vm;
     private readonly AppServices _services;
 
+    /// <summary>
+    /// Runtime-loader and designer entry point. Builds a self-contained window
+    /// over a throwaway data directory so no user data is touched; the app
+    /// itself always uses the service-taking constructor.
+    /// </summary>
+    public MainWindow()
+        : this(AppServices.Create(new AppPaths(ScratchDataDir())))
+    {
+    }
+
+    private MainWindow(AppServices services)
+        : this(new MainViewModel(services), services)
+    {
+    }
+
     public MainWindow(MainViewModel vm, AppServices services)
     {
         _vm = vm;
@@ -42,6 +57,9 @@ public partial class MainWindow : Window
 
         RestoreGeometry();
     }
+
+    private static string ScratchDataDir()
+        => Path.Combine(Path.GetTempPath(), "zfood-design-" + Guid.NewGuid().ToString("N"));
 
     private static GeoRect ToGeo(PixelRect rect) => new(rect.X, rect.Y, rect.Width, rect.Height);
 
