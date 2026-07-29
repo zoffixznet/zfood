@@ -145,6 +145,7 @@
                 </Grid>
                 <ListBox x:Name="RecentLogList" Classes="logList" IsVisible="{Binding !LogDrawerOpen}"
                          ItemsSource="{Binding Log.Recent}" Height="82"
+                         IsTabStop="False" KeyboardNavigation.TabNavigation="None"
                          Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
                     <ListBox.ItemTemplate>
                         <DataTemplate x:DataType="vm:LogRow">
@@ -163,6 +164,7 @@
                 <Border IsVisible="{Binding LogDrawerOpen}" Height="208">
                     <ScrollViewer>
                         <ListBox x:Name="DrawerLogList" Classes="logList" ItemsSource="{Binding Log.Drawer}"
+                                 IsTabStop="False" KeyboardNavigation.TabNavigation="None"
                                  Tapped="OnLogListTapped" KeyDown="OnLogListKeyDown">
                             <ListBox.DataTemplates>
                                 <DataTemplate DataType="vm:LogDayHeader">
@@ -199,11 +201,11 @@
                         <TextBlock Grid.Row="0" Grid.Column="1" Classes="unit" Text="grams" Margin="0,0,8,0"
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox Grid.Row="0" Grid.Column="2" x:Name="ServingGramsBox" Classes="numeric"
-                                 Text="{Binding Portion.ServingGramsText}" TabIndex="1" />
+                                 Text="{Binding Portion.ServingGramsText}" />
                         <TextBlock Grid.Row="0" Grid.Column="3" Classes="unit" Text="=" TextAlignment="Center"
                                    VerticalAlignment="Center" />
                         <TextBox Grid.Row="0" Grid.Column="4" x:Name="ServingCaloriesBox" Classes="numeric"
-                                 Text="{Binding Portion.ServingCaloriesText}" TabIndex="2" />
+                                 Text="{Binding Portion.ServingCaloriesText}" />
                         <TextBlock Grid.Row="0" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Eaten" Margin="6,0,0,0" />
@@ -211,12 +213,12 @@
                                    HorizontalAlignment="Right" VerticalAlignment="Center" />
                         <TextBox Grid.Row="2" Grid.Column="2" x:Name="EatenGramsBox" Classes="numeric"
                                  Classes.computed="{Binding Portion.EatenGramsIsComputed}"
-                                 Text="{Binding Portion.EatenGramsText}" TabIndex="3" />
+                                 Text="{Binding Portion.EatenGramsText}" />
                         <TextBlock Grid.Row="2" Grid.Column="3" Classes="unit" Text="⇄" TextAlignment="Center"
                                    VerticalAlignment="Center" />
                         <TextBox Grid.Row="2" Grid.Column="4" x:Name="EatenCaloriesBox" Classes="numeric"
                                  Classes.computed="{Binding Portion.EatenCaloriesIsComputed}"
-                                 Text="{Binding Portion.EatenCaloriesText}" TabIndex="4" />
+                                 Text="{Binding Portion.EatenCaloriesText}" />
                         <TextBlock Grid.Row="2" Grid.Column="5" Classes="unit" Text="cal" Margin="6,0,0,0" />
                         <Button Grid.Row="2" Grid.Column="6" x:Name="UseDishNetButton" Classes="quiet"
                                 Margin="16,0,0,0" Content="{Binding UseDishNetLabel}"
@@ -308,6 +310,7 @@
                         </Button>
                         <ListBox x:Name="MorePotsList" Classes="logList" ItemsSource="{Binding Scale.AvailablePots}"
                                  IsVisible="{Binding MorePotsOpen}" Margin="16,2,0,0"
+                                 IsTabStop="False" KeyboardNavigation.TabNavigation="None"
                                  Tapped="OnMorePotsTapped" KeyDown="OnMorePotsKeyDown">
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="core:Cookware">
@@ -333,13 +336,13 @@
                         <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" Margin="8,0,0,0" />
                         <TextBox Grid.Row="0" Grid.Column="1" x:Name="RecipeBox" Classes="numeric"
                                  HorizontalAlignment="Right"
-                                 Text="{Binding Scale.RecipeText}" TabIndex="40" />
+                                 Text="{Binding Scale.RecipeText}" />
                         <TextBlock Grid.Row="0" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
 
                         <TextBlock Grid.Row="2" Grid.Column="0" Classes="fieldLabel" Text="Water to add" Margin="8,0,0,0" />
                         <TextBox Grid.Row="2" Grid.Column="1" x:Name="DeltaBox" Classes="numeric computed delta"
                                  IsReadOnly="True" Text="{Binding Scale.DeltaText, Mode=OneWay}"
-                                 views:Pulse.Tick="{Binding Scale.DeltaPulse}" TabIndex="41" />
+                                 views:Pulse.Tick="{Binding Scale.DeltaPulse}" />
                         <TextBlock Grid.Row="2" Grid.Column="2" Classes="unit" Text="g" Margin="6,0,0,0" />
                         <Button Grid.Row="2" Grid.Column="3" x:Name="CopyButton" Classes="quiet" Content="Copy"
                                 Margin="16,0,0,0" VerticalAlignment="Center" IsEnabled="{Binding Scale.CanCopy}"

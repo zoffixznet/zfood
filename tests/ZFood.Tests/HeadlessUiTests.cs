@@ -299,6 +299,36 @@ public class HeadlessUiTests
     }
 
     [AvaloniaFact]
+    public void Tab_walks_only_numeric_fields_in_logical_order()
+    {
+        using var f = new Fixture();
+
+        f.Box("ServingGramsBox").Focus();
+        Fixture.Pump();
+
+        var stops = new List<string>();
+        for (var i = 0; i < 9; i++)
+        {
+            f.Press(Key.Tab);
+            var focused = f.FocusedBox();
+            Assert.NotNull(focused);
+            stops.Add(focused!.Name
+                ?? (focused.Classes.Contains("rowGross") ? "rowGross" : focused.Classes.Contains("rowNet") ? "rowNet" : "?"));
+        }
+
+        Assert.Equal(
+            new[]
+            {
+                "ServingCaloriesBox", "EatenGramsBox", "EatenCaloriesBox",
+                "rowGross", "rowNet",  // Big pot
+                "rowGross", "rowNet",  // Steel bowl
+                "rowGross",            // No pot (single field)
+                "RecipeBox",
+            },
+            stops);
+    }
+
+    [AvaloniaFact]
     public void Escape_clears_only_the_focused_field()
     {
         using var f = new Fixture();
