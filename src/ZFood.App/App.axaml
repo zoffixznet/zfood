@@ -22,12 +22,12 @@
         <Color x:Key="HairlineColor">#E3E5E8</Color>
         <Color x:Key="HairlineStrongColor">#D3D7DC</Color>
         <Color x:Key="InkColor">#1B1F24</Color>
-        <Color x:Key="SubtleColor">#68707B</Color>
-        <Color x:Key="GhostColor">#AEB4BC</Color>
+        <Color x:Key="SubtleColor">#4B5563</Color>
+        <Color x:Key="GhostColor">#7E8794</Color>
         <Color x:Key="AccentColor">#0E7568</Color>
         <Color x:Key="AccentTintColor">#EDF4F2</Color>
         <Color x:Key="PulseTintColor">#C5E0DB</Color>
-        <Color x:Key="WarnColor">#B0821A</Color>
+        <Color x:Key="WarnColor">#8F6A12</Color>
         <Color x:Key="ErrorColor">#A42B1D</Color>
 
         <SolidColorBrush x:Key="PorcelainBrush" Color="{StaticResource PorcelainColor}" />
