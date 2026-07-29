@@ -195,7 +195,13 @@ public partial class MainWindow : Window
         {
             if (focused is TextBox { IsReadOnly: false } box)
             {
-                box.Clear();
+                // Esc clears just the focused field, and only while that field
+                // holds the input role (or is a plain input field). On the
+                // computed member of a pair it is a deliberate no-op: clearing
+                // it would count as a typed edit, flip the roles, and wipe the
+                // partner's user-entered value.
+                if (!box.Classes.Contains("computed"))
+                    box.Clear();
                 return true;
             }
 

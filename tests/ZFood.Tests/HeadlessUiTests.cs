@@ -369,6 +369,52 @@ public class HeadlessUiTests
     }
 
     [AvaloniaFact]
+    public void Escape_on_a_computed_pot_pair_member_is_a_no_op()
+    {
+        using var f = new Fixture();
+
+        // Gross is the input, net is computed. Esc on the computed net must
+        // not clear anything, flip the roles, or wipe the typed gross value.
+        f.Type(f.RowBox(0, "rowGross"), "1440");
+        f.RowBox(0, "rowNet").Focus();
+        Fixture.Pump();
+        f.Press(Key.Escape);
+
+        Assert.Equal("1440", f.RowBox(0, "rowGross").Text);
+        Assert.Equal("800", f.RowBox(0, "rowNet").Text);
+        Assert.Equal(PairSide.A, f.Vm.Scale.Rows[0].Input);
+
+        // The unit is still complete and commits normally.
+        f.Vm.CommitUnit(MainViewModel.UnitOfRow(f.Vm.Scale.Rows[0]));
+        Assert.Contains(f.Services.Log.Entries, e => e.Panel == LogPanel.Tare && e.Result == "800");
+
+        // Esc on the input member still clears it.
+        f.RowBox(0, "rowGross").Focus();
+        Fixture.Pump();
+        f.Press(Key.Escape);
+        Assert.Equal("", f.RowBox(0, "rowGross").Text ?? "");
+    }
+
+    [AvaloniaFact]
+    public void Escape_on_the_computed_eaten_member_keeps_the_typed_partner()
+    {
+        using var f = new Fixture();
+
+        f.Type(f.Box("ServingGramsBox"), "56");
+        f.Type(f.Box("ServingCaloriesBox"), "250");
+        f.Type(f.Box("EatenGramsBox"), "128");
+        Assert.Equal("571", f.Box("EatenCaloriesBox").Text);
+
+        f.Box("EatenCaloriesBox").Focus();
+        Fixture.Pump();
+        f.Press(Key.Escape);
+
+        Assert.Equal("128", f.Box("EatenGramsBox").Text);
+        Assert.Equal("571", f.Box("EatenCaloriesBox").Text);
+        Assert.Equal(PairSide.A, f.Vm.Portion.EatenInput);
+    }
+
+    [AvaloniaFact]
     public void Tabular_numerals_make_equal_length_numbers_equal_width()
     {
         using var f = new Fixture();
