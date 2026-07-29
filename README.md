@@ -90,12 +90,12 @@ the app never refuses to start over its own data.
 ## Building and testing
 
 ```sh
-make            # list all targets
-make test       # unit tests plus headless UI tests
-make smoke      # launches the real binary on a private virtual display
-make format     # code formatting
-make icons      # regenerate icons from the SVG source
-make screenshots# regenerate the README screenshots from the running app
+make              # list all targets
+make test         # unit tests plus headless UI tests
+make smoke        # launches the real binary on a private virtual display
+make format       # code formatting
+make icons        # regenerate icons from the SVG source
+make screenshots  # regenerate the README screenshots from the running app
 ```
 
 The smoke and screenshot targets need `Xvfb`, `xdotool`, and ImageMagick.
