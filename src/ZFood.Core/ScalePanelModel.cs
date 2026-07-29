@@ -3,8 +3,8 @@ using System.Collections.ObjectModel;
 namespace ZFood.Core;
 
 /// <summary>
-/// The SCALE panel: one row per pinned pot, session rows promoted from the
-/// unpinned tail, the permanent no-pot row last, and the water section bound to
+/// The SCALE panel: one row per pinned cookware item, session rows promoted from the
+/// unpinned tail, the permanent no-cookware row last, and the water section bound to
 /// the dish row through the <see cref="DishLatch"/>. Owns row lifecycle (pins,
 /// promotions, CRUD reconciliation, Reset) and the delta pipeline.
 /// </summary>
@@ -24,19 +24,19 @@ public sealed class ScalePanelModel : ObservableModel
     public ScalePanelModel(Settings settings)
     {
         _settings = settings;
-        NoPotRow = new PotRowModel(this, PotRowModel.NoPotId, "No pot", 0, pinned: false);
-        foreach (var pot in settings.Cookware.Where(c => c.Pinned).OrderBy(c => c.Order))
-            Rows.Add(new PotRowModel(this, pot.Id, pot.Name, pot.Grams, pinned: true));
-        Rows.Add(NoPotRow);
+        NoCookwareRow = new CookwareRowModel(this, CookwareRowModel.NoCookwareId, "No cookware", 0, pinned: false);
+        foreach (var item in settings.Cookware.Where(c => c.Pinned).OrderBy(c => c.Order))
+            Rows.Add(new CookwareRowModel(this, item.Id, item.Name, item.Grams, pinned: true));
+        Rows.Add(NoCookwareRow);
     }
 
-    /// <summary>All rows in display order: pinned, then session rows, then the no-pot row.</summary>
-    public ObservableCollection<PotRowModel> Rows { get; } = new();
+    /// <summary>All rows in display order: pinned, then session rows, then the no-cookware row.</summary>
+    public ObservableCollection<CookwareRowModel> Rows { get; } = new();
 
-    public PotRowModel NoPotRow { get; }
+    public CookwareRowModel NoCookwareRow { get; }
 
     /// <summary>The dish row, or null while the water section is dormant.</summary>
-    public PotRowModel? DishRow => Rows.FirstOrDefault(r => r.IsDish);
+    public CookwareRowModel? DishRow => Rows.FirstOrDefault(r => r.IsDish);
 
     /// <summary>The recipe weight text. Setting it via binding is a user edit.</summary>
     public string RecipeText
@@ -80,8 +80,8 @@ public sealed class ScalePanelModel : ObservableModel
     /// <summary>False while the water section is dormant (Copy disabled).</summary>
     public bool CanCopy => DeltaValue is not null;
 
-    /// <summary>Unpinned cookware available in the More-pots expander.</summary>
-    public IReadOnlyList<Cookware> AvailablePots
+    /// <summary>Unpinned cookware available in the More-cookware expander.</summary>
+    public IReadOnlyList<Cookware> AvailableCookware
         => _settings.Cookware
             .Where(c => !c.Pinned && Rows.All(r => r.Id != c.Id))
             .OrderBy(c => c.Name, StringComparer.CurrentCultureIgnoreCase)
@@ -91,9 +91,9 @@ public sealed class ScalePanelModel : ObservableModel
     public event Action<string>? Activity;
 
     /// <summary>Raised when the dish binding moves; true means the move must be loud.</summary>
-    public event Action<PotRowModel?, bool>? DishRebound;
+    public event Action<CookwareRowModel?, bool>? DishRebound;
 
-    /// <summary>Raised for status-bar notes about loud row changes (deleted pot, pin cap).</summary>
+    /// <summary>Raised for status-bar notes about loud row changes (deleted cookware, pin cap).</summary>
     public event Action<string>? Note;
 
     /// <summary>Raised when pins or pin order changed and settings should be saved.</summary>
@@ -103,7 +103,7 @@ public sealed class ScalePanelModel : ObservableModel
     public int PinnedCount => Rows.Count(r => r.Pinned);
 
     /// <summary>Handles an accepted user edit in a row (called from the row's text setters).</summary>
-    internal void OnRowEdited(PotRowModel row, PairSide side)
+    internal void OnRowEdited(CookwareRowModel row, PairSide side)
     {
         row.Pair.UserEdited(side);
         row.Recompute();
@@ -121,7 +121,7 @@ public sealed class ScalePanelModel : ObservableModel
     /// An explicit act (Enter, click, accelerator) binds the row as the dish.
     /// A move while the recipe holds a value is loud.
     /// </summary>
-    public void BindDish(PotRowModel row)
+    public void BindDish(CookwareRowModel row)
     {
         var loud = _latch.Frozen && _latch.DishRowId is not null && _latch.DishRowId != row.Id;
         if (_latch.ExplicitBind(row.Id))
@@ -129,19 +129,19 @@ public sealed class ScalePanelModel : ObservableModel
     }
 
     /// <summary>Promotes an unpinned cookware item into an immediately typeable session row.</summary>
-    public PotRowModel? PromoteToSession(string cookwareId)
+    public CookwareRowModel? PromoteToSession(string cookwareId)
     {
         var existing = Rows.FirstOrDefault(r => r.Id == cookwareId);
         if (existing is not null)
             return existing;
 
-        var pot = _settings.Cookware.FirstOrDefault(c => c.Id == cookwareId);
-        if (pot is null)
+        var item = _settings.Cookware.FirstOrDefault(c => c.Id == cookwareId);
+        if (item is null)
             return null;
 
-        var row = new PotRowModel(this, pot.Id, pot.Name, pot.Grams, pinned: false);
-        Rows.Insert(Rows.Count - 1, row); // above the no-pot row
-        Raise(nameof(AvailablePots));
+        var row = new CookwareRowModel(this, item.Id, item.Name, item.Grams, pinned: false);
+        Rows.Insert(Rows.Count - 1, row); // above the no-cookware row
+        Raise(nameof(AvailableCookware));
         return row;
     }
 
@@ -150,30 +150,30 @@ public sealed class ScalePanelModel : ObservableModel
     /// it to a session row when it holds a value or the dish role and removing
     /// it otherwise. Returns true when anything changed.
     /// </summary>
-    public bool TogglePin(PotRowModel row)
+    public bool TogglePin(CookwareRowModel row)
     {
-        if (row.IsNoPot)
+        if (row.IsNoCookware)
             return false;
-        var pot = _settings.Cookware.FirstOrDefault(c => c.Id == row.Id);
-        if (pot is null)
+        var item = _settings.Cookware.FirstOrDefault(c => c.Id == row.Id);
+        if (item is null)
             return false;
 
         if (!row.Pinned)
         {
             if (PinnedCount >= PinnedCap)
             {
-                Note?.Invoke($"pin limit is {PinnedCap}; unpin another pot first");
+                Note?.Invoke($"pin limit is {PinnedCap}; unpin another cookware item first");
                 return false;
             }
 
-            pot.Pinned = true;
-            pot.Order = _settings.Cookware.Where(c => c.Pinned).Max(c => c.Order) + 1;
+            item.Pinned = true;
+            item.Order = _settings.Cookware.Where(c => c.Pinned).Max(c => c.Order) + 1;
             row.Pinned = true;
             MoveRow(row, PinnedSectionEnd(exclude: row));
         }
         else
         {
-            pot.Pinned = false;
+            item.Pinned = false;
             row.Pinned = false;
             if (row.HoldsValue || row.IsDish)
                 MoveRow(row, SessionSectionEnd(exclude: row)); // stays visible as a session row
@@ -181,7 +181,7 @@ public sealed class ScalePanelModel : ObservableModel
                 Rows.Remove(row);
         }
 
-        Raise(nameof(AvailablePots));
+        Raise(nameof(AvailableCookware));
         SettingsChanged?.Invoke();
         return true;
     }
@@ -194,19 +194,19 @@ public sealed class ScalePanelModel : ObservableModel
     /// </summary>
     public void SyncFromSettings()
     {
-        foreach (var row in Rows.Where(r => !r.IsNoPot).ToList())
+        foreach (var row in Rows.Where(r => !r.IsNoCookware).ToList())
         {
-            var pot = _settings.Cookware.FirstOrDefault(c => c.Id == row.Id);
-            if (pot is null)
+            var item = _settings.Cookware.FirstOrDefault(c => c.Id == row.Id);
+            if (item is null)
             {
                 RemoveDeletedRow(row);
                 continue;
             }
 
-            row.Name = pot.Name;
-            if (Math.Abs(row.Tare - pot.Grams) > double.Epsilon)
+            row.Name = item.Name;
+            if (Math.Abs(row.Tare - item.Grams) > double.Epsilon)
             {
-                row.Tare = pot.Grams;
+                row.Tare = item.Grams;
                 row.Recompute();
                 // The tare edit changed this row's calculation, so the unit must
                 // commit the corrected numbers at its next settle point. (The
@@ -215,23 +215,23 @@ public sealed class ScalePanelModel : ObservableModel
                     row.ChangedSinceCommit = true;
             }
 
-            if (pot.Pinned != row.Pinned)
+            if (item.Pinned != row.Pinned)
             {
-                row.Pinned = pot.Pinned;
-                if (!pot.Pinned && !row.HoldsValue && !row.IsDish)
+                row.Pinned = item.Pinned;
+                if (!item.Pinned && !row.HoldsValue && !row.IsDish)
                     Rows.Remove(row);
             }
         }
 
-        foreach (var pot in _settings.Cookware.Where(c => c.Pinned))
+        foreach (var item in _settings.Cookware.Where(c => c.Pinned))
         {
-            if (Rows.All(r => r.Id != pot.Id))
-                Rows.Insert(PinnedSectionEnd(exclude: null), new PotRowModel(this, pot.Id, pot.Name, pot.Grams, pinned: true));
+            if (Rows.All(r => r.Id != item.Id))
+                Rows.Insert(PinnedSectionEnd(exclude: null), new CookwareRowModel(this, item.Id, item.Name, item.Grams, pinned: true));
         }
 
         SortPinnedRows();
         RecomputeDelta();
-        Raise(nameof(AvailablePots));
+        Raise(nameof(AvailableCookware));
     }
 
     /// <summary>
@@ -241,7 +241,7 @@ public sealed class ScalePanelModel : ObservableModel
     /// </summary>
     public void Reset()
     {
-        foreach (var row in Rows.Where(r => !r.Pinned && !r.IsNoPot).ToList())
+        foreach (var row in Rows.Where(r => !r.Pinned && !r.IsNoCookware).ToList())
             Rows.Remove(row);
         foreach (var row in Rows)
         {
@@ -257,7 +257,7 @@ public sealed class ScalePanelModel : ObservableModel
 
         _latch.Reset();
         RecomputeDelta();
-        Raise(nameof(AvailablePots));
+        Raise(nameof(AvailableCookware));
     }
 
     /// <summary>Recomputes the water section from the dish row and recipe text.</summary>
@@ -283,7 +283,7 @@ public sealed class ScalePanelModel : ObservableModel
     private void OnRecipeEdited()
     {
         _latch.RecipeChanged(!string.IsNullOrWhiteSpace(RecipeText));
-        if (DishRow is PotRowModel dish)
+        if (DishRow is CookwareRowModel dish)
             dish.ChangedSinceCommit = true;
         RecomputeDelta();
         Activity?.Invoke(DeltaValue is double d ? $"= {Numeric.FormatWhole(d)} g" : Dash);
@@ -293,13 +293,13 @@ public sealed class ScalePanelModel : ObservableModel
     {
         foreach (var row in Rows)
             row.IsDish = row.Id == _latch.DishRowId;
-        if (DishRow is PotRowModel dish)
+        if (DishRow is CookwareRowModel dish)
             dish.ChangedSinceCommit = true;
         RecomputeDelta();
         DishRebound?.Invoke(DishRow, loud);
     }
 
-    private void RemoveDeletedRow(PotRowModel row)
+    private void RemoveDeletedRow(CookwareRowModel row)
     {
         var hadValue = row.HoldsValue;
         var wasDish = row.IsDish;
@@ -314,7 +314,7 @@ public sealed class ScalePanelModel : ObservableModel
         }
     }
 
-    private string RowEcho(PotRowModel row)
+    private string RowEcho(CookwareRowModel row)
     {
         if (row.IsDish && DeltaValue is double d)
             return $"= {Numeric.FormatWhole(d)} g";
@@ -322,13 +322,13 @@ public sealed class ScalePanelModel : ObservableModel
         return partner is double p ? $"= {Numeric.FormatWhole(p)} g" : Dash;
     }
 
-    private int PinnedSectionEnd(PotRowModel? exclude)
+    private int PinnedSectionEnd(CookwareRowModel? exclude)
         => Rows.Count(r => r.Pinned && !ReferenceEquals(r, exclude));
 
-    private int SessionSectionEnd(PotRowModel? exclude)
-        => Rows.Count(r => !r.IsNoPot && !ReferenceEquals(r, exclude));
+    private int SessionSectionEnd(CookwareRowModel? exclude)
+        => Rows.Count(r => !r.IsNoCookware && !ReferenceEquals(r, exclude));
 
-    private void MoveRow(PotRowModel row, int newIndex)
+    private void MoveRow(CookwareRowModel row, int newIndex)
     {
         var oldIndex = Rows.IndexOf(row);
         if (oldIndex < 0 || oldIndex == newIndex)

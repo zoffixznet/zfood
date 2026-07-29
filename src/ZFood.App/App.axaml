@@ -181,7 +181,7 @@
             <Setter Property="TextElement.Foreground" Value="{StaticResource GhostBrush}" />
         </Style>
 
-        <!-- Quiet text-only toggle (the More-pots expander header). -->
+        <!-- Quiet text-only toggle (the More-cookware expander header). -->
         <Style Selector="Button.linklike">
             <Setter Property="Focusable" Value="False" />
             <Setter Property="Background" Value="Transparent" />

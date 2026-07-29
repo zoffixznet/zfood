@@ -1,15 +1,16 @@
 namespace ZFood.Core;
 
 /// <summary>
-/// One pot row on the SCALE panel: a cookware item (or the permanent no-pot
+/// One cookware row on the SCALE panel: a cookware item (or the permanent no-cookware
 /// row) with its own bidirectional gross/net pair and last-edited-wins state.
 /// Text properties are bind-ready; user edits flow through the owning
 /// <see cref="ScalePanelModel"/>, programmatic partner updates do not.
 /// </summary>
-public sealed class PotRowModel : ObservableModel
+public sealed class CookwareRowModel : ObservableModel
 {
-    /// <summary>Row id of the permanent no-pot (tare 0) row.</summary>
-    public const string NoPotId = "nopot";
+    /// <summary>Row id of the permanent no-cookware (tare 0) row. The literal
+    /// value is persisted inside log.jsonl unit ids and must never change.</summary>
+    public const string NoCookwareId = "nopot";
 
     private readonly ScalePanelModel _panel;
     private string _name;
@@ -23,7 +24,7 @@ public sealed class PotRowModel : ObservableModel
     private bool _netIsComputed;
     private int _computedPulse;
 
-    internal PotRowModel(ScalePanelModel panel, string id, string name, double tare, bool pinned)
+    internal CookwareRowModel(ScalePanelModel panel, string id, string name, double tare, bool pinned)
     {
         _panel = panel;
         Id = id;
@@ -36,10 +37,10 @@ public sealed class PotRowModel : ObservableModel
 
     internal bool Updating { get; set; }
 
-    /// <summary>Cookware id, or <see cref="NoPotId"/> for the permanent no-pot row.</summary>
+    /// <summary>Cookware id, or <see cref="NoCookwareId"/> for the permanent no-cookware row.</summary>
     public string Id { get; }
 
-    public bool IsNoPot => Id == NoPotId;
+    public bool IsNoCookware => Id == NoCookwareId;
 
     public string Name
     {
@@ -79,7 +80,7 @@ public sealed class PotRowModel : ObservableModel
         internal set => Set(ref _isDish, value);
     }
 
-    /// <summary>True while the gross reading is below the tare (probable wrong pot).</summary>
+    /// <summary>True while the gross reading is below the tare (probable wrong cookware).</summary>
     public bool BelowTare
     {
         get => _belowTare;

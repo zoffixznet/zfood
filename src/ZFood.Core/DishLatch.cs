@@ -1,7 +1,7 @@
 namespace ZFood.Core;
 
 /// <summary>
-/// The dish-binding latch. Exactly one pot row (or none) is the dish, the row
+/// The dish-binding latch. Exactly one cookware row (or none) is the dish, the row
 /// feeding the water section. While the recipe field is empty the binding
 /// follows the last row the user typed in, clicked, or jumped to; once the
 /// recipe field holds text the binding freezes and only an explicit act (Enter

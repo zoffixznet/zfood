@@ -17,13 +17,13 @@ public class ScalePanelModelTests
 
     private static ScalePanelModel Panel(Settings? settings = null) => new(settings ?? DemoSettings());
 
-    private static PotRowModel Row(ScalePanelModel panel, string id) => panel.Rows.First(r => r.Id == id);
+    private static CookwareRowModel Row(ScalePanelModel panel, string id) => panel.Rows.First(r => r.Id == id);
 
     [Fact]
-    public void Builds_pinned_rows_in_order_with_the_no_pot_row_last()
+    public void Builds_pinned_rows_in_order_with_the_no_cookware_row_last()
     {
         var panel = Panel();
-        Assert.Equal(new[] { "pot1", "pot2", PotRowModel.NoPotId }, panel.Rows.Select(r => r.Id));
+        Assert.Equal(new[] { "pot1", "pot2", CookwareRowModel.NoCookwareId }, panel.Rows.Select(r => r.Id));
         Assert.Equal("tare 640", Row(panel, "pot1").TareEcho);
     }
 
@@ -117,15 +117,15 @@ public class ScalePanelModelTests
     }
 
     [Fact]
-    public void No_pot_row_covers_dishes_weighed_directly()
+    public void No_cookware_row_covers_dishes_weighed_directly()
     {
         var panel = Panel();
-        panel.NoPotRow.GrossText = "800";
+        panel.NoCookwareRow.GrossText = "800";
         panel.RecipeText = "1000";
 
-        Assert.Equal(800d, panel.NoPotRow.NetValue);
+        Assert.Equal(800d, panel.NoCookwareRow.NetValue);
         Assert.Equal(-200d, panel.DeltaValue);
-        Assert.Equal(panel.NoPotRow, panel.DishRow);
+        Assert.Equal(panel.NoCookwareRow, panel.DishRow);
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public class ScalePanelModelTests
     public void Explicit_bind_moves_the_frozen_latch_and_reports_loud()
     {
         var panel = Panel();
-        PotRowModel? reboundTo = null;
+        CookwareRowModel? reboundTo = null;
         var loudMove = false;
         panel.DishRebound += (row, loud) => (reboundTo, loudMove) = (row, loud);
 
@@ -198,14 +198,14 @@ public class ScalePanelModelTests
     }
 
     [Fact]
-    public void Promoting_from_the_expander_inserts_a_session_row_above_no_pot()
+    public void Promoting_from_the_expander_inserts_a_session_row_above_no_cookware()
     {
         var panel = Panel();
         var row = panel.PromoteToSession("pot3")!;
 
         Assert.False(row.Pinned);
-        Assert.Equal(new[] { "pot1", "pot2", "pot3", PotRowModel.NoPotId }, panel.Rows.Select(r => r.Id));
-        Assert.DoesNotContain(panel.AvailablePots, c => c.Id == "pot3");
+        Assert.Equal(new[] { "pot1", "pot2", "pot3", CookwareRowModel.NoCookwareId }, panel.Rows.Select(r => r.Id));
+        Assert.DoesNotContain(panel.AvailableCookware, c => c.Id == "pot3");
     }
 
     [Fact]
@@ -222,7 +222,7 @@ public class ScalePanelModelTests
         Assert.True(row.Pinned);
         Assert.True(settings.Cookware.First(c => c.Id == "pot3").Pinned);
         Assert.Equal(1, saved);
-        Assert.Equal(new[] { "pot1", "pot2", "pot3", PotRowModel.NoPotId }, panel.Rows.Select(r => r.Id));
+        Assert.Equal(new[] { "pot1", "pot2", "pot3", CookwareRowModel.NoCookwareId }, panel.Rows.Select(r => r.Id));
     }
 
     [Fact]
@@ -251,7 +251,7 @@ public class ScalePanelModelTests
 
         Assert.DoesNotContain(panel.Rows, r => r.Id == "pot2");
         Assert.False(settings.Cookware.First(c => c.Id == "pot2").Pinned);
-        Assert.Contains(panel.AvailablePots, c => c.Id == "pot2");
+        Assert.Contains(panel.AvailableCookware, c => c.Id == "pot2");
     }
 
     [Fact]
@@ -266,7 +266,7 @@ public class ScalePanelModelTests
         Assert.Contains(panel.Rows, r => r.Id == "pot1");
         Assert.False(Row(panel, "pot1").Pinned);
         Assert.Equal("800", Row(panel, "pot1").NetText); // value survived
-        Assert.Equal(new[] { "pot2", "pot1", PotRowModel.NoPotId }, panel.Rows.Select(r => r.Id));
+        Assert.Equal(new[] { "pot2", "pot1", CookwareRowModel.NoCookwareId }, panel.Rows.Select(r => r.Id));
     }
 
     [Fact]
@@ -292,7 +292,7 @@ public class ScalePanelModelTests
 
         panel.Reset();
 
-        Assert.Equal(new[] { "pot1", "pot2", PotRowModel.NoPotId }, panel.Rows.Select(r => r.Id));
+        Assert.Equal(new[] { "pot1", "pot2", CookwareRowModel.NoCookwareId }, panel.Rows.Select(r => r.Id));
         Assert.All(panel.Rows, r => Assert.Equal("", r.GrossText));
         Assert.All(panel.Rows, r => Assert.Equal(PairSide.None, r.Input));
         Assert.Equal("", panel.RecipeText);
@@ -359,7 +359,7 @@ public class ScalePanelModelTests
     }
 
     [Fact]
-    public void Deleting_a_pot_with_a_value_clears_the_row_loudly()
+    public void Deleting_cookware_with_a_value_clears_the_row_loudly()
     {
         var settings = DemoSettings();
         var panel = Panel(settings);
@@ -379,7 +379,7 @@ public class ScalePanelModelTests
     }
 
     [Fact]
-    public void Deleting_an_untouched_pot_is_quiet()
+    public void Deleting_untouched_cookware_is_quiet()
     {
         var settings = DemoSettings();
         var panel = Panel(settings);
@@ -403,7 +403,7 @@ public class ScalePanelModelTests
         settings.Cookware.First(c => c.Id == "pot3").Order = 0; // first
         panel.SyncFromSettings();
 
-        Assert.Equal(new[] { "pot3", "pot1", "pot2", PotRowModel.NoPotId }, panel.Rows.Select(r => r.Id));
+        Assert.Equal(new[] { "pot3", "pot1", "pot2", CookwareRowModel.NoCookwareId }, panel.Rows.Select(r => r.Id));
     }
 
     [Fact]
@@ -417,14 +417,14 @@ public class ScalePanelModelTests
 
         var dishEntry = Row(panel, "pot2").TryBuildEntry(t0)!;
         Assert.Equal(LogPanel.Water, dishEntry.Panel);
-        Assert.Equal(LogEntryFactory.PotUnit("pot2"), dishEntry.Unit);
+        Assert.Equal(LogEntryFactory.CookwareUnit("pot2"), dishEntry.Unit);
         Assert.Equal("-600", dishEntry.Result);
 
         var otherEntry = Row(panel, "pot1").TryBuildEntry(t0)!;
         Assert.Equal(LogPanel.Tare, otherEntry.Panel);
         Assert.Equal("800", otherEntry.Result);
 
-        Assert.Null(panel.NoPotRow.TryBuildEntry(t0)); // untouched row has nothing to log
+        Assert.Null(panel.NoCookwareRow.TryBuildEntry(t0)); // untouched row has nothing to log
     }
 
     [Fact]

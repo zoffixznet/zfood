@@ -57,7 +57,7 @@ public class HeadlessUiTests
         public TextBox RowBox(int index, string className)
         {
             Window.UpdateLayout();
-            var items = Window.FindControl<ItemsControl>("PotRowsControl")!;
+            var items = Window.FindControl<ItemsControl>("CookwareRowsControl")!;
             var container = items.ContainerFromIndex(index)!;
             return container.GetVisualDescendants().OfType<TextBox>()
                 .First(t => t.Classes.Contains(className));
@@ -110,7 +110,7 @@ public class HeadlessUiTests
     }
 
     [AvaloniaFact]
-    public void Typing_in_a_pot_row_makes_it_the_dish_and_the_delta_follows()
+    public void Typing_in_a_cookware_row_makes_it_the_dish_and_the_delta_follows()
     {
         using var f = new Fixture();
 
@@ -173,15 +173,15 @@ public class HeadlessUiTests
     }
 
     [AvaloniaFact]
-    public void Promoting_a_pot_from_the_expander_yields_an_immediately_typeable_row()
+    public void Promoting_cookware_from_the_expander_yields_an_immediately_typeable_row()
     {
         using var f = new Fixture();
 
-        f.Vm.MorePotsOpen = true;
+        f.Vm.MoreCookwareOpen = true;
         Fixture.Pump();
         f.Window.UpdateLayout();
-        var list = f.Window.FindControl<ListBox>("MorePotsList")!;
-        list.SelectedIndex = 0; // Sieve, the only unpinned pot
+        var list = f.Window.FindControl<ListBox>("MoreCookwareList")!;
+        list.SelectedIndex = 0; // Sieve, the only unpinned cookware
         var container = list.ContainerFromIndex(0)!;
         container.Focus();
         Fixture.Pump();
@@ -190,8 +190,8 @@ public class HeadlessUiTests
         f.Window.UpdateLayout();
         Fixture.Pump();
 
-        // The session row exists above the no-pot row and its reads field has focus.
-        Assert.Equal(new[] { "p1", "p2", "p3", PotRowModel.NoPotId }, f.Vm.Scale.Rows.Select(r => r.Id));
+        // The session row exists above the no-cookware row and its reads field has focus.
+        Assert.Equal(new[] { "p1", "p2", "p3", CookwareRowModel.NoCookwareId }, f.Vm.Scale.Rows.Select(r => r.Id));
         var focused = f.FocusedBox();
         Assert.NotNull(focused);
         Assert.Contains("rowGross", focused!.Classes);
@@ -212,13 +212,13 @@ public class HeadlessUiTests
         f.Press(Key.Down);
         Assert.Equal("EatenGramsBox", f.FocusedName());
 
-        f.Press(Key.Down); // first pot row's reads field
+        f.Press(Key.Down); // first cookware row's reads field
         var focused = f.FocusedBox();
         Assert.NotNull(focused);
         Assert.Contains("rowGross", focused!.Classes);
 
-        f.Press(Key.Down); // second pot row
-        f.Press(Key.Down); // no-pot row
+        f.Press(Key.Down); // second cookware row
+        f.Press(Key.Down); // no-cookware row
         f.Press(Key.Down);
         Assert.Equal("RecipeBox", f.FocusedName());
 
@@ -294,7 +294,7 @@ public class HeadlessUiTests
         Fixture.Pump();
 
         Assert.Equal("", f.Box("ServingGramsBox").Text ?? "");
-        Assert.Equal(new[] { "p1", "p2", PotRowModel.NoPotId }, f.Vm.Scale.Rows.Select(r => r.Id));
+        Assert.Equal(new[] { "p1", "p2", CookwareRowModel.NoCookwareId }, f.Vm.Scale.Rows.Select(r => r.Id));
         Assert.All(f.Vm.Scale.Rows, r => Assert.Equal("", r.GrossText));
         Assert.Equal("", f.Vm.Scale.RecipeText);
         Assert.Null(f.Vm.Scale.DishRow);
@@ -347,7 +347,7 @@ public class HeadlessUiTests
                 "ServingCaloriesBox", "EatenGramsBox", "EatenCaloriesBox",
                 "rowGross", "rowNet",  // Big pot
                 "rowGross", "rowNet",  // Steel bowl
-                "rowGross",            // No pot (single field)
+                "rowGross",            // No cookware (single field)
                 "RecipeBox",
             },
             stops);
@@ -369,7 +369,7 @@ public class HeadlessUiTests
     }
 
     [AvaloniaFact]
-    public void Escape_on_a_computed_pot_pair_member_is_a_no_op()
+    public void Escape_on_a_computed_cookware_pair_member_is_a_no_op()
     {
         using var f = new Fixture();
 

@@ -31,13 +31,13 @@ public partial class MainViewModel : ObservableObject
     private bool logDrawerOpen;
 
     [ObservableProperty]
-    private string morePotsHeader = "More pots";
+    private string moreCookwareHeader = "More cookware";
 
     [ObservableProperty]
-    private bool morePotsVisible;
+    private bool moreCookwareVisible;
 
     [ObservableProperty]
-    private bool morePotsOpen;
+    private bool moreCookwareOpen;
 
     [ObservableProperty]
     private string useDishNetLabel = "use dish net";
@@ -67,7 +67,7 @@ public partial class MainViewModel : ObservableObject
         Scale.SettingsChanged += SaveSettings;
         Scale.PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName is nameof(ScalePanelModel.AvailablePots) or nameof(ScalePanelModel.DishCaption))
+            if (e.PropertyName is nameof(ScalePanelModel.AvailableCookware) or nameof(ScalePanelModel.DishCaption))
                 UpdateDishDependent();
         };
         services.LogStore.WriteFailed += () => Notice("log write failed; this entry may not survive a restart", warning: true);
@@ -84,8 +84,8 @@ public partial class MainViewModel : ObservableObject
     /// <summary>Set by the view; puts text on the system clipboard.</summary>
     public Func<string, Task>? CopyToClipboard { get; set; }
 
-    /// <summary>The commit-unit key for a pot row's fields.</summary>
-    public static string UnitOfRow(PotRowModel row) => LogEntryFactory.PotUnit(row.Id);
+    /// <summary>The commit-unit key for a cookware row's fields.</summary>
+    public static string UnitOfRow(CookwareRowModel row) => LogEntryFactory.CookwareUnit(row.Id);
 
     /// <summary>
     /// Keyboard focus moved to a (possibly different) unit; commits the unit
@@ -106,7 +106,7 @@ public partial class MainViewModel : ObservableObject
     {
         if (_focusedUnit is not null)
             CommitUnit(_focusedUnit);
-        if (Scale.DishRow is PotRowModel dish)
+        if (Scale.DishRow is CookwareRowModel dish)
             CommitUnit(UnitOfRow(dish));
     }
 
@@ -166,7 +166,7 @@ public partial class MainViewModel : ObservableObject
     /// </summary>
     public async Task<bool> CopyDeltaAsync()
     {
-        if (Scale.DishRow is not PotRowModel dish || !Scale.CanCopy)
+        if (Scale.DishRow is not CookwareRowModel dish || !Scale.CanCopy)
             return false;
 
         CommitUnit(UnitOfRow(dish));
@@ -190,10 +190,10 @@ public partial class MainViewModel : ObservableObject
             Portion.UseAsEatenGrams(net);
     }
 
-    /// <summary>Promotes a pot from the expander and returns its fresh session row.</summary>
-    public PotRowModel? PromotePot(Cookware pot)
+    /// <summary>Promotes a cookware item from the expander and returns its fresh session row.</summary>
+    public CookwareRowModel? PromoteCookware(Cookware item)
     {
-        var row = Scale.PromoteToSession(pot.Id);
+        var row = Scale.PromoteToSession(item.Id);
         UpdateDishDependent();
         return row;
     }
@@ -248,8 +248,8 @@ public partial class MainViewModel : ObservableObject
         var dish = Scale.DishRow;
         CanUseDishNet = dish?.NetValue is not null;
         UseDishNetLabel = dish is null ? "use dish net" : $"use {dish.Name} net";
-        var available = Scale.AvailablePots.Count;
-        MorePotsHeader = $"More pots ({available})";
-        MorePotsVisible = available > 0;
+        var available = Scale.AvailableCookware.Count;
+        MoreCookwareHeader = $"More cookware ({available})";
+        MoreCookwareVisible = available > 0;
     }
 }

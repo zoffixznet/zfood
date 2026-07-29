@@ -53,11 +53,11 @@ public class SettingsStoreTests
         Assert.Equal(800, loaded.Window.Width);
         Assert.Equal(600, loaded.Window.Height);
         Assert.True(loaded.Window.Maximized);
-        var pot = Assert.Single(loaded.Cookware);
-        Assert.Equal("Big pot", pot.Name);
-        Assert.Equal(640.5, pot.Grams);
-        Assert.True(pot.Pinned);
-        Assert.Equal(3, pot.Order);
+        var item = Assert.Single(loaded.Cookware);
+        Assert.Equal("Big pot", item.Name);
+        Assert.Equal(640.5, item.Grams);
+        Assert.True(item.Pinned);
+        Assert.Equal(3, item.Order);
     }
 
     [Theory]
@@ -87,10 +87,10 @@ public class SettingsStoreTests
 
         var settings = Store(dir).Load();
 
-        var pot = Assert.Single(settings.Cookware);
-        Assert.Equal(0, pot.Grams);
-        Assert.Equal("", pot.Name);
-        Assert.NotEqual("", pot.Id);
+        var item = Assert.Single(settings.Cookware);
+        Assert.Equal(0, item.Grams);
+        Assert.Equal("", item.Name);
+        Assert.NotEqual("", item.Id);
     }
 
     [Fact]
@@ -212,6 +212,33 @@ public class LogStoreTests
         Assert.True(File.Exists(paths.LogFile + ".bak"));
         // The rewritten file no longer contains the damaged line.
         Assert.Single(store.Load(Now));
+    }
+
+    [Fact]
+    public void Log_entries_written_by_earlier_versions_still_load_and_dedupe()
+    {
+        using var dir = new TempDir();
+        var paths = new AppPaths(dir.Path);
+        var store = Store(dir);
+        // A verbatim line in the on-disk format used before the cookware
+        // naming: the unit carries the "pot:" prefix and the inputs use the
+        // "pot" key. It must load unchanged, never be treated as corrupt.
+        File.WriteAllText(paths.LogFile,
+            """{"ts":"2026-07-28T14:40:12+00:00","panel":"tare","unit":"pot:row1","result":"800","resultUnit":"g","equation":"Big pot (640 g) · gross 1440 g → net","inputs":{"pot":"Big pot","tare":"640","side":"gross","value":"1440"}}"""
+            + "\n");
+
+        var loaded = store.Load(new DateTimeOffset(2026, 7, 29, 12, 0, 0, TimeSpan.Zero));
+
+        var entry = Assert.Single(loaded);
+        Assert.Equal("pot:row1", entry.Unit);
+        Assert.False(File.Exists(paths.LogFile + ".bak"));
+
+        // A freshly built identical calculation lands in the same unit and is
+        // suppressed as a consecutive duplicate.
+        var log = new CalculationLog(store, loaded);
+        var fresh = LogEntryFactory.Tare(
+            new DateTimeOffset(2026, 7, 29, 9, 0, 0, TimeSpan.Zero), "row1", "Big pot", 640, PairSide.A, 1440, 800);
+        Assert.Equal(CommitOutcome.DuplicateSkipped, log.Commit(fresh));
     }
 
     [Fact]

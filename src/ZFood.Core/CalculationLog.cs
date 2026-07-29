@@ -22,7 +22,7 @@ public enum CommitOutcome
 
 /// <summary>
 /// The in-memory calculation log plus its commit rules: per-unit
-/// consecutive-duplicate suppression (so alternating between two pots cannot
+/// consecutive-duplicate suppression (so alternating between two cookware rows cannot
 /// flood the log) and water-subsumes-tare within one row's unit. Persistence is
 /// delegated to an <see cref="ILogSink"/>.
 /// </summary>

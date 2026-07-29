@@ -52,7 +52,7 @@ public class CalculationLogTests
     }
 
     [Fact]
-    public void Duplicate_check_is_per_unit_so_alternating_pots_cannot_flood()
+    public void Duplicate_check_is_per_unit_so_alternating_cookware_cannot_flood()
     {
         var log = new CalculationLog();
         log.Commit(TareEntry("pot1"));
@@ -68,7 +68,7 @@ public class CalculationLogTests
     }
 
     [Fact]
-    public void Portion_and_pot_units_do_not_suppress_each_other()
+    public void Portion_and_cookware_units_do_not_suppress_each_other()
     {
         var log = new CalculationLog();
         log.Commit(PortionEntry());
@@ -101,7 +101,7 @@ public class CalculationLogTests
         log.Commit(WaterEntry("pot1"));
 
         Assert.Equal(3, log.Entries.Count);
-        Assert.DoesNotContain(log.Entries, e => e.Panel == LogPanel.Tare && e.Unit == LogEntryFactory.PotUnit("pot1"));
+        Assert.DoesNotContain(log.Entries, e => e.Panel == LogPanel.Tare && e.Unit == LogEntryFactory.CookwareUnit("pot1"));
     }
 
     [Fact]
@@ -157,6 +157,14 @@ public class CalculationLogTests
     }
 
     [Fact]
+    public void Cookware_unit_keys_keep_their_stable_on_disk_prefix()
+    {
+        // Unit ids are persisted inside log.jsonl; entries written by earlier
+        // versions use exactly this form and must keep matching their unit.
+        Assert.Equal("pot:row1", LogEntryFactory.CookwareUnit("row1"));
+    }
+
+    [Fact]
     public void Entries_with_null_required_fields_are_flagged_incomplete()
     {
         Assert.True(TareEntry().HasRequiredFields);
@@ -200,11 +208,11 @@ public class LogEntryFactoryTests
     }
 
     [Fact]
-    public void Tare_forward_records_net_result_naming_pot_and_tare()
+    public void Tare_forward_records_net_result_naming_cookware_and_tare()
     {
         var e = LogEntryFactory.Tare(T0, "pot1", "Big pot", 640, PairSide.A, 1440, 800);
         Assert.Equal("800", e.Result);
-        Assert.Equal(LogEntryFactory.PotUnit("pot1"), e.Unit);
+        Assert.Equal(LogEntryFactory.CookwareUnit("pot1"), e.Unit);
         Assert.Contains("Big pot (640 g)", e.Equation);
         Assert.Contains("gross 1440 g", e.Equation);
         Assert.Equal("Big pot", e.Inputs["pot"]);

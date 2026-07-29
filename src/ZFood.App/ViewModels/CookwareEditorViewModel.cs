@@ -56,7 +56,7 @@ public partial class CookwareItemViewModel : ObservableObject
 
 /// <summary>
 /// The cookware CRUD behind the gear icon: add, rename, re-weigh, pin, order,
-/// and delete pots. Edits apply to the settings object; the caller saves and
+/// and delete cookware items. Edits apply to the settings object; the caller saves and
 /// re-syncs the scale panel after the dialog closes.
 /// </summary>
 public partial class CookwareEditorViewModel : ObservableObject
@@ -73,8 +73,8 @@ public partial class CookwareEditorViewModel : ObservableObject
     public CookwareEditorViewModel(Settings settings)
     {
         _settings = settings;
-        foreach (var pot in settings.Cookware)
-            Items.Add(new CookwareItemViewModel(this, pot));
+        foreach (var item in settings.Cookware)
+            Items.Add(new CookwareItemViewModel(this, item));
         Selected = Items.FirstOrDefault();
     }
 
@@ -82,9 +82,9 @@ public partial class CookwareEditorViewModel : ObservableObject
 
     public void Add()
     {
-        var pot = new Cookware { Name = "New pot" };
-        _settings.Cookware.Add(pot);
-        var item = new CookwareItemViewModel(this, pot);
+        var model = new Cookware { Name = "New cookware" };
+        _settings.Cookware.Add(model);
+        var item = new CookwareItemViewModel(this, model);
         Items.Add(item);
         Selected = item;
         Note = "";
@@ -125,7 +125,7 @@ public partial class CookwareEditorViewModel : ObservableObject
             _revertingPin = true;
             item.Pinned = false;
             _revertingPin = false;
-            Note = $"pin limit is {ScalePanelModel.PinnedCap}; unpin another pot first";
+            Note = $"pin limit is {ScalePanelModel.PinnedCap}; unpin another cookware item first";
             return;
         }
 

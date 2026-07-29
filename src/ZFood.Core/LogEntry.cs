@@ -6,7 +6,7 @@ public enum LogPanel
     /// <summary>Label math (portion panel).</summary>
     Portion,
 
-    /// <summary>Tare-only pot-row calculation (gross/net, no water clause).</summary>
+    /// <summary>Tare-only cookware-row calculation (gross/net, no water clause).</summary>
     Tare,
 
     /// <summary>Water reconciliation (a dish row's pipeline including the recipe).</summary>
@@ -27,7 +27,7 @@ public sealed class LogEntry
 
     /// <summary>
     /// The commit unit that produced the entry: "portion" for the portion panel,
-    /// or a per-row key for pot rows. Duplicate suppression is per unit.
+    /// or a per-row key for cookware rows. Duplicate suppression is per unit.
     /// </summary>
     public string Unit { get; set; } = "";
 

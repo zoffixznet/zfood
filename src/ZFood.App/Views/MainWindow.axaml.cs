@@ -121,11 +121,11 @@ public partial class MainWindow : Window
     {
         if (source is not Visual visual)
             return null;
-        if (RowFromSource(visual) is PotRowModel row)
+        if (RowFromSource(visual) is CookwareRowModel row)
             return MainViewModel.UnitOfRow(row);
         if (IsWithin(visual, PortionPanel))
             return LogEntryFactory.PortionUnit;
-        if ((ReferenceEquals(visual, RecipeBox) || ReferenceEquals(visual, DeltaBox)) && _vm.Scale.DishRow is PotRowModel dish)
+        if ((ReferenceEquals(visual, RecipeBox) || ReferenceEquals(visual, DeltaBox)) && _vm.Scale.DishRow is CookwareRowModel dish)
             return MainViewModel.UnitOfRow(dish);
         return null;
     }
@@ -133,13 +133,13 @@ public partial class MainWindow : Window
     private static bool IsWithin(Visual visual, Visual ancestor)
         => visual.GetVisualAncestors().Prepend(visual).Any(v => ReferenceEquals(v, ancestor));
 
-    private PotRowModel? RowFromSource(object? source)
+    private CookwareRowModel? RowFromSource(object? source)
     {
         for (var v = source as Visual; v is not null; v = v.GetVisualParent())
         {
-            if (ReferenceEquals(v, PotRowsControl))
+            if (ReferenceEquals(v, CookwareRowsControl))
                 return null;
-            if (v is StyledElement styled && styled.DataContext is PotRowModel row)
+            if (v is StyledElement styled && styled.DataContext is CookwareRowModel row)
                 return row;
         }
 
@@ -154,12 +154,12 @@ public partial class MainWindow : Window
         box.SelectAll();
     }
 
-    private TextBox? RowInputBox(PotRowModel row)
+    private TextBox? RowInputBox(CookwareRowModel row)
     {
-        var container = PotRowsControl.ContainerFromItem(row);
+        var container = CookwareRowsControl.ContainerFromItem(row);
         if (container is null)
             return null;
-        var wantNet = row.Input == PairSide.B && !row.IsNoPot;
+        var wantNet = row.Input == PairSide.B && !row.IsNoCookware;
         var className = wantNet ? "rowNet" : "rowGross";
         return container.GetVisualDescendants().OfType<TextBox>()
             .FirstOrDefault(t => t.Classes.Contains(className));
@@ -228,7 +228,7 @@ public partial class MainWindow : Window
             if (e.Key >= Key.NumPad1 && e.Key <= Key.NumPad9)
                 return FocusRowByIndex(e.Key - Key.NumPad1);
             if (e.Key is Key.D0 or Key.NumPad0)
-                return FocusRow(_vm.Scale.NoPotRow);
+                return FocusRow(_vm.Scale.NoCookwareRow);
         }
 
         if (e.KeyModifiers == KeyModifiers.Alt)
@@ -242,7 +242,7 @@ public partial class MainWindow : Window
                     FocusAndSelect(RecipeBox);
                     return true;
                 case Key.M:
-                    return ToggleMorePots();
+                    return ToggleMoreCookware();
             }
         }
 
@@ -254,11 +254,11 @@ public partial class MainWindow : Window
         if (focused is null)
             return false;
 
-        // The log lists and the More-pots list handle Enter themselves.
-        if (IsWithin(focused, RecentLogList) || IsWithin(focused, DrawerLogList) || IsWithin(focused, MorePotsList))
+        // The log lists and the More-cookware list handle Enter themselves.
+        if (IsWithin(focused, RecentLogList) || IsWithin(focused, DrawerLogList) || IsWithin(focused, MoreCookwareList))
             return false;
 
-        if (RowFromSource(focused) is PotRowModel row)
+        if (RowFromSource(focused) is CookwareRowModel row)
         {
             _vm.Scale.BindDish(row);
             _vm.CommitUnit(MainViewModel.UnitOfRow(row));
@@ -284,38 +284,38 @@ public partial class MainWindow : Window
 
     private bool FocusRowByIndex(int index)
     {
-        var rows = _vm.Scale.Rows.Where(r => !r.IsNoPot).ToList();
+        var rows = _vm.Scale.Rows.Where(r => !r.IsNoCookware).ToList();
         return index < rows.Count && FocusRow(rows[index]);
     }
 
-    private bool FocusRow(PotRowModel row)
+    private bool FocusRow(CookwareRowModel row)
     {
         _vm.Scale.BindDish(row);
         FocusAndSelect(RowInputBox(row));
         return true;
     }
 
-    private void OnMorePotsToggleClick(object? sender, RoutedEventArgs e) => ToggleMorePots();
+    private void OnMoreCookwareToggleClick(object? sender, RoutedEventArgs e) => ToggleMoreCookware();
 
-    private bool ToggleMorePots()
+    private bool ToggleMoreCookware()
     {
-        if (!_vm.MorePotsVisible)
+        if (!_vm.MoreCookwareVisible)
             return false;
-        _vm.MorePotsOpen = !_vm.MorePotsOpen;
-        if (_vm.MorePotsOpen)
+        _vm.MoreCookwareOpen = !_vm.MoreCookwareOpen;
+        if (_vm.MoreCookwareOpen)
         {
             // The expander content needs a layout pass before it can take focus.
             Dispatcher.UIThread.Post(() =>
             {
-                if (MorePotsList.ItemCount == 0)
+                if (MoreCookwareList.ItemCount == 0)
                     return;
-                if (MorePotsList.SelectedIndex < 0)
-                    MorePotsList.SelectedIndex = 0;
-                var container = MorePotsList.ContainerFromIndex(MorePotsList.SelectedIndex);
+                if (MoreCookwareList.SelectedIndex < 0)
+                    MoreCookwareList.SelectedIndex = 0;
+                var container = MoreCookwareList.ContainerFromIndex(MoreCookwareList.SelectedIndex);
                 if (container is not null)
                     container.Focus();
                 else
-                    MorePotsList.Focus();
+                    MoreCookwareList.Focus();
             }, DispatcherPriority.Loaded);
         }
 
@@ -330,10 +330,10 @@ public partial class MainWindow : Window
             e.Handled = true;
     }
 
-    // Up/Down walk focus vertically through the fields (portion, pot rows,
+    // Up/Down walk focus vertically through the fields (portion, cookware rows,
     // recipe, delta), so the whole app is operable with single keypresses.
     // Implemented as a tunnel handler so the text boxes never swallow the keys;
-    // lists (log, More pots) keep their own arrow behavior.
+    // lists (log, More cookware) keep their own arrow behavior.
     private void OnKeyDownTunnel(object? sender, KeyEventArgs e)
     {
         if (e.Key is not (Key.Up or Key.Down) || e.KeyModifiers != KeyModifiers.None)
@@ -374,7 +374,7 @@ public partial class MainWindow : Window
 
         foreach (var row in _vm.Scale.Rows)
         {
-            var container = PotRowsControl.ContainerFromItem(row);
+            var container = CookwareRowsControl.ContainerFromItem(row);
             if (container is null)
                 continue;
             var boxes = container.GetVisualDescendants().OfType<TextBox>().ToList();
@@ -382,7 +382,7 @@ public partial class MainWindow : Window
             var net = boxes.FirstOrDefault(t => t.Classes.Contains("rowNet"));
             if (gross is null)
                 continue;
-            grid.Add(row.IsNoPot || net is null ? new[] { gross } : new[] { gross, net });
+            grid.Add(row.IsNoCookware || net is null ? new[] { gross } : new[] { gross, net });
         }
 
         grid.Add(new[] { RecipeBox });
@@ -390,16 +390,16 @@ public partial class MainWindow : Window
         return grid;
     }
 
-    // -- Pot rows ----------------------------------------------------------
+    // -- Cookware rows -----------------------------------------------------
 
     private void OnAnyPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        // A single click anywhere in a pot row's band (except its pin star)
+        // A single click anywhere in a cookware row's band (except its pin star)
         // binds it as the dish and focuses its input field with the text
         // selected, so click-then-type always suffices.
         if (e.Source is not Visual visual
             || visual.GetVisualAncestors().Prepend(visual).OfType<Button>().Any()
-            || RowFromSource(visual) is not PotRowModel row)
+            || RowFromSource(visual) is not CookwareRowModel row)
         {
             return;
         }
@@ -412,34 +412,34 @@ public partial class MainWindow : Window
 
     private void OnStarClick(object? sender, RoutedEventArgs e)
     {
-        if (sender is Visual visual && RowFromSource(visual) is PotRowModel row)
+        if (sender is Visual visual && RowFromSource(visual) is CookwareRowModel row)
             _vm.Scale.TogglePin(row);
     }
 
-    private void OnMorePotsTapped(object? sender, TappedEventArgs e)
+    private void OnMoreCookwareTapped(object? sender, TappedEventArgs e)
     {
         if (e.Source is Visual visual
-            && FindDataContext<Cookware>(visual) is Cookware pot)
+            && FindDataContext<Cookware>(visual) is Cookware item)
         {
-            PromotePot(pot);
+            PromoteCookware(item);
             e.Handled = true;
         }
     }
 
-    private void OnMorePotsKeyDown(object? sender, KeyEventArgs e)
+    private void OnMoreCookwareKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key == Key.Enter && MorePotsList.SelectedItem is Cookware pot)
+        if (e.Key == Key.Enter && MoreCookwareList.SelectedItem is Cookware item)
         {
-            PromotePot(pot);
+            PromoteCookware(item);
             e.Handled = true;
         }
     }
 
-    private void PromotePot(Cookware pot)
+    private void PromoteCookware(Cookware item)
     {
-        if (_vm.PromotePot(pot) is not PotRowModel row)
+        if (_vm.PromoteCookware(item) is not CookwareRowModel row)
             return;
-        _vm.MorePotsOpen = false;
+        _vm.MoreCookwareOpen = false;
         // The fresh row needs a layout pass before its container exists.
         Dispatcher.UIThread.Post(() => FocusAndSelect(RowInputBox(row)), DispatcherPriority.Loaded);
     }
@@ -516,7 +516,7 @@ public partial class MainWindow : Window
             Pulse.Trigger(target);
     }
 
-    private void OnDishRebound(PotRowModel? row, bool loud)
+    private void OnDishRebound(CookwareRowModel? row, bool loud)
     {
         if (!loud)
             return;

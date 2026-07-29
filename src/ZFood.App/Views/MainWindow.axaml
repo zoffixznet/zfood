@@ -20,17 +20,17 @@
             <Setter Property="Margin" Value="0,6" />
         </Style>
 
-        <!-- Pot rows: empty rows are dim ghosts, the dish row is emphasized. -->
-        <Style Selector="Grid.potRow.dim">
+        <!-- Cookware rows: empty rows are dim ghosts, the dish row is emphasized. -->
+        <Style Selector="Grid.cookwareRow.dim">
             <Setter Property="Opacity" Value="0.5" />
         </Style>
-        <Style Selector="Grid.potRow.dish">
+        <Style Selector="Grid.cookwareRow.dish">
             <Setter Property="Opacity" Value="1" />
         </Style>
-        <Style Selector="Grid.potRow.dish TextBlock.potName">
+        <Style Selector="Grid.cookwareRow.dish TextBlock.cookwareName">
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
-        <Style Selector="TextBlock.potName">
+        <Style Selector="TextBlock.cookwareName">
             <Setter Property="FontSize" Value="14" />
             <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -193,7 +193,7 @@
             <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Grid.Column="0" Spacing="10">
                     <TextBlock Classes="sectionTitle" Text="PORTION" />
-                    <!-- Columns mirror the pot rows below so every numeral sits
+                    <!-- Columns mirror the cookware rows below so every numeral sits
                          on one shared grid across both cards. -->
                     <Grid x:Name="PortionPanel" ColumnDefinitions="186,52,Auto,24,Auto,26,Auto"
                           RowDefinitions="Auto,10,Auto">
@@ -249,44 +249,44 @@
                 <StackPanel>
                     <TextBlock Classes="sectionTitle" Text="SCALE" Margin="0,0,0,10" />
 
-                    <!-- Pot rows -->
-                    <ItemsControl x:Name="PotRowsControl" ItemsSource="{Binding Scale.Rows}">
+                    <!-- Cookware rows -->
+                    <ItemsControl x:Name="CookwareRowsControl" ItemsSource="{Binding Scale.Rows}">
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="core:PotRowModel">
-                                <Grid Classes="potRow" Classes.dish="{Binding IsDish}" Classes.dim="{Binding IsEmpty}"
+                            <DataTemplate x:DataType="core:CookwareRowModel">
+                                <Grid Classes="cookwareRow" Classes.dish="{Binding IsDish}" Classes.dim="{Binding IsEmpty}"
                                       ColumnDefinitions="8,178,52,Auto,24,Auto,26,Auto,*,36" Height="38"
                                       Background="Transparent">
                                     <Border Grid.Column="0" Classes="dishBar" IsVisible="{Binding IsDish}" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8"
                                                 VerticalAlignment="Center" Margin="6,0,0,0">
-                                        <TextBlock Classes="potName" Text="{Binding Name}" />
+                                        <TextBlock Classes="cookwareName" Text="{Binding Name}" />
                                         <TextBlock Classes="unit" FontSize="11" Text="{Binding TareEcho}" />
                                     </StackPanel>
                                     <TextBlock Grid.Column="2" Classes="unit" Text="reads" Margin="0,0,8,0"
                                                HorizontalAlignment="Right" VerticalAlignment="Center"
-                                               IsVisible="{Binding !IsNoPot}" />
+                                               IsVisible="{Binding !IsNoCookware}" />
                                     <TextBlock Grid.Column="2" Classes="unit" Text="weight" Margin="0,0,8,0"
                                                HorizontalAlignment="Right" VerticalAlignment="Center"
-                                               IsVisible="{Binding IsNoPot}" />
+                                               IsVisible="{Binding IsNoCookware}" />
                                     <TextBox Grid.Column="3" Classes="numeric rowGross"
                                              Classes.computed="{Binding GrossIsComputed}"
                                              Text="{Binding GrossText}"
                                              views:Pulse.Tick="{Binding ComputedPulse}" />
                                     <TextBlock Grid.Column="4" Classes="unit" Text="⇄" TextAlignment="Center"
-                                               VerticalAlignment="Center" IsVisible="{Binding !IsNoPot}" />
+                                               VerticalAlignment="Center" IsVisible="{Binding !IsNoCookware}" />
                                     <TextBox Grid.Column="5" Classes="numeric rowNet"
                                              Classes.computed="{Binding NetIsComputed}"
                                              Classes.warn="{Binding BelowTare}"
                                              Text="{Binding NetText}"
                                              views:Pulse.Tick="{Binding ComputedPulse}"
-                                             IsVisible="{Binding !IsNoPot}" />
+                                             IsVisible="{Binding !IsNoCookware}" />
                                     <TextBlock Grid.Column="6" Classes="unit" Text="g" Margin="6,0,0,0"
                                                VerticalAlignment="Center" />
                                     <TextBlock Grid.Column="7" Classes="belowTare" Margin="10,0,0,0"
-                                               Text="below tare, wrong pot?" IsVisible="{Binding BelowTare}" />
+                                               Text="below tare, wrong cookware?" IsVisible="{Binding BelowTare}" />
                                     <Button Grid.Column="9" Classes="star" Classes.pinned="{Binding Pinned}"
-                                            IsVisible="{Binding !IsNoPot}" Click="OnStarClick"
-                                            ToolTip.Tip="Pin or unpin this pot">
+                                            IsVisible="{Binding !IsNoCookware}" Click="OnStarClick"
+                                            ToolTip.Tip="Pin or unpin this cookware">
                                         <Panel>
                                             <TextBlock Text="★" IsVisible="{Binding Pinned}" />
                                             <TextBlock Text="☆" IsVisible="{Binding !Pinned}" />
@@ -297,21 +297,21 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <StackPanel IsVisible="{Binding MorePotsVisible}" Margin="8,4,0,0">
-                        <Button x:Name="MorePotsToggle" Classes="linklike" Click="OnMorePotsToggleClick"
+                    <StackPanel IsVisible="{Binding MoreCookwareVisible}" Margin="8,4,0,0">
+                        <Button x:Name="MoreCookwareToggle" Classes="linklike" Click="OnMoreCookwareToggleClick"
                                 ToolTip.Tip="Rarely used cookware (Alt+M)">
                             <StackPanel Orientation="Horizontal" Spacing="6">
                                 <TextBlock Text="▸" FontSize="10" VerticalAlignment="Center"
-                                           IsVisible="{Binding !MorePotsOpen}" />
+                                           IsVisible="{Binding !MoreCookwareOpen}" />
                                 <TextBlock Text="▾" FontSize="10" VerticalAlignment="Center"
-                                           IsVisible="{Binding MorePotsOpen}" />
-                                <TextBlock Text="{Binding MorePotsHeader}" />
+                                           IsVisible="{Binding MoreCookwareOpen}" />
+                                <TextBlock Text="{Binding MoreCookwareHeader}" />
                             </StackPanel>
                         </Button>
-                        <ListBox x:Name="MorePotsList" Classes="logList" ItemsSource="{Binding Scale.AvailablePots}"
-                                 IsVisible="{Binding MorePotsOpen}" Margin="16,2,0,0"
+                        <ListBox x:Name="MoreCookwareList" Classes="logList" ItemsSource="{Binding Scale.AvailableCookware}"
+                                 IsVisible="{Binding MoreCookwareOpen}" Margin="16,2,0,0"
                                  IsTabStop="False" KeyboardNavigation.TabNavigation="None"
-                                 Tapped="OnMorePotsTapped" KeyDown="OnMorePotsKeyDown">
+                                 Tapped="OnMoreCookwareTapped" KeyDown="OnMoreCookwareKeyDown">
                             <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="core:Cookware">
                                     <StackPanel Orientation="Horizontal" Spacing="10" Height="24">
@@ -330,7 +330,7 @@
                     <TextBlock x:Name="DishCaptionText" Classes="dishCaption pulseable"
                                Text="{Binding Scale.DishCaption}" Margin="8,0,0,10" />
                     <!-- The 238 px label column lines the water boxes up with the
-                         pot rows' reads column; the delta's right edge meets the
+                         cookware rows' reads column; the delta's right edge meets the
                          net column's right edge. -->
                     <Grid ColumnDefinitions="238,232,28,Auto" RowDefinitions="Auto,10,Auto">
                         <TextBlock Grid.Row="0" Grid.Column="0" Classes="fieldLabel" Text="Recipe weight" Margin="8,0,0,0" />
