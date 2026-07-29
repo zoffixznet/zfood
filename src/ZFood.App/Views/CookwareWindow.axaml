@@ -49,7 +49,11 @@
                 <StackPanel Spacing="4">
                     <TextBlock Classes="fieldLabel" Text="Empty weight (g)" />
                     <TextBox Classes="numeric" Width="120" HorizontalAlignment="Left"
+                             Classes.warn="{Binding Selected.GramsInvalid, FallbackValue=False}"
                              Text="{Binding Selected.GramsText}" />
+                    <TextBlock FontSize="12" Foreground="{StaticResource WarnBrush}"
+                               Text="not a weight; the saved value is unchanged"
+                               IsVisible="{Binding Selected.GramsInvalid, FallbackValue=False}" />
                 </StackPanel>
                 <CheckBox Content="Pinned (always visible)" IsChecked="{Binding Selected.Pinned}" />
                 <StackPanel Orientation="Horizontal" Spacing="8">

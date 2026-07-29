@@ -15,6 +15,10 @@ public partial class CookwareItemViewModel : ObservableObject
     [ObservableProperty]
     private string gramsText;
 
+    /// <summary>True while the weight text does not parse (the stored tare keeps its last valid value).</summary>
+    [ObservableProperty]
+    private bool gramsInvalid;
+
     [ObservableProperty]
     private bool pinned;
 
@@ -33,8 +37,18 @@ public partial class CookwareItemViewModel : ObservableObject
 
     partial void OnGramsTextChanged(string value)
     {
+        // Same validation rule as the main window's numeric fields: invalid
+        // text never reaches the model, and the field is visibly flagged so
+        // the mismatch with the stored tare is never silent.
         if (Numeric.ParseNonNegative(value) is double grams)
+        {
             Model.Grams = grams;
+            GramsInvalid = false;
+        }
+        else
+        {
+            GramsInvalid = true;
+        }
     }
 
     partial void OnPinnedChanged(bool value) => _owner.OnItemPinChanged(this, value);

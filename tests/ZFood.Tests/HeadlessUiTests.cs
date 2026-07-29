@@ -424,6 +424,50 @@ public class HeadlessUiTests
         Assert.Equal(narrow.Width, wide.Width, 2);
     }
 
+    [AvaloniaFact]
+    public void Cookware_weight_field_rejects_minus_and_flags_invalid_text()
+    {
+        var settings = new Settings
+        {
+            Cookware = { new Cookware { Id = "p1", Name = "Big pot", Grams = 640 } },
+        };
+        var window = new CookwareWindow(settings);
+        window.Show();
+        Fixture.Pump();
+
+        var editor = (CookwareEditorViewModel)window.DataContext!;
+        var weightBox = window.GetVisualDescendants().OfType<TextBox>()
+            .First(t => t.Classes.Contains("numeric"));
+
+        // The minus key is rejected outright.
+        weightBox.Focus();
+        Fixture.Pump();
+        weightBox.SelectAll();
+        window.KeyTextInput("-");
+        Fixture.Pump();
+        Assert.Equal("640", weightBox.Text);
+        Assert.Equal(640, settings.Cookware[0].Grams);
+
+        // Invalid text is visibly flagged and never reaches the stored tare.
+        weightBox.SelectAll();
+        window.KeyTextInput("12x");
+        Fixture.Pump();
+        Assert.True(editor.Selected!.GramsInvalid);
+        Assert.Contains("warn", weightBox.Classes);
+        Assert.Equal(640, settings.Cookware[0].Grams);
+
+        // Valid text clears the flag and updates the model.
+        weightBox.SelectAll();
+        window.KeyTextInput("600");
+        Fixture.Pump();
+        Assert.False(editor.Selected!.GramsInvalid);
+        Assert.DoesNotContain("warn", weightBox.Classes);
+        Assert.Equal(600, settings.Cookware[0].Grams);
+
+        window.Close();
+        Fixture.Pump();
+    }
+
     private sealed class FormattedTextBox
     {
         public FormattedTextBox(TextBox box, string text)
