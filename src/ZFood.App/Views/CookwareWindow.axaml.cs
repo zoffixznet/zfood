@@ -46,7 +46,11 @@ public partial class CookwareWindow : Window
     }
 
     private IEnumerable<RadioButton> ThemeRadios()
-        => new[] { ThemePorcelain, ThemeAurora, ThemeJuiceBar, ThemeGlossy };
+        => new[]
+        {
+            ThemeJuiceBar, ThemeLimonata, ThemeMatcha, ThemeBerryMilk,
+            ThemePorcelain, ThemeAurora, ThemeGlossy,
+        };
 
     private void OnThemeChecked(object? sender, RoutedEventArgs e)
     {

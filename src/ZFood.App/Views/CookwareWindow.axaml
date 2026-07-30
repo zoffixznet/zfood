@@ -5,10 +5,27 @@
         x:DataType="vm:CookwareEditorViewModel"
         Title="Cookware"
         Icon="/Assets/zfood.png"
-        Width="560" Height="470"
-        MinWidth="480" MinHeight="390"
+        Width="560" Height="560"
+        MinWidth="480" MinHeight="480"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource DialogWindowBrush}">
+
+    <Window.Styles>
+        <!-- Theme picker swatches: a small tile per theme previewing its
+             canvas, so seven options scan at a glance. -->
+        <Style Selector="Border.themeSwatch">
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="RadioButton.themeOption">
+            <Setter Property="Margin" Value="0,0,14,4" />
+            <Setter Property="MinHeight" Value="30" />
+        </Style>
+    </Window.Styles>
 
     <Panel>
         <!-- Theme atmosphere layers, calmer than the main window's. -->
@@ -16,6 +33,119 @@
         <Border Background="{DynamicResource DialogBloom2Brush}" IsHitTestVisible="False" />
 
         <DockPanel Margin="14">
+
+        <!-- Theme section: its own titled block at the top; picking a swatch
+             applies instantly and persists with the settings. -->
+        <StackPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="2,0,0,8">
+                <Path Classes="sectionMark" />
+                <TextBlock Classes="sectionTitle" Text="THEME" />
+            </StackPanel>
+            <WrapPanel Margin="2,0,0,0">
+                <RadioButton x:Name="ThemeJuiceBar" Classes="themeOption" GroupName="theme"
+                             Tag="juicebar" IsCheckedChanged="OnThemeChecked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Classes="themeSwatch">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#FFE3A9" />
+                                    <GradientStop Offset="1" Color="#FF9FB6" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="Juice Bar" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="ThemeLimonata" Classes="themeOption" GroupName="theme"
+                             Tag="limonata" IsCheckedChanged="OnThemeChecked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Classes="themeSwatch">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#FFF9D9" />
+                                    <GradientStop Offset="1" Color="#CDE98A" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="Limonata" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="ThemeMatcha" Classes="themeOption" GroupName="theme"
+                             Tag="matcha" IsCheckedChanged="OnThemeChecked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Classes="themeSwatch">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#F3F7E4" />
+                                    <GradientStop Offset="1" Color="#A9D49A" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="Matcha Garden" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="ThemeBerryMilk" Classes="themeOption" GroupName="theme"
+                             Tag="berrymilk" IsCheckedChanged="OnThemeChecked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Classes="themeSwatch">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#D9E2FF" />
+                                    <GradientStop Offset="1" Color="#E5C8F2" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="Berry Milk" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="ThemePorcelain" Classes="themeOption" GroupName="theme"
+                             Tag="porcelain" IsCheckedChanged="OnThemeChecked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Classes="themeSwatch">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#FFFFFF" />
+                                    <GradientStop Offset="1" Color="#DDE0E4" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="Porcelain" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="ThemeAurora" Classes="themeOption" GroupName="theme"
+                             Tag="aurora" IsCheckedChanged="OnThemeChecked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Classes="themeSwatch">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#2EE6A8" />
+                                    <GradientStop Offset="0.35" Color="#151B42" />
+                                    <GradientStop Offset="1" Color="#070A18" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="Aurora" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="ThemeGlossy" Classes="themeOption" GroupName="theme"
+                             Tag="glossy" IsCheckedChanged="OnThemeChecked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Border Classes="themeSwatch">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                    <GradientStop Offset="0" Color="#E0AE58" />
+                                    <GradientStop Offset="0.35" Color="#0B2B21" />
+                                    <GradientStop Offset="1" Color="#030E0A" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <TextBlock Text="Glossy" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+            </WrapPanel>
+            <Border Classes="hairline" Margin="0,10,0,12" />
+        </StackPanel>
+
         <!-- Footer -->
         <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,10,0,0">
             <Button Grid.Column="0" Classes="quiet" Content="Add cookware" Click="OnAddClick" />
@@ -27,20 +157,14 @@
             <Button Grid.Column="3" Classes="quiet primary" Content="Save" Click="OnSaveClick" />
         </Grid>
 
-        <!-- Theme picker: applies instantly, saved with the settings. -->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="14" Margin="2,12,0,0">
-            <TextBlock Classes="sectionTitle" Text="THEME" VerticalAlignment="Center" Margin="0,0,4,0" />
-            <RadioButton x:Name="ThemePorcelain" GroupName="theme" Content="Porcelain"
-                         Tag="porcelain" IsCheckedChanged="OnThemeChecked" />
-            <RadioButton x:Name="ThemeAurora" GroupName="theme" Content="Aurora"
-                         Tag="aurora" IsCheckedChanged="OnThemeChecked" />
-            <RadioButton x:Name="ThemeJuiceBar" GroupName="theme" Content="Juice Bar"
-                         Tag="juicebar" IsCheckedChanged="OnThemeChecked" />
-            <RadioButton x:Name="ThemeGlossy" GroupName="theme" Content="Glossy"
-                         Tag="glossy" IsCheckedChanged="OnThemeChecked" />
-        </StackPanel>
-
-        <Grid ColumnDefinitions="*,14,240">
+        <!-- Cookware section: list, editor, and the Add button in the footer
+             directly below, one contiguous block. -->
+        <Grid RowDefinitions="Auto,*">
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="2,0,0,8">
+                <Path Classes="sectionMark" />
+                <TextBlock Classes="sectionTitle" Text="COOKWARE" />
+            </StackPanel>
+            <Grid Grid.Row="1" ColumnDefinitions="*,14,240">
             <!-- Cookware list -->
             <ListBox Grid.Column="0" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}"
                      Background="{DynamicResource InputBrush}" BorderBrush="{DynamicResource InputBorderBrush}"
@@ -62,10 +186,6 @@
 
             <!-- Editor for the selected cookware item -->
             <StackPanel Grid.Column="2" Spacing="10" IsEnabled="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <Path Classes="sectionMark" />
-                    <TextBlock Classes="sectionTitle" Text="SELECTED COOKWARE" />
-                </StackPanel>
                 <StackPanel Spacing="4">
                     <TextBlock Classes="fieldLabel" Text="Name" />
                     <TextBox Text="{Binding Selected.Name}" />
@@ -86,6 +206,7 @@
                 </StackPanel>
                 <Button Classes="quiet danger" Content="Delete cookware" Click="OnDeleteClick" />
             </StackPanel>
+            </Grid>
         </Grid>
         </DockPanel>
     </Panel>
