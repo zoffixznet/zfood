@@ -15,12 +15,16 @@ public static class ThemeManager
     public const string Aurora = "aurora";
     public const string JuiceBar = "juicebar";
     public const string Glossy = "glossy";
+    public const string Limonata = "limonata";
+    public const string Matcha = "matcha";
+    public const string BerryMilk = "berrymilk";
 
     /// <summary>Applied when settings carry no theme or an unknown one.</summary>
-    public const string DefaultTheme = Aurora;
+    public const string DefaultTheme = JuiceBar;
 
-    /// <summary>All theme ids, in picker order.</summary>
-    public static readonly string[] Themes = { Porcelain, Aurora, JuiceBar, Glossy };
+    /// <summary>All theme ids, in picker order: light themes first, dark last.</summary>
+    public static readonly string[] Themes =
+        { JuiceBar, Limonata, Matcha, BerryMilk, Porcelain, Aurora, Glossy };
 
     private static readonly Dictionary<string, string> Files = new()
     {
@@ -28,6 +32,9 @@ public static class ThemeManager
         [Aurora] = "Aurora",
         [JuiceBar] = "JuiceBar",
         [Glossy] = "Glossy",
+        [Limonata] = "Limonata",
+        [Matcha] = "MatchaGarden",
+        [BerryMilk] = "BerryMilk",
     };
 
     private static ResourceDictionary? _current;

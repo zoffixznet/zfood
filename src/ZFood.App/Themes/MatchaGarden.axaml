@@ -1,0 +1,254 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Matcha Garden: a bright greenhouse morning. The window is a diagonal
+         cream-to-sage wash with a honey sun bloom; cards are milk-white slabs
+         with leaf-green rind borders; all text is deep spruce ink; the two
+         hero readouts are deep-glazed ceramic matcha bowls with cream
+         numerals and an inset crema ring. -->
+
+    <!-- Fluent accent -->
+    <Color x:Key="SystemAccentColor">#4F8A28</Color>
+    <Color x:Key="SystemAccentColorDark1">#447724</Color>
+    <Color x:Key="SystemAccentColorDark2">#396320</Color>
+    <Color x:Key="SystemAccentColorDark3">#2E501B</Color>
+    <Color x:Key="SystemAccentColorLight1">#6BA144</Color>
+    <Color x:Key="SystemAccentColorLight2">#8CBA6B</Color>
+    <Color x:Key="SystemAccentColorLight3">#B5D59B</Color>
+
+    <!-- Canvas: morning cream to soft sage under the honey sun. -->
+    <LinearGradientBrush x:Key="WindowBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#F3F7E4" />
+        <GradientStop Offset="0.5" Color="#E3F0D5" />
+        <GradientStop Offset="1" Color="#C9E4BE" />
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="CanvasBloom1Brush" Center="82%,6%" GradientOrigin="82%,6%"
+                         RadiusX="50%" RadiusY="50%">
+        <GradientStop Offset="0" Color="#47FFEFC4" />
+        <GradientStop Offset="1" Color="#00FFEFC4" />
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="CanvasBloom2Brush" Center="8%,96%" GradientOrigin="8%,96%"
+                         RadiusX="45%" RadiusY="45%">
+        <GradientStop Offset="0" Color="#2ED7EFD2" />
+        <GradientStop Offset="1" Color="#00D7EFD2" />
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="CanvasBloom3Brush" Color="Transparent" />
+    <LinearGradientBrush x:Key="DialogWindowBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#F3F7E4" />
+        <GradientStop Offset="1" Color="#DDEECF" />
+    </LinearGradientBrush>
+    <RadialGradientBrush x:Key="DialogBloom1Brush" Center="80%,0%" GradientOrigin="80%,0%"
+                         RadiusX="50%" RadiusY="50%">
+        <GradientStop Offset="0" Color="#38FFEFC4" />
+        <GradientStop Offset="1" Color="#00FFEFC4" />
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="DialogBloom2Brush" Color="Transparent" />
+
+    <!-- Header -->
+    <SolidColorBrush x:Key="WordmarkBrush" Color="#1E3320" />
+    <FontFamily x:Key="WordmarkFontFamily">avares://ZFood/Assets/Fonts/InstrumentSerif#Instrument Serif</FontFamily>
+    <x:Double x:Key="WordmarkFontSize">22</x:Double>
+    <FontWeight x:Key="WordmarkFontWeight">Normal</FontWeight>
+    <SolidColorBrush x:Key="HeaderRuleBrush" Color="Transparent" />
+
+    <!-- Cards: milk slabs with leaf-rind borders and moss-tinted shadows. -->
+    <LinearGradientBrush x:Key="CardBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#FFFFFF" />
+        <GradientStop Offset="1" Color="#F7FAF0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="CardBorderBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#BFDCA4" />
+        <GradientStop Offset="1" Color="#8FBE7F" />
+    </LinearGradientBrush>
+    <Thickness x:Key="CardBorderThickness">1.5</Thickness>
+    <CornerRadius x:Key="CardCornerRadius">16</CornerRadius>
+    <BoxShadows x:Key="CardShadow">0 14 30 -10 #3D4E7A38, 0 3 10 -2 #264E7A38</BoxShadows>
+    <SolidColorBrush x:Key="CardInnerHighlightBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="CardGlossBrush" Color="Transparent" />
+    <Thickness x:Key="CardPadding">22,12</Thickness>
+    <LinearGradientBrush x:Key="LogCardBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#FFFFFF" />
+        <GradientStop Offset="1" Color="#F7FAF0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="LogCardBorderBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#BFDCA4" />
+        <GradientStop Offset="1" Color="#8FBE7F" />
+    </LinearGradientBrush>
+    <Thickness x:Key="LogCardBorderThickness">1.5</Thickness>
+    <BoxShadows x:Key="LogCardShadow">0 14 30 -10 #3D4E7A38, 0 3 10 -2 #264E7A38</BoxShadows>
+
+    <!-- Text tiers: spruce and fir inks, never gray. -->
+    <SolidColorBrush x:Key="InkBrush" Color="#1E3320" />
+    <SolidColorBrush x:Key="SubtleBrush" Color="#36512F" />
+    <SolidColorBrush x:Key="FaintBrush" Color="#36512F" />
+    <SolidColorBrush x:Key="GhostBrush" Color="#465B3F" />
+
+    <!-- Accent family: matcha. -->
+    <SolidColorBrush x:Key="AccentBrush" Color="#4F8A28" />
+    <SolidColorBrush x:Key="AccentTextBrush" Color="#2B5220" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#3D8FC763" />
+    <SolidColorBrush x:Key="CaretBrush" Color="#3A7429" />
+
+    <!-- Computed fields and states: matcha milk. -->
+    <LinearGradientBrush x:Key="ComputedBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#F1F8E4" />
+        <GradientStop Offset="1" Color="#E7F2D8" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ComputedBorderBrush" Color="#AECF92" />
+    <BoxShadows x:Key="ComputedShadow">0 0 0 0 #00000000</BoxShadows>
+    <SolidColorBrush x:Key="PulseBrush" Color="#DFF0CB" />
+    <SolidColorBrush x:Key="WarnBrush" Color="#5F4700" />
+    <LinearGradientBrush x:Key="WarnFieldBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#FFF6D6" />
+        <GradientStop Offset="1" Color="#FBEAB4" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="WarnFieldBorderBrush" Color="#D9BE7C" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="#7E1A25" />
+    <SolidColorBrush x:Key="ErrorButtonBrush" Color="#FDECEA" />
+    <SolidColorBrush x:Key="ErrorButtonBorderBrush" Color="#EDB8B4" />
+    <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#EDF6DE" />
+    <LinearGradientBrush x:Key="PrimaryButtonBorderBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="#A9CE8B" />
+        <GradientStop Offset="1" Color="#5F9A3E" />
+    </LinearGradientBrush>
+
+    <!-- Inputs: white fields with sage hairlines and a matcha focus ring. -->
+    <SolidColorBrush x:Key="InputBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="InputBorderBrush" Color="#D7E0CB" />
+    <Thickness x:Key="InputBorderThickness">1.5</Thickness>
+    <CornerRadius x:Key="InputCornerRadius">10</CornerRadius>
+    <SolidColorBrush x:Key="InputHoverBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#36512F" />
+    <SolidColorBrush x:Key="FocusBorderBrush" Color="#4F8A28" />
+    <BoxShadows x:Key="FocusShadow">0 0 0 3 #2E8FC763</BoxShadows>
+    <x:Double x:Key="NarrowThreshold">950</x:Double>
+    <FontFamily x:Key="UiFontFamily">avares://ZFood/Assets/Fonts/InstrumentSans#Instrument Sans</FontFamily>
+    <FontFamily x:Key="NumeralFontFamily">avares://ZFood/Assets/Fonts/Manrope#Manrope</FontFamily>
+    <FontWeight x:Key="NumeralFontWeight">Medium</FontWeight>
+    <FontWeight x:Key="ComputedFontWeight">SemiBold</FontWeight>
+
+    <!-- Density hero: a deep-glazed matcha bowl with the crema ring;
+         placeholder state is the unwhisked milk chip. -->
+    <FontFamily x:Key="HeroFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
+    <FontWeight x:Key="HeroFontWeight">SemiBold</FontWeight>
+    <SolidColorBrush x:Key="HeroBrush" Color="#FCFAEB" />
+    <SolidColorBrush x:Key="HeroPlaceholderBrush" Color="#3E5439" />
+    <SolidColorBrush x:Key="HeroUnitBrush" Color="#FCFAEB" />
+    <SolidColorBrush x:Key="HeroHaloBrush" Color="Transparent" />
+    <LinearGradientBrush x:Key="HeroChipBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#305827" />
+        <GradientStop Offset="1" Color="#264B20" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="HeroChipPlaceholderBrush" Color="#ECF3E1" />
+    <SolidColorBrush x:Key="HeroChipBorderBrush" Color="Transparent" />
+    <BoxShadows x:Key="HeroChipShadow">inset 0 0 0 2 #40FFF6DC, inset 0 2 0 0 #4DFFFFFF, 0 10 24 -8 #4D2E5226</BoxShadows>
+    <CornerRadius x:Key="HeroChipCornerRadius">18</CornerRadius>
+    <Thickness x:Key="HeroChipPadding">20,10</Thickness>
+    <SolidColorBrush x:Key="HeroChipPulseBrush" Color="#345F28" />
+
+    <!-- Water delta: the same glazed bowl skin on the field itself. -->
+    <FontFamily x:Key="DeltaFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
+    <FontWeight x:Key="DeltaFontWeight">SemiBold</FontWeight>
+    <x:Double x:Key="DeltaFontSize">32</x:Double>
+    <SolidColorBrush x:Key="DeltaTextBrush" Color="#FCFAEB" />
+    <LinearGradientBrush x:Key="DeltaFieldBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#305827" />
+        <GradientStop Offset="1" Color="#264B20" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DeltaFieldBorderBrush" Color="Transparent" />
+    <Thickness x:Key="DeltaFieldBorderThickness">1</Thickness>
+    <CornerRadius x:Key="DeltaCornerRadius">16</CornerRadius>
+    <BoxShadows x:Key="DeltaShadow">inset 0 0 0 2 #40FFF6DC, inset 0 2 0 0 #4DFFFFFF, 0 10 24 -8 #4D2E5226</BoxShadows>
+    <SolidColorBrush x:Key="DeltaSelectionBrush" Color="#59122B0D" />
+    <SolidColorBrush x:Key="DeltaPulseBrush" Color="#345F28" />
+    <SolidColorBrush x:Key="DeltaCopyIconBrush" Color="#F2F5DC" />
+    <SolidColorBrush x:Key="DeltaCopyIconHoverBrush" Color="#FFE9A8" />
+    <LinearGradientBrush x:Key="DeltaReflectionBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#2E2E5226" />
+        <GradientStop Offset="1" Color="#002E5226" />
+    </LinearGradientBrush>
+
+    <!-- Dish binding -->
+    <LinearGradientBrush x:Key="DishBarBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#4F8A28" />
+        <GradientStop Offset="1" Color="#2B5220" />
+    </LinearGradientBrush>
+    <BoxShadows x:Key="DishBarShadow">0 0 8 0 #598FC763</BoxShadows>
+    <LinearGradientBrush x:Key="DishRowBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Offset="0" Color="#1A7FB65C" />
+        <GradientStop Offset="1" Color="#007FB65C" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="DishCaptionBrush" Color="#2B5220" />
+
+    <!-- Rows -->
+    <x:Double x:Key="GhostRowOpacity">0.72</x:Double>
+    <SolidColorBrush x:Key="StarBrush" Color="#465B3F" />
+    <SolidColorBrush x:Key="StarPinnedBrush" Color="#C08A00" />
+
+    <!-- Buttons: milk pills with a matcha hover rim. -->
+    <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#FFFFFF" />
+        <GradientStop Offset="1" Color="#F2F8E8" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#CFE0B8" />
+    <SolidColorBrush x:Key="ButtonTextBrush" Color="#1E3320" />
+    <CornerRadius x:Key="ButtonCornerRadius">999</CornerRadius>
+    <BoxShadows x:Key="ButtonShadow">0 2 8 -2 #333F6B33</BoxShadows>
+    <LinearGradientBrush x:Key="ButtonHoverBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Offset="0" Color="#FFFFFF" />
+        <GradientStop Offset="1" Color="#F2F8E8" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ButtonHoverBorderBrush" Color="#4F8A28" />
+    <BoxShadows x:Key="ButtonHoverShadow">0 3 10 -2 #4D4F8A28</BoxShadows>
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#E7F2D7" />
+    <SolidColorBrush x:Key="ButtonDisabledBrush" Color="#F4F7EC" />
+    <SolidColorBrush x:Key="ButtonDisabledTextBrush" Color="#556450" />
+    <SolidColorBrush x:Key="LinkBrush" Color="#36512F" />
+    <SolidColorBrush x:Key="LinkHoverBrush" Color="#EDF6DE" />
+    <SolidColorBrush x:Key="LinkHoverTextBrush" Color="#2B5220" />
+
+    <!-- Copy icons -->
+    <SolidColorBrush x:Key="CopyIconBrush" Color="#465B3F" />
+    <SolidColorBrush x:Key="CopyIconHoverBrush" Color="#3A7429" />
+    <SolidColorBrush x:Key="CopyIconDisabledBrush" Color="#C6D2BC" />
+
+    <!-- Section titles: letter-spaced serif botanical labels with a leaf mark. -->
+    <SolidColorBrush x:Key="SectionTitleBrush" Color="#36512F" />
+    <FontFamily x:Key="SectionTitleFontFamily">avares://ZFood/Assets/Fonts/InstrumentSerif#Instrument Serif</FontFamily>
+    <x:Double x:Key="SectionTitleLetterSpacing">2.6</x:Double>
+    <StreamGeometry x:Key="SectionMarkGeometry">M0,11 C1.2,4.4 6.8,0 13.5,0 C16.4,0 18.7,0.6 20,1.6 C18.8,8.2 13.2,12 6.5,12 C4.1,12 1.9,11.7 0,11 Z</StreamGeometry>
+    <LinearGradientBrush x:Key="SectionMarkBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Offset="0" Color="#E9B949" />
+        <GradientStop Offset="1" Color="#4F8A28" />
+    </LinearGradientBrush>
+    <x:Boolean x:Key="SectionMarkVisible">True</x:Boolean>
+    <SolidColorBrush x:Key="SectionUnderlineBrush" Color="Transparent" />
+    <x:Boolean x:Key="SectionUnderlineVisible">False</x:Boolean>
+
+    <!-- Hairlines and the flex band's honey-light pool. -->
+    <SolidColorBrush x:Key="HairlineBrush" Color="#E2EBD6" />
+    <SolidColorBrush x:Key="ShelfRuleBrush" Color="#E2EBD6" />
+    <RadialGradientBrush x:Key="FlexBandBrush" Center="85%,100%" GradientOrigin="85%,100%"
+                         RadiusX="55%" RadiusY="80%">
+        <GradientStop Offset="0" Color="#1FE9B949" />
+        <GradientStop Offset="1" Color="#00E9B949" />
+    </RadialGradientBrush>
+
+    <!-- Log rows -->
+    <x:Double x:Key="LogStripHeight">78</x:Double>
+    <SolidColorBrush x:Key="TagPillBrush" Color="#EAF4DA" />
+    <SolidColorBrush x:Key="TagPillTextBrush" Color="#36512F" />
+    <Thickness x:Key="TagPillPadding">7,1</Thickness>
+    <SolidColorBrush x:Key="ListHoverBrush" Color="#F1F7E6" />
+    <SolidColorBrush x:Key="ListSelectedBrush" Color="#DFEFC9" />
+
+    <!-- Status bar: the milk-glass shelf. -->
+    <SolidColorBrush x:Key="StatusBarBrush" Color="#CCFFFFFF" />
+    <SolidColorBrush x:Key="StatusBarBorderBrush" Color="#80FFFFFF" />
+    <BoxShadows x:Key="StatusBarShadow">0 4 16 -6 #33417E2E</BoxShadows>
+    <CornerRadius x:Key="StatusBarCornerRadius">12</CornerRadius>
+    <Thickness x:Key="StatusBarPadding">12,4</Thickness>
+
+    <!-- Scroll bars -->
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#4D36512F" />
+    <SolidColorBrush x:Key="ScrollThumbHoverBrush" Color="#6636512F" />
+</ResourceDictionary>

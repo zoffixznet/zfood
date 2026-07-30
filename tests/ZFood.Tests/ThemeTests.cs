@@ -16,8 +16,12 @@ public class ThemeTests
     [InlineData("aurora", "aurora")]
     [InlineData("juicebar", "juicebar")]
     [InlineData("glossy", "glossy")]
+    [InlineData("limonata", "limonata")]
+    [InlineData("matcha", "matcha")]
+    [InlineData("berrymilk", "berrymilk")]
     [InlineData("  Aurora  ", "aurora")]
     [InlineData("GLOSSY", "glossy")]
+    [InlineData("BerryMilk", "berrymilk")]
     [InlineData("solarized", ThemeManager.DefaultTheme)]
     [InlineData("", ThemeManager.DefaultTheme)]
     [InlineData(null, ThemeManager.DefaultTheme)]
@@ -51,7 +55,7 @@ public class ThemeTests
         var referenceKeys = reference.Keys.Select(k => k.ToString()!).OrderBy(k => k).ToList();
         Assert.NotEmpty(referenceKeys);
 
-        foreach (var file in new[] { "Aurora", "JuiceBar", "Glossy" })
+        foreach (var file in new[] { "Aurora", "JuiceBar", "Glossy", "Limonata", "MatchaGarden", "BerryMilk" })
         {
             var keys = LoadTheme(file).Keys.Select(k => k.ToString()!).OrderBy(k => k).ToList();
             Assert.Equal(referenceKeys, keys);
@@ -104,6 +108,17 @@ public class ThemeTests
             Assert.Equal("glossy", settings.Theme);
             Assert.Equal("glossy", ThemeManager.CurrentTheme);
 
+            // The new light themes work the same way.
+            window.FindControl<RadioButton>("ThemeLimonata")!.IsChecked = true;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("limonata", settings.Theme);
+            Assert.Equal("limonata", ThemeManager.CurrentTheme);
+
+            window.FindControl<RadioButton>("ThemeBerryMilk")!.IsChecked = true;
+            Dispatcher.UIThread.RunJobs();
+            Assert.Equal("berrymilk", settings.Theme);
+            Assert.Equal("berrymilk", ThemeManager.CurrentTheme);
+
             window.Close();
             Dispatcher.UIThread.RunJobs();
         }
@@ -121,7 +136,7 @@ public class ThemeTests
         window.Show();
         Dispatcher.UIThread.RunJobs();
 
-        Assert.True(window.FindControl<RadioButton>("ThemeAurora")!.IsChecked);
+        Assert.True(window.FindControl<RadioButton>("ThemeJuiceBar")!.IsChecked);
         Assert.False(window.FindControl<RadioButton>("ThemePorcelain")!.IsChecked);
 
         window.Close();
