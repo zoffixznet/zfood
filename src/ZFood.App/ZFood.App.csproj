@@ -7,6 +7,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>ZFood</AssemblyName>
     <RootNamespace>ZFood.App</RootNamespace>
+    <Version>1.1.0</Version>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <ApplicationIcon>Assets/zfood.ico</ApplicationIcon>
   </PropertyGroup>
