@@ -80,14 +80,14 @@ close_app() {
 }
 
 # One capture per theme.
-for theme in porcelain aurora juicebar glossy; do
+for theme in juicebar limonata matcha berrymilk porcelain aurora glossy; do
     capture_theme "$theme" "$OUT/theme-$theme.png"
     close_app
 done
 
 # The default theme's capture doubles as the README hero image, and the
 # cookware editor is captured behind the gear icon.
-capture_theme aurora "$OUT/main.png"
+capture_theme juicebar "$OUT/main.png"
 xdotool mousemove --window "$WID" 841 30 click 1
 sleep 1.2
 CWID=$(xdotool search --onlyvisible --name '^Cookware$' | head -1)

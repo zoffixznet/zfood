@@ -36,31 +36,6 @@ Every field carries a small copy icon, and focusing a field that holds a
 number also places it on the clipboard, so a result is always one action away
 from your tracker.
 
-## Themes
-
-Four visual themes ship with the app. Pick one in the settings dialog (gear
-icon, top right); it applies instantly and is remembered across runs.
-
-- **Aurora** (the default): smoked-glass panels under a northern-lights sky;
-  computed values glow mint.
-
-  ![Aurora theme](assets/screenshots/theme-aurora.png)
-
-- **Porcelain**: a quiet, light instrument; white cards on cool porcelain
-  with a single deep-teal accent.
-
-  ![Porcelain theme](assets/screenshots/theme-porcelain.png)
-
-- **Juice Bar**: a sunlit counter; cream cards on a mango-to-watermelon
-  gradient, with the two hero readouts as glossy raspberry candy chips.
-
-  ![Juice Bar theme](assets/screenshots/theme-juicebar.png)
-
-- **Glossy**: a jeweler's vitrine; dark bottle-green glass, brass bezels,
-  and gold numerals lit by one warm lamp.
-
-  ![Glossy theme](assets/screenshots/theme-glossy.png)
-
 ## Download
 
 Prebuilt self-contained executables for Linux x64 and Windows x64 are on the
@@ -114,10 +89,11 @@ announced visibly.
 
 ## Cookware
 
-The gear icon (top right) opens the cookware list: name, empty weight, pinned
-flag, and ordering. Pinned items (up to five) are always visible as rows;
-everything else waits behind "More cookware". The permanent "No cookware" row
-covers dishes weighed directly on the scale.
+The gear icon (top right) opens the settings dialog: the theme picker on top
+and the cookware list below it, with name, empty weight, pinned flag, and
+ordering. Pinned items (up to five) are always visible as rows; everything
+else waits behind "More cookware". The permanent "No cookware" row covers
+dishes weighed directly on the scale.
 
 ![Cookware editor](assets/screenshots/cookware.png)
 
@@ -145,6 +121,49 @@ make screenshots  # regenerate the README screenshots from the running app
 
 The smoke and screenshot targets need `Xvfb`, `xdotool`, and ImageMagick;
 `make deps` installs them on Debian/Ubuntu.
+
+## Themes
+
+Seven visual themes ship with the app. Pick one in the settings dialog (gear
+icon, top right); it applies instantly and is remembered across runs.
+
+- **Juice Bar** (the default): a sunlit counter; cream cards on a
+  mango-to-watermelon gradient, with the two hero readouts as glossy
+  raspberry candy chips.
+
+  ![Juice Bar theme](assets/screenshots/theme-juicebar.png)
+
+- **Limonata**: a lemonade stand; zest-edged white cards on a poured
+  lemon-to-lime-fizz glass, with the heroes as deep lime hard candies.
+
+  ![Limonata theme](assets/screenshots/theme-limonata.png)
+
+- **Matcha Garden**: a greenhouse morning; milk-white cards with leaf-rind
+  borders on a cream-to-sage wash, serif botanical labels, and the heroes as
+  deep-glazed matcha bowls with a crema ring.
+
+  ![Matcha Garden theme](assets/screenshots/theme-matcha.png)
+
+- **Berry Milk**: a pastel dessert bar; milk slabs on a
+  periwinkle-to-lavender sky, with the heroes as blueberry candy buttons
+  wearing a piped milk rim.
+
+  ![Berry Milk theme](assets/screenshots/theme-berrymilk.png)
+
+- **Porcelain**: a quiet, light instrument; white cards on cool porcelain
+  with a single deep-teal accent.
+
+  ![Porcelain theme](assets/screenshots/theme-porcelain.png)
+
+- **Aurora**: smoked-glass panels under a northern-lights sky; computed
+  values glow mint.
+
+  ![Aurora theme](assets/screenshots/theme-aurora.png)
+
+- **Glossy**: a jeweler's vitrine; dark bottle-green glass, brass bezels,
+  and gold numerals lit by one warm lamp.
+
+  ![Glossy theme](assets/screenshots/theme-glossy.png)
 
 ## Known limitations
 
