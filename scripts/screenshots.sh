@@ -86,9 +86,10 @@ for theme in juicebar limonata matcha berrymilk porcelain aurora glossy; do
 done
 
 # The default theme's capture doubles as the README hero image, and the
-# cookware editor is captured behind the gear icon.
+# cookware editor is captured behind the gear icon at the bottom right.
 capture_theme juicebar "$OUT/main.png"
-xdotool mousemove --window "$WID" 841 30 click 1
+eval "$(xdotool getwindowgeometry --shell "$WID")"
+xdotool mousemove --window "$WID" $((WIDTH - 50)) $((HEIGHT - 27)) click 1
 sleep 1.2
 CWID=$(xdotool search --onlyvisible --name '^Cookware$' | head -1)
 if [ -n "$CWID" ]; then

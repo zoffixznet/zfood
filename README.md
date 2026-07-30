@@ -31,10 +31,14 @@ a cooked recipe.
   (for example `-200`) on the clipboard, ready to paste into your tracker.
 
 A log keeps completed calculations for two weeks, so a number you forgot to
-enter into your tracker is never lost: click any log row to copy its result.
-Every field carries a small copy icon, and focusing a field that holds a
-number also places it on the clipboard, so a result is always one action away
-from your tracker.
+enter into your tracker is never lost: the Log button opens it, and clicking
+any row copies its result. The status line at the bottom always shows the
+newest entry and copies its result on click. Results reach the clipboard
+without any extra action at all: while you type, the freshly computed partner
+value (the net weight, the calories, the water number) is placed on the
+clipboard on every recompute, so finishing typing means the result is already
+pasteable. Every field also carries a small copy icon, and focusing a field
+that holds a number copies it too.
 
 ## Download
 
@@ -75,8 +79,9 @@ because cooking hands are messy hands:
   makes it the "dish" feeding the water calculation.
 - **Enter** in a cookware row commits the calculation and jumps to the recipe
   field; **Enter** in the recipe field commits and copies the water number.
-- **Esc** clears the focused field. **Reset** (or Ctrl+R) clears every number
-  at once; the log keeps anything worth remembering.
+- **Esc** clears the focused field, or closes the log view when it is open.
+  **Reset** (or Ctrl+R) clears every number at once; the log keeps anything
+  worth remembering.
 
 Optional accelerators for desk use: Ctrl+1..9 jump to cookware rows (Ctrl+0
 the no-cookware row), Alt+P serving grams, Alt+R recipe weight, Alt+M more
@@ -89,9 +94,11 @@ announced visibly.
 
 ## Cookware
 
-The gear icon (top right) opens the settings dialog: the theme picker on top
-and the cookware list below it, with name, empty weight, pinned flag, and
-ordering. Pinned items (up to five) are always visible as rows; everything
+The gear icon (bottom right) opens the settings dialog: the theme picker on
+top and the cookware list below it. New cookware is entered in the add row
+under the list (name, weight, Add); selecting a list item opens it in the
+editor beside the list for renaming, re-weighing, pinning, ordering, or
+deleting. Pinned items (up to five) are always visible as rows; everything
 else waits behind "More cookware". The permanent "No cookware" row covers
 dishes weighed directly on the scale.
 
@@ -125,7 +132,7 @@ The smoke and screenshot targets need `Xvfb`, `xdotool`, and ImageMagick;
 ## Themes
 
 Seven visual themes ship with the app. Pick one in the settings dialog (gear
-icon, top right); it applies instantly and is remembered across runs.
+icon, bottom right); it applies instantly and is remembered across runs.
 
 - **Juice Bar** (the default): a sunlit counter; cream cards on a
   mango-to-watermelon gradient, with the two hero readouts as glossy
