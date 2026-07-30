@@ -78,7 +78,13 @@ public partial class CookwareWindow : Window
             e.Handled = true;
     }
 
-    private void OnAddClick(object? sender, RoutedEventArgs e) => _vm.Add();
+    private void OnAddClick(object? sender, RoutedEventArgs e)
+    {
+        // On success the row clears and focus returns to the name field, so
+        // entering several items is type, Add, type, Add.
+        if (_vm.AddNew())
+            NewNameBox.Focus();
+    }
 
     private void OnDeleteClick(object? sender, RoutedEventArgs e) => _vm.DeleteSelected();
 

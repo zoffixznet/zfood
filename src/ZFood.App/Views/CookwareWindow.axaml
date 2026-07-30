@@ -147,24 +147,23 @@
         </StackPanel>
 
         <!-- Footer -->
-        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="Auto,*,Auto,Auto" Margin="0,10,0,0">
-            <Button Grid.Column="0" Classes="quiet" Content="Add cookware" Click="OnAddClick" />
-            <TextBlock Grid.Column="1" Margin="12,0" VerticalAlignment="Center" FontSize="13"
+        <Grid DockPanel.Dock="Bottom" ColumnDefinitions="*,Auto,Auto" Margin="0,10,0,0">
+            <TextBlock Grid.Column="0" Margin="2,0,12,0" VerticalAlignment="Center" FontSize="13"
                        Foreground="{DynamicResource WarnBrush}" Text="{Binding Note}" />
-            <TextBlock Grid.Column="2" x:Name="SavedText" Margin="0,0,12,0" VerticalAlignment="Center"
+            <TextBlock Grid.Column="1" x:Name="SavedText" Margin="0,0,12,0" VerticalAlignment="Center"
                        FontSize="13" Foreground="{DynamicResource AccentTextBrush}" Text="saved"
                        IsVisible="{Binding Saved}" />
-            <Button Grid.Column="3" Classes="quiet primary" Content="Save" Click="OnSaveClick" />
+            <Button Grid.Column="2" Classes="quiet primary" Content="Save" Click="OnSaveClick" />
         </Grid>
 
-        <!-- Cookware section: list, editor, and the Add button in the footer
-             directly below, one contiguous block. -->
-        <Grid RowDefinitions="Auto,*">
+        <!-- Cookware section: the list with its add row beneath it, and the
+             separately scoped editor for the selected item beside them. -->
+        <Grid RowDefinitions="Auto,*,Auto">
             <StackPanel Orientation="Horizontal" Spacing="8" Margin="2,0,0,8">
                 <Path Classes="sectionMark" />
                 <TextBlock Classes="sectionTitle" Text="COOKWARE" />
             </StackPanel>
-            <Grid Grid.Row="1" ColumnDefinitions="*,14,240">
+            <Grid Grid.Row="1" Grid.RowSpan="2" ColumnDefinitions="*,14,240" RowDefinitions="*,Auto">
             <!-- Cookware list -->
             <ListBox Grid.Column="0" ItemsSource="{Binding Items}" SelectedItem="{Binding Selected}"
                      Background="{DynamicResource InputBrush}" BorderBrush="{DynamicResource InputBorderBrush}"
@@ -184,8 +183,23 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <!-- Editor for the selected cookware item -->
-            <StackPanel Grid.Column="2" Spacing="10" IsEnabled="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <!-- Add row: fill it in, press Add, and the new item appears in
+                 the list above while the row clears for the next entry. -->
+            <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,8,110,8,Auto" Margin="0,8,0,0">
+                <TextBox Grid.Column="0" x:Name="NewNameBox" Watermark="New cookware name"
+                         Text="{Binding NewName}" />
+                <TextBox Grid.Column="2" x:Name="NewWeightBox" Classes="numeric" Width="110"
+                         Watermark="weight (g)" Classes.warn="{Binding NewGramsInvalid}"
+                         Text="{Binding NewGramsText}" />
+                <Button Grid.Column="4" x:Name="AddButton" Classes="quiet primary" Content="Add"
+                        Click="OnAddClick" ToolTip.Tip="Add this cookware to the list" />
+            </Grid>
+
+            <!-- Editor for the item selected in the list; a separate concern
+                 from adding, so it is labeled with its scope. -->
+            <StackPanel Grid.Column="2" Grid.RowSpan="2" Spacing="10"
+                        IsEnabled="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <TextBlock Classes="sectionTitle" Text="EDIT SELECTED" Margin="0,0,0,2" />
                 <StackPanel Spacing="4">
                     <TextBlock Classes="fieldLabel" Text="Name" />
                     <TextBox Text="{Binding Selected.Name}" />

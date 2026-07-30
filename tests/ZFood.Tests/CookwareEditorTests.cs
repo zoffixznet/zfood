@@ -45,8 +45,83 @@ public class CookwareEditorTests
         Assert.Equal("", ok.Note);
     }
 
+    [Fact]
+    public void Add_appends_the_entry_and_clears_the_add_row_for_the_next_one()
+    {
+        var settings = DemoSettings();
+        var vm = new CookwareEditorViewModel(settings, () => true);
+        var selectedBefore = vm.Selected;
+
+        vm.NewName = "  Sieve ";
+        vm.NewGramsText = "120";
+        Assert.True(vm.AddNew());
+
+        Assert.Equal(2, vm.Items.Count);
+        Assert.Equal("Sieve", vm.Items[1].Name);
+        Assert.Equal(120, settings.Cookware[1].Grams);
+        Assert.False(settings.Cookware[1].Pinned);
+        Assert.Equal(1, settings.Cookware[1].Order);
+
+        // The add row cleared and no edit interface opened for the new item.
+        Assert.Equal("", vm.NewName);
+        Assert.Equal("", vm.NewGramsText);
+        Assert.Same(selectedBefore, vm.Selected);
+
+        // An empty weight is a valid tare-0 entry (a plate, a sheet of paper).
+        vm.NewName = "Plate";
+        Assert.True(vm.AddNew());
+        Assert.Equal(0, settings.Cookware[2].Grams);
+    }
+
+    [Fact]
+    public void Add_refuses_blank_names_and_unparseable_weights()
+    {
+        var vm = new CookwareEditorViewModel(DemoSettings(), () => true);
+
+        vm.NewName = "   ";
+        Assert.False(vm.AddNew());
+        Assert.Contains("name", vm.Note);
+        Assert.Single(vm.Items);
+
+        vm.NewName = "Sieve";
+        vm.NewGramsText = "12x";
+        Assert.True(vm.NewGramsInvalid);
+        Assert.False(vm.AddNew());
+        Assert.Single(vm.Items);
+
+        // Correcting the weight clears the flag and the add succeeds.
+        vm.NewGramsText = "120";
+        Assert.False(vm.NewGramsInvalid);
+        Assert.True(vm.AddNew());
+        Assert.Equal(2, vm.Items.Count);
+        Assert.Equal("", vm.Note);
+    }
+
     private static Button SaveButton(CookwareWindow window)
         => window.GetVisualDescendants().OfType<Button>().First(b => Equals(b.Content, "Save"));
+
+    [AvaloniaFact]
+    public void The_add_button_appends_to_the_list_and_clears_the_add_row()
+    {
+        var window = new CookwareWindow(DemoSettings(), () => true);
+        window.Show();
+        Pump();
+
+        var name = window.FindControl<TextBox>("NewNameBox")!;
+        var weight = window.FindControl<TextBox>("NewWeightBox")!;
+        name.Text = "Sieve";
+        weight.Text = "120";
+        window.FindControl<Button>("AddButton")!.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+        Pump();
+
+        var vm = (CookwareEditorViewModel)window.DataContext!;
+        Assert.Equal(new[] { "Big pot", "Sieve" }, vm.Items.Select(i => i.Name));
+        Assert.Equal("", name.Text ?? "");
+        Assert.Equal("", weight.Text ?? "");
+
+        window.Close();
+        Pump();
+    }
 
     private static void Pump() => Dispatcher.UIThread.RunJobs();
 

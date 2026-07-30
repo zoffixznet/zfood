@@ -72,6 +72,18 @@ public partial class CookwareEditorViewModel : ObservableObject
     [ObservableProperty]
     private string note = "";
 
+    /// <summary>Name entered in the add row, pending an Add.</summary>
+    [ObservableProperty]
+    private string newName = "";
+
+    /// <summary>Weight text entered in the add row, pending an Add.</summary>
+    [ObservableProperty]
+    private string newGramsText = "";
+
+    /// <summary>True while the add row's weight text does not parse.</summary>
+    [ObservableProperty]
+    private bool newGramsInvalid;
+
     /// <summary>True after a successful save (shows the inline confirmation).</summary>
     [ObservableProperty]
     private bool saved;
@@ -105,14 +117,46 @@ public partial class CookwareEditorViewModel : ObservableObject
 
     public ObservableCollection<CookwareItemViewModel> Items { get; } = new();
 
-    public void Add()
+    partial void OnNewGramsTextChanged(string value)
+        => NewGramsInvalid = !string.IsNullOrWhiteSpace(value) && Numeric.ParseNonNegative(value) is null;
+
+    /// <summary>
+    /// Appends the add row's entry to the list and clears the row for the next
+    /// one. Nothing else opens: the appended list row is the completion signal.
+    /// Returns false (with the reason in <see cref="Note"/> or the invalid
+    /// flag) when the entry is not usable yet.
+    /// </summary>
+    public bool AddNew()
     {
-        var model = new Cookware { Name = "New cookware" };
+        var name = NewName.Trim();
+        if (name.Length == 0)
+        {
+            Note = "enter a name for the new cookware";
+            return false;
+        }
+
+        double grams = 0;
+        if (!string.IsNullOrWhiteSpace(NewGramsText))
+        {
+            if (Numeric.ParseNonNegative(NewGramsText) is not double parsed)
+            {
+                NewGramsInvalid = true;
+                Note = "the weight is not a number";
+                return false;
+            }
+
+            grams = parsed;
+        }
+
+        var model = new Cookware { Name = name, Grams = grams };
         _settings.Cookware.Add(model);
-        var item = new CookwareItemViewModel(this, model);
-        Items.Add(item);
-        Selected = item;
+        Items.Add(new CookwareItemViewModel(this, model));
+        ReassignOrders();
+        NewName = "";
+        NewGramsText = "";
+        NewGramsInvalid = false;
         Note = "";
+        return true;
     }
 
     public void DeleteSelected()
