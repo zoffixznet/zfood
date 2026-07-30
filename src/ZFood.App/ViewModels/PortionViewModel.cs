@@ -47,6 +47,14 @@ public partial class PortionViewModel : ObservableObject
     /// <summary>Raised on every accepted user edit (drives the status-bar echo tick).</summary>
     public event Action? Activity;
 
+    /// <summary>
+    /// Raised on every user-edit recompute whose computed eaten member is a
+    /// valid number, carrying that member's displayed text (calories for a
+    /// grams entry and vice versa). Drives the live clipboard; never raised
+    /// for placeholders, and never a log settle point.
+    /// </summary>
+    public event Action<string>? AutoCopy;
+
     /// <summary>Raised when a computed field recomputes; the argument names it (for the pulse).</summary>
     public event Action<string>? ComputedChanged;
 
@@ -181,6 +189,15 @@ public partial class PortionViewModel : ObservableObject
         {
             _updating = false;
         }
+
+        var partner = _eatenPair.Input switch
+        {
+            PairSide.A => EatenCaloriesText,
+            PairSide.B => EatenGramsText,
+            _ => null,
+        };
+        if (Numeric.ParseDisplayed(partner) is not null)
+            AutoCopy?.Invoke(partner!);
     }
 
     private static string DensityEcho(PortionResult result)

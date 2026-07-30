@@ -90,6 +90,14 @@ public sealed class ScalePanelModel : ObservableModel
     /// <summary>Raised on every accepted user edit; carries the status-bar echo text.</summary>
     public event Action<string>? Activity;
 
+    /// <summary>
+    /// Raised on every user-edit recompute whose computed partner is a valid
+    /// number, carrying that partner's displayed text: net for a gross entry,
+    /// gross for a net entry, the delta for recipe edits. Drives the live
+    /// clipboard; never raised for placeholders, and never a log settle point.
+    /// </summary>
+    public event Action<string>? AutoCopy;
+
     /// <summary>Raised when the dish binding moves; true means the move must be loud.</summary>
     public event Action<CookwareRowModel?, bool>? DishRebound;
 
@@ -115,6 +123,10 @@ public sealed class ScalePanelModel : ObservableModel
             RecomputeDelta();
 
         Activity?.Invoke(RowEcho(row));
+
+        var partner = side == PairSide.A ? row.NetText : row.GrossText;
+        if (Numeric.ParseDisplayed(partner) is not null)
+            AutoCopy?.Invoke(partner);
     }
 
     /// <summary>
@@ -287,6 +299,8 @@ public sealed class ScalePanelModel : ObservableModel
             dish.ChangedSinceCommit = true;
         RecomputeDelta();
         Activity?.Invoke(DeltaValue is double d ? $"= {Numeric.FormatWhole(d)} g" : Dash);
+        if (DeltaValue is not null)
+            AutoCopy?.Invoke(DeltaText);
     }
 
     private void ApplyDishChange(bool loud)

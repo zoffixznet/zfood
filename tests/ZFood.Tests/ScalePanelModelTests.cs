@@ -451,4 +451,37 @@ public class ScalePanelModelTests
         panel.RecipeText = "1000"; // recipe edits belong to the dish row's unit
         Assert.True(row.ChangedSinceCommit);
     }
+
+    [Fact]
+    public void Edits_offer_the_computed_partner_for_the_live_clipboard()
+    {
+        var panel = Panel();
+        var copies = new List<string>();
+        panel.AutoCopy += copies.Add;
+
+        Row(panel, "pot1").GrossText = "1440"; // gross entry offers the net
+        Assert.Equal("800", copies.Last());
+
+        Row(panel, "pot1").NetText = "200"; // net entry offers the target gross
+        Assert.Equal("840", copies.Last());
+
+        panel.RecipeText = "1000"; // recipe edits offer the delta
+        Assert.Equal("-800", copies.Last());
+
+        // A gross reading below the tare still offers the (negative) net.
+        Row(panel, "pot2").GrossText = "100";
+        Assert.Equal("-110", copies.Last());
+    }
+
+    [Fact]
+    public void Placeholder_partners_are_never_offered_to_the_live_clipboard()
+    {
+        var panel = Panel();
+        var copies = new List<string>();
+        panel.AutoCopy += copies.Add;
+
+        Row(panel, "pot1").GrossText = "12x"; // partner degrades to a dash
+        panel.RecipeText = "500"; // no net, so no delta either
+        Assert.Empty(copies);
+    }
 }

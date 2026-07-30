@@ -57,6 +57,11 @@ public partial class MainViewModel : ObservableObject
             Echo(echo);
             UpdateDishDependent();
         };
+        // The live clipboard: each recompute with a valid computed partner
+        // puts that number on the clipboard, so finishing typing means the
+        // result is already pasteable. Clipboard-only, never a settle point.
+        Portion.AutoCopy += text => _ = CopyBareNumberAsync(text);
+        Scale.AutoCopy += text => _ = CopyBareNumberAsync(text);
         Scale.Note += note => Notice(note, warning: true);
         Scale.DishRebound += (row, loud) =>
         {

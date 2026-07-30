@@ -280,6 +280,43 @@ public class HeadlessUiTests
         Assert.Equal("-200", copied);
     }
 
+    [AvaloniaFact]
+    public void Typing_keeps_the_computed_partner_on_the_clipboard_without_logging()
+    {
+        using var f = new Fixture();
+        var copies = new List<string>();
+        f.Vm.CopyToClipboard = text =>
+        {
+            copies.Add(text);
+            return Task.CompletedTask;
+        };
+
+        // A gross entry puts the net on the clipboard as it recomputes, with
+        // the quiet copied echo, and without writing any log entry.
+        f.Type(f.RowBox(0, "rowGross"), "1440");
+        Assert.Equal("800", copies.Last());
+        Assert.Contains("copied 800", f.Vm.StatusNotice);
+        Assert.Empty(f.Services.Log.Entries);
+
+        // A recipe entry puts the delta on the clipboard, still not logging.
+        f.Type(f.Box("RecipeBox"), "1000");
+        Assert.Equal("-200", copies.Last());
+        Assert.Empty(f.Services.Log.Entries);
+
+        // Eaten pair: typing grams keeps the calories pasteable.
+        f.Type(f.Box("ServingGramsBox"), "56");
+        f.Type(f.Box("ServingCaloriesBox"), "250");
+        f.Type(f.Box("EatenGramsBox"), "128");
+        Assert.Equal("571", copies.Last());
+
+        // The existing settle points are unchanged: Enter still commits.
+        f.Box("RecipeBox").Focus();
+        Fixture.Pump();
+        f.Press(Key.Enter);
+        Fixture.Pump();
+        Assert.Contains(f.Services.Log.Entries, e => e.Panel == LogPanel.Water && e.Result == "-200");
+    }
+
     private static Button CopyIconOf(TextBox box)
         => box.GetVisualDescendants().OfType<Button>().First(b => b.Classes.Contains("copyIcon"));
 
@@ -586,7 +623,7 @@ public class HeadlessUiTests
 
         var editor = (CookwareEditorViewModel)window.DataContext!;
         var weightBox = window.GetVisualDescendants().OfType<TextBox>()
-            .First(t => t.Classes.Contains("numeric"));
+            .First(t => t.Classes.Contains("numeric") && t.Name != "NewWeightBox");
 
         // The minus key is rejected outright.
         weightBox.Focus();
