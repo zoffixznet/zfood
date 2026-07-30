@@ -31,7 +31,37 @@ public partial class CookwareWindow : Window
         DataContext = _vm;
 
         AddHandler(TextInputEvent, OnTextInputTunnel, RoutingStrategies.Tunnel);
+        AddHandler(PointerReleasedEvent, OnAnyPointerReleased, RoutingStrategies.Bubble, handledEventsToo: true);
         InitializeThemePicker();
+    }
+
+    // -- Select-all on focus -------------------------------------------------
+
+    private TextBox? _pendingPointerSelectAll;
+
+    protected override void OnGotFocus(GotFocusEventArgs e)
+    {
+        base.OnGotFocus(e);
+        if (e.Source is not TextBox box)
+            return;
+
+        // Same rule as the main window's fields: focusing selects the content,
+        // so typing over a stale value (the default weight, an old name) costs
+        // nothing. Pointer focus applies the selection when the click ends,
+        // because the click itself would immediately reset the caret.
+        if (e.NavigationMethod == NavigationMethod.Pointer)
+            _pendingPointerSelectAll = box;
+        else
+            Avalonia.Threading.Dispatcher.UIThread.Post(box.SelectAll);
+    }
+
+    private void OnAnyPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        if (_pendingPointerSelectAll is TextBox box)
+        {
+            _pendingPointerSelectAll = null;
+            Avalonia.Threading.Dispatcher.UIThread.Post(box.SelectAll);
+        }
     }
 
     // -- Theme picker --------------------------------------------------------

@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -99,6 +100,29 @@ public class CookwareEditorTests
 
     private static Button SaveButton(CookwareWindow window)
         => window.GetVisualDescendants().OfType<Button>().First(b => Equals(b.Content, "Save"));
+
+    [AvaloniaFact]
+    public void Dialog_fields_select_their_content_on_focus()
+    {
+        var window = new CookwareWindow(DemoSettings(), () => true);
+        window.Show();
+        Pump();
+
+        // The editor's weight field holds the stored tare; focusing it selects
+        // everything, so typing replaces the value instead of appending to it.
+        var weightBox = window.GetVisualDescendants().OfType<TextBox>()
+            .First(t => t.Classes.Contains("numeric") && !ReferenceEquals(t, window.FindControl<TextBox>("NewWeightBox")));
+        weightBox.Focus();
+        Pump();
+        Assert.Equal("640", weightBox.SelectedText);
+
+        window.KeyTextInput("400");
+        Pump();
+        Assert.Equal("400", weightBox.Text);
+
+        window.Close();
+        Pump();
+    }
 
     [AvaloniaFact]
     public void The_add_button_appends_to_the_list_and_clears_the_add_row()
