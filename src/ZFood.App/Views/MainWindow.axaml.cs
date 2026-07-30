@@ -281,6 +281,12 @@ public partial class MainWindow : Window
 
         if (e.Key == Key.Escape && e.KeyModifiers == KeyModifiers.None)
         {
+            if (_vm.LogDrawerOpen)
+            {
+                _vm.LogDrawerOpen = false;
+                return true;
+            }
+
             if (focused is TextBox { IsReadOnly: false } box)
             {
                 // Esc clears just the focused field, and only while that field
@@ -342,8 +348,8 @@ public partial class MainWindow : Window
         if (focused is null)
             return false;
 
-        // The log lists and the More-cookware list handle Enter themselves.
-        if (IsWithin(focused, RecentLogList) || IsWithin(focused, DrawerLogList) || IsWithin(focused, MoreCookwareList))
+        // The log list and the More-cookware list handle Enter themselves.
+        if (IsWithin(focused, DrawerLogList) || IsWithin(focused, MoreCookwareList))
             return false;
 
         if (RowFromSource(focused) is CookwareRowModel row)
@@ -585,7 +591,10 @@ public partial class MainWindow : Window
 
     private void OnDeltaCopyIconClick(object? sender, RoutedEventArgs e) => _ = _vm.CopyDeltaAsync();
 
-    // -- Log lists ---------------------------------------------------------
+    // -- Log lists and the status line ---------------------------------------
+
+    private void OnStatusLineTapped(object? sender, TappedEventArgs e)
+        => _ = _vm.CopyStatusResultAsync();
 
     private void OnLogListTapped(object? sender, TappedEventArgs e)
     {

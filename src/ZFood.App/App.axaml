@@ -14,6 +14,15 @@
              (even-odd) rather than stroked lines, so the shape stays crisp at
              any rendered size; a stroked path distorts when scaled. -->
         <StreamGeometry x:Key="CopyIconGeometry">M5,16 L4,16 A3,3 0 0 1 1,13 L1,4 A3,3 0 0 1 4,1 L13,1 A3,3 0 0 1 16,4 L16,5 A1,1 0 0 1 14,5 L14,4 A1,1 0 0 0 13,3 L4,3 A1,1 0 0 0 3,4 L3,13 A1,1 0 0 0 4,14 L5,14 A1,1 0 0 1 5,16 Z M11,8 L19,8 A3,3 0 0 1 22,11 L22,19 A3,3 0 0 1 19,22 L11,22 A3,3 0 0 1 8,19 L8,11 A3,3 0 0 1 11,8 Z M11,10 L19,10 A1,1 0 0 1 20,11 L20,19 A1,1 0 0 1 19,20 L11,20 A1,1 0 0 1 10,19 L10,11 A1,1 0 0 1 11,10 Z</StreamGeometry>
+
+        <!-- Icon-button glyphs, all filled vector outlines like the copy icon
+             so they stay crisp at any size. -->
+        <!-- Reset: a circular arrow. -->
+        <StreamGeometry x:Key="ResetIconGeometry">M16.60,4.03 A9.2,9.2 0 1 1 4.95,6.09 L7.25,8.01 A6.2,6.2 0 1 0 15.10,6.63 Z M18.10,1.43 L11.73,4.30 L13.60,9.23 Z</StreamGeometry>
+        <!-- Log: a short list of entry lines. -->
+        <StreamGeometry x:Key="LogIconGeometry">M2,4 L17,4 L17,6.6 L2,6.6 Z M2,10.7 L22,10.7 L22,13.3 L2,13.3 Z M2,17.4 L13,17.4 L13,20 L2,20 Z</StreamGeometry>
+        <!-- Settings: a gear with eight teeth. -->
+        <StreamGeometry x:Key="GearIconGeometry">M10.30,3.98 L10.47,1.11 L13.53,1.11 L13.70,3.98 L16.47,5.12 L18.62,3.22 L20.78,5.38 L18.88,7.53 L20.02,10.30 L22.89,10.47 L22.89,13.53 L20.02,13.70 L18.88,16.47 L20.78,18.62 L18.62,20.78 L16.47,18.88 L13.70,20.02 L13.53,22.89 L10.47,22.89 L10.30,20.02 L7.53,18.88 L5.38,20.78 L3.22,18.62 L5.12,16.47 L3.98,13.70 L1.11,13.53 L1.11,10.47 L3.98,10.30 L5.12,7.53 L3.22,5.38 L5.38,3.22 L7.53,5.12 Z M16.40,12.00 A4.4,4.4 0 1 1 7.60,12.00 A4.4,4.4 0 1 1 16.40,12.00 Z</StreamGeometry>
     </Application.Resources>
 
     <Application.Styles>
@@ -162,9 +171,10 @@
             <Setter Property="Foreground" Value="{DynamicResource WarnBrush}" />
         </Style>
 
-        <!-- The water delta: a hero readout like the display of a fine scale.
-             Still a real selectable text box. Declared after the computed
-             styles so its tokens win at equal specificity. -->
+        <!-- The water delta: the scale panel's primary readout, restrained to
+             the same height class as the other fields. Still a real selectable
+             text box. Declared after the computed styles so its tokens win at
+             equal specificity. -->
         <Style Selector="TextBox.numeric.delta">
             <Setter Property="FontSize" Value="{DynamicResource DeltaFontSize}" />
             <Setter Property="FontFamily" Value="{DynamicResource DeltaFontFamily}" />
@@ -175,8 +185,8 @@
             <Setter Property="BorderThickness" Value="{DynamicResource DeltaFieldBorderThickness}" />
             <Setter Property="CornerRadius" Value="{DynamicResource DeltaCornerRadius}" />
             <Setter Property="SelectionBrush" Value="{DynamicResource DeltaSelectionBrush}" />
-            <Setter Property="Width" Value="232" />
-            <Setter Property="MinHeight" Value="44" />
+            <Setter Property="Width" Value="150" />
+            <Setter Property="MinHeight" Value="36" />
             <Setter Property="Padding" Value="10,2" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
@@ -289,6 +299,23 @@
             <Setter Property="Foreground" Value="{DynamicResource ButtonDisabledTextBrush}" />
         </Style>
 
+        <!-- Icon-only buttons (Reset, Log, Settings): a quiet button whose
+             content is a single glyph; generous click target, vector fill in
+             the theme's button ink. -->
+        <Style Selector="Button.quiet.icon">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinWidth" Value="46" />
+            <Setter Property="MinHeight" Value="30" />
+        </Style>
+        <Style Selector="Button.quiet.icon Path">
+            <Setter Property="Fill" Value="{DynamicResource ButtonTextBrush}" />
+            <Setter Property="Width" Value="15" />
+            <Setter Property="Height" Value="15" />
+            <Setter Property="Stretch" Value="Uniform" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
         <!-- Dialog variants: the emphasized Save and the destructive Delete. -->
         <Style Selector="Button.quiet.primary">
             <Setter Property="Background" Value="{DynamicResource PrimaryButtonBrush}" />
@@ -356,11 +383,11 @@
         <Style Selector="Button.copyIcon:disabled Path">
             <Setter Property="Fill" Value="{DynamicResource CopyIconDisabledBrush}" />
         </Style>
-        <!-- The delta's hero box gets a proportionally larger icon in the
-             delta's own colors (its surface can be a dark chip). -->
+        <!-- The delta's box gets its icon in the delta's own colors (its
+             surface can be a dark chip). -->
         <Style Selector="TextBox.numeric.delta Button.copyIcon Path">
-            <Setter Property="Width" Value="18" />
-            <Setter Property="Height" Value="18" />
+            <Setter Property="Width" Value="15" />
+            <Setter Property="Height" Value="15" />
             <Setter Property="Fill" Value="{DynamicResource DeltaCopyIconBrush}" />
         </Style>
         <Style Selector="TextBox.numeric.delta Button.copyIcon:pointerover Path">

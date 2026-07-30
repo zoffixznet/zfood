@@ -44,9 +44,6 @@ public partial class PortionViewModel : ObservableObject
     [ObservableProperty]
     private bool eatenCaloriesIsComputed;
 
-    /// <summary>Raised on every accepted user edit (drives the status-bar echo tick).</summary>
-    public event Action? Activity;
-
     /// <summary>
     /// Raised on every user-edit recompute whose computed eaten member is a
     /// valid number, carrying that member's displayed text (calories for a
@@ -57,9 +54,6 @@ public partial class PortionViewModel : ObservableObject
 
     /// <summary>Raised when a computed field recomputes; the argument names it (for the pulse).</summary>
     public event Action<string>? ComputedChanged;
-
-    /// <summary>Status-bar echo for this panel's newest computed value, e.g. "= 496 cal".</summary>
-    public string LatestEcho { get; private set; } = Dash;
 
     /// <summary>Which eaten member currently holds the input role.</summary>
     public PairSide EatenInput => _eatenPair.Input;
@@ -99,7 +93,6 @@ public partial class PortionViewModel : ObservableObject
             DensityIsPlaceholder = true;
             EatenGramsIsComputed = false;
             EatenCaloriesIsComputed = false;
-            LatestEcho = Dash;
             _eatenPair.Reset();
             ChangedSinceCommit = false;
         }
@@ -137,7 +130,6 @@ public partial class PortionViewModel : ObservableObject
 
         ChangedSinceCommit = true;
         Recompute();
-        Activity?.Invoke();
     }
 
     private PortionResult Compute(double? servingG, double? servingCal)
@@ -170,16 +162,11 @@ public partial class PortionViewModel : ObservableObject
             {
                 case PairSide.A:
                     EatenCaloriesText = result.EatenCalories is double ec ? Numeric.FormatWhole(ec) : Dash;
-                    LatestEcho = result.EatenCalories is double ec2 ? $"= {Numeric.FormatWhole(ec2)} cal" : DensityEcho(result);
                     ComputedChanged?.Invoke(nameof(EatenCaloriesText));
                     break;
                 case PairSide.B:
                     EatenGramsText = result.EatenGrams is double eg ? Numeric.FormatWhole(eg) : Dash;
-                    LatestEcho = result.EatenGrams is double eg2 ? $"= {Numeric.FormatWhole(eg2)} g" : DensityEcho(result);
                     ComputedChanged?.Invoke(nameof(EatenGramsText));
-                    break;
-                default:
-                    LatestEcho = DensityEcho(result);
                     break;
             }
 
@@ -199,7 +186,4 @@ public partial class PortionViewModel : ObservableObject
         if (Numeric.ParseDisplayed(partner) is not null)
             AutoCopy?.Invoke(partner!);
     }
-
-    private static string DensityEcho(PortionResult result)
-        => result.Density is double d ? $"= {Numeric.FormatDensity(d)} cal/g" : Dash;
 }

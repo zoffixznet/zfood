@@ -185,7 +185,8 @@
 
             <!-- Add row: fill it in, press Add, and the new item appears in
                  the list above while the row clears for the next entry. -->
-            <Grid Grid.Column="0" Grid.Row="1" ColumnDefinitions="*,8,110,8,Auto" Margin="0,8,0,0">
+            <Grid Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1"
+                  ColumnDefinitions="*,8,110,8,Auto" Margin="0,8,0,0">
                 <TextBox Grid.Column="0" x:Name="NewNameBox" Watermark="New cookware name"
                          Text="{Binding NewName}" />
                 <TextBox Grid.Column="2" x:Name="NewWeightBox" Classes="numeric" Width="110"
@@ -197,7 +198,7 @@
 
             <!-- Editor for the item selected in the list; a separate concern
                  from adding, so it is labeled with its scope. -->
-            <StackPanel Grid.Column="2" Grid.RowSpan="2" Spacing="10"
+            <StackPanel Grid.Column="2" Spacing="10"
                         IsEnabled="{Binding Selected, Converter={x:Static ObjectConverters.IsNotNull}}">
                 <TextBlock Classes="sectionTitle" Text="EDIT SELECTED" Margin="0,0,0,2" />
                 <StackPanel Spacing="4">

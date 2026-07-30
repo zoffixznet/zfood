@@ -465,6 +465,142 @@ public class HeadlessUiTests
     }
 
     [AvaloniaFact]
+    public void Cookware_columns_align_regardless_of_name_length()
+    {
+        using var f = new Fixture();
+
+        // Give one row a much longer name than its neighbors.
+        f.Services.Settings.Cookware.First(c => c.Id == "p2").Name = "Enameled cast-iron casserole with lid";
+        f.Vm.Scale.SyncFromSettings();
+        Fixture.Pump();
+        f.Window.UpdateLayout();
+
+        double LeftOf(Control c) => c.TranslatePoint(new Avalonia.Point(0, 0), f.Window)!.Value.X;
+
+        Assert.Equal(LeftOf(f.RowBox(0, "rowGross")), LeftOf(f.RowBox(1, "rowGross")), 1);
+        Assert.Equal(LeftOf(f.RowBox(0, "rowNet")), LeftOf(f.RowBox(1, "rowNet")), 1);
+
+        TextBlock Tare(int index)
+        {
+            var container = f.Window.FindControl<ItemsControl>("CookwareRowsControl")!.ContainerFromIndex(index)!;
+            return container.GetVisualDescendants().OfType<TextBlock>()
+                .First(t => t.Text?.StartsWith("tare") == true);
+        }
+
+        Assert.Equal(LeftOf(Tare(0)), LeftOf(Tare(1)), 1);
+
+        // The long name ellipsizes with a tooltip instead of pushing columns.
+        var name = f.Window.FindControl<ItemsControl>("CookwareRowsControl")!.ContainerFromIndex(1)!
+            .GetVisualDescendants().OfType<TextBlock>().First(t => t.Classes.Contains("cookwareName"));
+        Assert.Equal(Avalonia.Media.TextTrimming.CharacterEllipsis, name.TextTrimming);
+        Assert.Equal("Enameled cast-iron casserole with lid", ToolTip.GetTip(name));
+    }
+
+    [AvaloniaFact]
+    public void The_bottom_bar_holds_icon_buttons_with_glyphs_and_tooltips()
+    {
+        using var f = new Fixture();
+        f.Window.UpdateLayout();
+
+        foreach (var buttonName in new[] { "ResetButton", "LogButton", "GearButton" })
+        {
+            var button = f.Window.FindControl<Button>(buttonName)!;
+            Assert.True(button.IsVisible);
+            Assert.NotNull(ToolTip.GetTip(button));
+            Assert.Contains(button.GetVisualDescendants().OfType<Avalonia.Controls.Shapes.Path>(),
+                p => p.Data is not null);
+            // Icon-only, yet still a generous click target.
+            Assert.True(button.Bounds.Width >= 40, $"{buttonName} width {button.Bounds.Width}");
+            Assert.True(button.Bounds.Height >= 28, $"{buttonName} height {button.Bounds.Height}");
+        }
+    }
+
+    [AvaloniaFact]
+    public async Task The_status_line_shows_the_newest_log_entry_and_copies_its_result()
+    {
+        using var f = new Fixture();
+        string? copied = null;
+        f.Vm.CopyToClipboard = text =>
+        {
+            copied = text;
+            return Task.CompletedTask;
+        };
+
+        Assert.Equal("—", f.Vm.StatusLine);
+
+        f.Type(f.RowBox(0, "rowGross"), "1440");
+        f.Press(Key.Enter); // commits the tare entry
+        Fixture.Pump();
+
+        // The status line reads like the log entry: timestamp, result, kind,
+        // equation, and the view renders exactly that text.
+        Assert.Matches(@"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", f.Vm.StatusLine);
+        Assert.Contains("800 g", f.Vm.StatusLine);
+        Assert.Contains("TARE", f.Vm.StatusLine);
+        Assert.Contains("Big pot", f.Vm.StatusLine);
+        var status = f.Window.FindControl<SelectableTextBlock>("StatusLineText")!;
+        Assert.Equal(f.Vm.StatusLine, status.Text);
+
+        // Click-to-copy semantics: the result number, like a log row.
+        copied = null;
+        Assert.True(await f.Vm.CopyStatusResultAsync());
+        Assert.Equal("800", copied);
+        Assert.Contains("copied 800", f.Vm.StatusNotice);
+    }
+
+    [AvaloniaFact]
+    public void The_log_button_opens_the_overlay_and_escape_closes_it()
+    {
+        using var f = new Fixture();
+        var overlay = f.Window.FindControl<Border>("LogOverlay")!;
+        Assert.False(overlay.IsVisible);
+
+        Click(f.Window.FindControl<Button>("LogButton")!);
+        Fixture.Pump();
+        Assert.True(f.Vm.LogDrawerOpen);
+        Assert.True(overlay.IsVisible);
+
+        f.Press(Key.Escape);
+        Assert.False(f.Vm.LogDrawerOpen);
+        Assert.False(overlay.IsVisible);
+    }
+
+    [AvaloniaFact]
+    public void The_density_readout_stays_in_the_input_row_height_class()
+    {
+        using var f = new Fixture();
+
+        f.Type(f.Box("ServingGramsBox"), "56");
+        f.Type(f.Box("ServingCaloriesBox"), "250");
+        f.Window.UpdateLayout();
+
+        var chip = f.Window.FindControl<Border>("DensityChip")!;
+        Assert.True(chip.Bounds.Height <= 44, $"density chip height {chip.Bounds.Height}");
+        Assert.Equal("4.46", f.Vm.Portion.DensityCalPerG);
+        Assert.Equal("446", f.Vm.Portion.DensityPer100);
+    }
+
+    [AvaloniaFact]
+    public void The_water_section_sits_beside_the_rows_and_stacks_when_narrow()
+    {
+        using var f = new Fixture();
+        f.Window.UpdateLayout();
+
+        var water = f.Window.FindControl<StackPanel>("WaterColumn")!;
+        Assert.Equal(0, Grid.GetRow(water));
+        Assert.Equal(2, Grid.GetColumn(water));
+
+        // Below the side-by-side threshold the water section stacks back
+        // under the cookware rows.
+        f.Window.Width = 820;
+        Fixture.Pump();
+        f.Window.UpdateLayout();
+        Assert.Contains("narrow", f.Window.Classes);
+        Assert.Equal(1, Grid.GetRow(water));
+        Assert.Equal(0, Grid.GetColumn(water));
+    }
+
+    [AvaloniaFact]
     public void Reset_clears_fields_and_session_rows_but_not_pins()
     {
         using var f = new Fixture();

@@ -15,11 +15,9 @@ public partial class MainViewModel : ObservableObject
     private string? _focusedUnit;
     private int _noticeVersion;
 
+    /// <summary>The status line: what the newest log entry reads, or a dash.</summary>
     [ObservableProperty]
-    private string statusEcho = "—";
-
-    [ObservableProperty]
-    private string statusTime = "";
+    private string statusLine = "—";
 
     [ObservableProperty]
     private string statusNotice = "";
@@ -51,17 +49,13 @@ public partial class MainViewModel : ObservableObject
         Scale = new ScalePanelModel(services.Settings);
         Log = new LogViewModel(services.Log);
 
-        Portion.Activity += () => Echo(Portion.LatestEcho);
-        Scale.Activity += echo =>
-        {
-            Echo(echo);
-            UpdateDishDependent();
-        };
+        Scale.Activity += _ => UpdateDishDependent();
         // The live clipboard: each recompute with a valid computed partner
         // puts that number on the clipboard, so finishing typing means the
         // result is already pasteable. Clipboard-only, never a settle point.
         Portion.AutoCopy += text => _ = CopyBareNumberAsync(text);
         Scale.AutoCopy += text => _ = CopyBareNumberAsync(text);
+        Log.Changed += UpdateStatusLine;
         Scale.Note += note => Notice(note, warning: true);
         Scale.DishRebound += (row, loud) =>
         {
@@ -78,6 +72,7 @@ public partial class MainViewModel : ObservableObject
         services.LogStore.WriteFailed += () => Notice("log write failed; this entry may not survive a restart", warning: true);
 
         UpdateDishDependent();
+        UpdateStatusLine();
     }
 
     public PortionViewModel Portion { get; } = new();
@@ -159,8 +154,6 @@ public partial class MainViewModel : ObservableObject
         CommitAllChanged();
         Portion.Reset();
         Scale.Reset();
-        StatusEcho = "—";
-        StatusTime = "";
         UpdateDishDependent();
         Notice("reset");
     }
@@ -204,6 +197,18 @@ public partial class MainViewModel : ObservableObject
         Notice($"copied {row.CopyText}");
     }
 
+    /// <summary>
+    /// Copies the status line's result number (the newest log entry's result),
+    /// mirroring a click on a log row. False while the log is empty.
+    /// </summary>
+    public async Task<bool> CopyStatusResultAsync()
+    {
+        if (Log.Newest is not LogRow row)
+            return false;
+        await CopyLogRowAsync(row);
+        return true;
+    }
+
     /// <summary>Copies the dish row's net weight into eaten grams.</summary>
     public void UseDishNet()
     {
@@ -225,11 +230,10 @@ public partial class MainViewModel : ObservableObject
             await copy(text);
     }
 
-    private void Echo(string echo)
-    {
-        StatusEcho = echo;
-        StatusTime = DateTime.Now.ToString("HH:mm:ss");
-    }
+    private void UpdateStatusLine()
+        => StatusLine = Log.Newest is LogRow row
+            ? $"{row.Time}  ·  {row.Result}  ·  {row.Kind}  ·  {row.Equation}"
+            : "—";
 
     private void Settle(LogEntry entry)
     {

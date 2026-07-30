@@ -29,6 +29,9 @@ public sealed class LogViewModel
     /// <summary>All entries, newest first (expanded drawer).</summary>
     public ObservableCollection<LogRow> Drawer { get; } = new();
 
+    /// <summary>The newest entry, or null while the log is empty (status line).</summary>
+    public LogRow? Newest => Drawer.Count > 0 ? Drawer[0] : null;
+
     /// <summary>True when the log has no entries yet.</summary>
     public bool IsEmpty => _log.Entries.Count == 0;
 

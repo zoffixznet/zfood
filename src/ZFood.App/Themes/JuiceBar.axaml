@@ -113,7 +113,7 @@
     <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#5E3B4D" />
     <SolidColorBrush x:Key="FocusBorderBrush" Color="#E11D6F" />
     <BoxShadows x:Key="FocusShadow">0 0 0 3 #2EFF4D8D</BoxShadows>
-    <x:Double x:Key="NarrowThreshold">950</x:Double>
+    <x:Double x:Key="NarrowThreshold">900</x:Double>
     <FontFamily x:Key="UiFontFamily">avares://ZFood/Assets/Fonts/NunitoSans#Nunito Sans</FontFamily>
     <FontFamily x:Key="NumeralFontFamily">avares://ZFood/Assets/Fonts/Manrope#Manrope</FontFamily>
     <FontWeight x:Key="NumeralFontWeight">Medium</FontWeight>
@@ -134,14 +134,14 @@
     <SolidColorBrush x:Key="HeroChipPlaceholderBrush" Color="#F3E3E9" />
     <SolidColorBrush x:Key="HeroChipBorderBrush" Color="Transparent" />
     <BoxShadows x:Key="HeroChipShadow">inset 0 2 0 0 #59FFFFFF, 0 8 22 -6 #40E11D6F</BoxShadows>
-    <CornerRadius x:Key="HeroChipCornerRadius">18</CornerRadius>
-    <Thickness x:Key="HeroChipPadding">20,10</Thickness>
+    <CornerRadius x:Key="HeroChipCornerRadius">12</CornerRadius>
+    <Thickness x:Key="HeroChipPadding">12,4</Thickness>
     <SolidColorBrush x:Key="HeroChipPulseBrush" Color="#BE1B54" />
 
     <!-- Water delta: the same hard-candy skin on the field itself. -->
     <FontFamily x:Key="DeltaFontFamily">avares://ZFood/Assets/Fonts/Manrope#Manrope</FontFamily>
     <FontWeight x:Key="DeltaFontWeight">ExtraBold</FontWeight>
-    <x:Double x:Key="DeltaFontSize">32</x:Double>
+    <x:Double x:Key="DeltaFontSize">20</x:Double>
     <SolidColorBrush x:Key="DeltaTextBrush" Color="#FFFFFF" />
     <LinearGradientBrush x:Key="DeltaFieldBrush" StartPoint="0%,0%" EndPoint="0%,100%">
         <GradientStop Offset="0" Color="#A31245" />
@@ -149,7 +149,7 @@
     </LinearGradientBrush>
     <SolidColorBrush x:Key="DeltaFieldBorderBrush" Color="Transparent" />
     <Thickness x:Key="DeltaFieldBorderThickness">1</Thickness>
-    <CornerRadius x:Key="DeltaCornerRadius">16</CornerRadius>
+    <CornerRadius x:Key="DeltaCornerRadius">12</CornerRadius>
     <BoxShadows x:Key="DeltaShadow">inset 0 2 0 0 #59FFFFFF, 0 8 22 -6 #40E11D6F</BoxShadows>
     <SolidColorBrush x:Key="DeltaSelectionBrush" Color="#59FFFFFF" />
     <SolidColorBrush x:Key="DeltaPulseBrush" Color="#BE1B54" />

@@ -79,7 +79,7 @@
     <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#4B5563" />
     <SolidColorBrush x:Key="FocusBorderBrush" Color="#0E7568" />
     <BoxShadows x:Key="FocusShadow">0 0 0 0 #00000000</BoxShadows>
-    <x:Double x:Key="NarrowThreshold">860</x:Double>
+    <x:Double x:Key="NarrowThreshold">900</x:Double>
     <FontFamily x:Key="UiFontFamily">fonts:Inter#Inter</FontFamily>
     <FontFamily x:Key="NumeralFontFamily">fonts:Inter#Inter</FontFamily>
     <FontWeight x:Key="NumeralFontWeight">Normal</FontWeight>
@@ -103,7 +103,7 @@
     <!-- Water delta hero -->
     <FontFamily x:Key="DeltaFontFamily">fonts:Inter#Inter</FontFamily>
     <FontWeight x:Key="DeltaFontWeight">Light</FontWeight>
-    <x:Double x:Key="DeltaFontSize">32</x:Double>
+    <x:Double x:Key="DeltaFontSize">20</x:Double>
     <SolidColorBrush x:Key="DeltaTextBrush" Color="#084A43" />
     <SolidColorBrush x:Key="DeltaFieldBrush" Color="#EDF4F2" />
     <SolidColorBrush x:Key="DeltaFieldBorderBrush" Color="#E3E5E8" />

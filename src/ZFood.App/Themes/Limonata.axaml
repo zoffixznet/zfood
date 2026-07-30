@@ -120,7 +120,7 @@
     <SolidColorBrush x:Key="InputHoverBorderBrush" Color="#3E4A28" />
     <SolidColorBrush x:Key="FocusBorderBrush" Color="#4E9906" />
     <BoxShadows x:Key="FocusShadow">0 0 0 3 #2E84D22B</BoxShadows>
-    <x:Double x:Key="NarrowThreshold">950</x:Double>
+    <x:Double x:Key="NarrowThreshold">900</x:Double>
     <FontFamily x:Key="UiFontFamily">avares://ZFood/Assets/Fonts/InstrumentSans#Instrument Sans</FontFamily>
     <FontFamily x:Key="NumeralFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
     <FontWeight x:Key="NumeralFontWeight">SemiBold</FontWeight>
@@ -141,14 +141,14 @@
     <SolidColorBrush x:Key="HeroChipPlaceholderBrush" Color="#EDF4DC" />
     <SolidColorBrush x:Key="HeroChipBorderBrush" Color="Transparent" />
     <BoxShadows x:Key="HeroChipShadow">inset 0 2 0 0 #66FFFFFF, 0 8 20 -6 #593E7B0D</BoxShadows>
-    <CornerRadius x:Key="HeroChipCornerRadius">18</CornerRadius>
-    <Thickness x:Key="HeroChipPadding">20,10</Thickness>
+    <CornerRadius x:Key="HeroChipCornerRadius">12</CornerRadius>
+    <Thickness x:Key="HeroChipPadding">12,4</Thickness>
     <SolidColorBrush x:Key="HeroChipPulseBrush" Color="#3F7A10" />
 
     <!-- Water delta: the same lime candy skin on the field itself. -->
     <FontFamily x:Key="DeltaFontFamily">avares://ZFood/Assets/Fonts/SpaceGrotesk#Space Grotesk</FontFamily>
     <FontWeight x:Key="DeltaFontWeight">SemiBold</FontWeight>
-    <x:Double x:Key="DeltaFontSize">32</x:Double>
+    <x:Double x:Key="DeltaFontSize">20</x:Double>
     <SolidColorBrush x:Key="DeltaTextBrush" Color="#FFFFFF" />
     <LinearGradientBrush x:Key="DeltaFieldBrush" StartPoint="0%,0%" EndPoint="0%,100%">
         <GradientStop Offset="0" Color="#305F0A" />
@@ -156,7 +156,7 @@
     </LinearGradientBrush>
     <SolidColorBrush x:Key="DeltaFieldBorderBrush" Color="Transparent" />
     <Thickness x:Key="DeltaFieldBorderThickness">1</Thickness>
-    <CornerRadius x:Key="DeltaCornerRadius">16</CornerRadius>
+    <CornerRadius x:Key="DeltaCornerRadius">12</CornerRadius>
     <BoxShadows x:Key="DeltaShadow">inset 0 2 0 0 #66FFFFFF, 0 8 20 -6 #593E7B0D</BoxShadows>
     <SolidColorBrush x:Key="DeltaSelectionBrush" Color="#59FFFFFF" />
     <SolidColorBrush x:Key="DeltaPulseBrush" Color="#3F7A10" />
