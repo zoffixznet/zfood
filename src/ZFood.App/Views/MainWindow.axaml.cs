@@ -96,27 +96,58 @@ public partial class MainWindow : Window
 
     // -- Window geometry ---------------------------------------------------
 
+    // Conservative frame allowance in logical units: the OS decoration's side
+    // borders and title bar are not knowable before the window exists, so the
+    // clamp overestimates them; erring high only keeps the window a little
+    // further inside the screen, never lets the title bar off it.
+    private const double FrameSideAllowance = 20;
+    private const double FrameTopBottomAllowance = 48;
+
     private void RestoreGeometry()
     {
         var saved = _services.Settings.Window;
         var screens = Screens.All.Select(s => ToGeo(s.WorkingArea)).ToList();
-        if (saved is null || screens.Count == 0)
+        if (screens.Count == 0)
         {
+            // No screen information at all (headless platforms); leave the
+            // default centering to the windowing system.
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             return;
         }
 
-        var primary = ToGeo((Screens.Primary ?? Screens.All[0]).WorkingArea);
-        var rect = WindowGeometryMath.EnsureVisible(saved, screens, primary,
-            (int)Width, (int)Height, (int)MinWidth, (int)MinHeight);
+        var primary = Screens.Primary ?? Screens.All[0];
+
+        // All geometry math runs in physical pixels (working areas and
+        // Position are physical; Width/Height are logical), converted with the
+        // scale of the screen the window is headed for.
+        var target = saved is null
+            ? primary
+            : Screens.ScreenFromPoint(new PixelPoint(saved.X, saved.Y)) ?? primary;
+        var scale = target.Scaling > 0 ? target.Scaling : 1.0;
+        var frame = new FrameMargin(Px(FrameSideAllowance, scale), Px(FrameTopBottomAllowance, scale));
+
+        var savedPhysical = saved is null
+            ? null
+            : new WindowGeometry
+            {
+                X = saved.X,
+                Y = saved.Y,
+                Width = Px(saved.Width, scale),
+                Height = Px(saved.Height, scale),
+            };
+
+        var rect = WindowGeometryMath.EnsureVisible(savedPhysical, screens, ToGeo(primary.WorkingArea),
+            Px(Width, scale), Px(Height, scale), Px(MinWidth, scale), Px(MinHeight, scale), frame);
 
         WindowStartupLocation = WindowStartupLocation.Manual;
         Position = new PixelPoint(rect.X, rect.Y);
-        Width = rect.Width;
-        Height = rect.Height;
-        if (saved.Maximized)
+        Width = rect.Width / scale;
+        Height = rect.Height / scale;
+        if (saved?.Maximized == true)
             WindowState = WindowState.Maximized;
     }
+
+    private static int Px(double logical, double scale) => (int)Math.Round(logical * scale);
 
     private void OnClosingWindow(object? sender, WindowClosingEventArgs e)
     {

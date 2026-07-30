@@ -108,4 +108,96 @@ public class WindowGeometryMathTests
         var r = Ensure(saved, Array.Empty<GeoRect>());
         Assert.True(Primary.Contains(r));
     }
+
+    // -- Frame-aware clamping: the position is the frame's top-left corner and
+    // -- the clamp must keep the whole frame (title bar included) visible.
+
+    private static readonly FrameMargin Frame = new(16, 48);
+
+    private static GeoRect FrameRect(GeoRect client)
+        => new(client.X, client.Y, client.Width + Frame.Horizontal, client.Height + Frame.Vertical);
+
+    private static GeoRect EnsureFramed(WindowGeometry? saved, GeoRect area)
+        => WindowGeometryMath.EnsureVisible(saved, new[] { area }, area, 960, 620, 800, 460, Frame);
+
+    [Fact]
+    public void First_run_centers_the_whole_frame_in_the_primary_working_area()
+    {
+        var area = new GeoRect(0, 0, 1920, 1040);
+        var r = EnsureFramed(null, area);
+        var f = FrameRect(r);
+        Assert.True(area.Contains(f));
+        Assert.Equal((area.Width - f.Width) / 2, f.X - area.X);
+        Assert.Equal((area.Height - f.Height) / 2, f.Y - area.Y);
+        Assert.Equal(960, r.Width);
+        Assert.Equal(620, r.Height);
+    }
+
+    [Fact]
+    public void First_run_on_a_short_screen_keeps_the_title_bar_visible()
+    {
+        // A laptop working area shorter than the default frame: the client
+        // shrinks so the frame fits, and the top edge never goes above the
+        // working area, so the title bar stays reachable.
+        var area = new GeoRect(0, 0, 1366, 640);
+        var r = EnsureFramed(null, area);
+        var f = FrameRect(r);
+        Assert.True(area.Contains(f));
+        Assert.True(f.Y >= area.Y);
+        Assert.Equal(640 - 48, r.Height);
+    }
+
+    [Fact]
+    public void First_run_respects_a_working_area_that_starts_below_a_top_taskbar()
+    {
+        var area = new GeoRect(0, 40, 1920, 1000);
+        var r = EnsureFramed(null, area);
+        Assert.True(r.Y >= 40);
+        Assert.True(area.Contains(FrameRect(r)));
+    }
+
+    [Fact]
+    public void A_saved_top_edge_above_the_working_area_is_pulled_down()
+    {
+        var area = new GeoRect(0, 0, 1920, 1040);
+        var saved = new WindowGeometry { X = 200, Y = -35, Width = 900, Height = 600 };
+        var r = EnsureFramed(saved, area);
+        Assert.Equal(0, r.Y);
+        Assert.Equal(200, r.X);
+        Assert.True(area.Contains(FrameRect(r)));
+    }
+
+    [Fact]
+    public void The_clamp_accounts_for_the_frame_below_and_beside_the_client_area()
+    {
+        // The client rect alone would fit; the frame around it would not.
+        var area = new GeoRect(0, 0, 1920, 1040);
+        var saved = new WindowGeometry { X = 1920 - 900 - 5, Y = 1040 - 600 - 5, Width = 900, Height = 600 };
+        var r = EnsureFramed(saved, area);
+        var f = FrameRect(r);
+        Assert.True(area.Contains(f));
+        Assert.Equal(area.Right, f.Right);
+        Assert.Equal(area.Bottom, f.Bottom);
+    }
+
+    [Fact]
+    public void A_saved_frame_taller_than_the_working_area_pins_the_top_and_shrinks()
+    {
+        var area = new GeoRect(0, 0, 1366, 700);
+        var saved = new WindowGeometry { X = 100, Y = 100, Width = 900, Height = 900 };
+        var r = EnsureFramed(saved, area);
+        Assert.Equal(0, r.Y);
+        Assert.Equal(700 - 48, r.Height);
+        Assert.True(area.Contains(FrameRect(r)));
+    }
+
+    [Fact]
+    public void Recentering_after_a_dead_monitor_keeps_the_frame_inside_the_primary()
+    {
+        var area = new GeoRect(0, 0, 1920, 1040);
+        var saved = new WindowGeometry { X = 5000, Y = 5000, Width = 900, Height = 600 };
+        var r = EnsureFramed(saved, area);
+        Assert.True(area.Contains(FrameRect(r)));
+        Assert.True(r.Y >= area.Y);
+    }
 }
